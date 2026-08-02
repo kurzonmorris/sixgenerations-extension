@@ -1,0 +1,5 @@
+Six Generations extension version marker.
+
+The number in this filename must match "version" in manifest.json and the top
+entry in docs/CHANGELOG.md. Rename this file when the version changes.
+See docs/VERSIONING.md.

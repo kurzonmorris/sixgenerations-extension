@@ -1,0 +1,11 @@
+{
+  "name": "sixgenerations-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension keeping the Six Generations Vinted wardrobe and Shopify store in parity.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "//": "No build step — Chrome loads this folder as-is. package.json exists so `node --test` treats source/**/*.js as ES modules, and so the version has a home npm understands."
+}

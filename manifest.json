@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+  "name": "Six Generations — Vinted ↔ Shopify Sync",
+  "short_name": "Six Generations Sync",
+  "version": "0.1.0",
+  "version_name": "v_0.1.0",
+  "description": "Keeps the Six Generations Vinted wardrobe and Shopify store in parity: listings, prices, stock and sold status.",
+  "minimum_chrome_version": "114",
+
+  "permissions": [
+    "storage",
+    "alarms",
+    "scripting",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "https://*.vinted.co.uk/*",
+    "https://*.vinted.com/*",
+    "https://*.vinted.fr/*",
+    "https://*.vinted.de/*",
+    "https://*.vinted.pl/*",
+    "https://*.vinted.es/*",
+    "https://*.vinted.it/*",
+    "https://*.vinted.nl/*",
+    "https://*.myshopify.com/*"
+  ],
+
+  "background": {
+    "service_worker": "source/backgroundServiceWorker.js",
+    "type": "module"
+  },
+
+  "action": {
+    "default_title": "Six Generations Sync",
+    "default_popup": "source/popupPanel/popupPanel.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "options_ui": {
+    "page": "source/settingsPage/settingsPage.html",
+    "open_in_tab": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.vinted.co.uk/*",
+        "https://*.vinted.com/*",
+        "https://*.vinted.fr/*",
+        "https://*.vinted.de/*",
+        "https://*.vinted.pl/*",
+        "https://*.vinted.es/*",
+        "https://*.vinted.it/*",
+        "https://*.vinted.nl/*"
+      ],
+      "js": ["source/contentScripts/vintedPageReader.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
