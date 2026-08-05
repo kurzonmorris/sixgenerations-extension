@@ -6,7 +6,58 @@ answered in the session where they came up. Each one is cheap to reverse.
 **Answer these and the choice gets locked in — or corrected — in the next
 commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md.
 
+> **Note on how these got here:** the interactive question prompt did not reach
+> Kurzon in the sessions where this work was done (asked twice, no answer both
+> times). That is why the questions live in this file. Answers can be given in
+> plain chat, or by editing this file directly.
+
 ---
+
+# Answer these next
+
+The set below blocks the next piece of work. **Q7 is the one that matters most.**
+
+## Q7 — What gets built next?
+
+Nothing is being written until this is answered, because the options conflict.
+
+| Option | What it is | Argument for |
+|---|---|---|
+| **F-01 — verify the Vinted read path** ← *recommended* | Prove the wardrobe read works against the real account, harden the field mapping, make failures loud | It is the one part written from public references rather than a live account. Everything downstream trusts it. Writing to Vinted before this is proven risks writing to the wrong listing |
+| **F-07 — bulk SKU assignment** | A helper that proposes a SKU per garment and writes it to both sides | The right first move *if the wardrobe was never SKU'd* — without SKUs nothing pairs, and a dry run just reports everything as one-sided |
+| **F-02 / F-03 — Vinted writes** | Price changes, hiding sold listings | The road to v_1.0.0, but premature until F-01 is proven |
+| **Nothing yet** | Kurzon installs v_0.1.0, runs a dry run, reports what it got wrong | The fastest way to find out what is actually broken |
+
+**Feeding into this:** are the Vinted listings already SKU'd, or is the wardrobe
+untouched? That single fact decides between F-01 and F-07.
+
+## Q8 — Shopify store domain
+
+The permanent `xxx.myshopify.com` one. Guessed candidates were
+`sixgenerations.myshopify.com` / `six-generations.myshopify.com`, neither
+confirmed. Also useful: **which Shopify plan**, since it sets the rate-limit
+budget (PROJECT_INFO.md §1.5).
+
+Not blocking — it is typed into the settings page at setup — but without it no
+one can debug a wrong-domain error from the outside.
+
+## Q9 — Which Vinted domain
+
+Assumed `www.vinted.co.uk` (GBP, UK sizes). Confirming it means the other seven
+Vinted domains can be dropped from `host_permissions`, which shortens the
+permission warning Chrome shows on install.
+
+A non-UK domain would need the size normalisation re-checked.
+
+## Q10 — Scale
+
+Roughly how many garments are in the wardrobe and in the store? It changes
+whether rate-limit backoff (F-10) is a real concern or a theoretical one, and
+whether the first dry run will be readable or a wall of text.
+
+---
+
+# Already decided (without an answer)
 
 ## Q1 — Version format: `v_0.1.0` or `.js_v0.1.0` on every file?
 
