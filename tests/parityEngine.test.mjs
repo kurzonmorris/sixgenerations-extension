@@ -115,3 +115,38 @@ test('items with no SKU and no title are left out of pairing entirely', () => {
   });
   assert.deepEqual(plan.actions, []);
 });
+
+test('a title-only match is flagged for review, never written from', () => {
+  const plan = buildPlan({
+    vintedItems: [vintedItem({ title: 'Floral dress', size: 'UK 10', price: 20 })],
+    shopifyItems: [shopifyItem({ title: 'Floral dress', size: '10', price: 24 })],
+    settings: settingsWith({}),
+  });
+
+  assert.equal(plan.actions.length, 1, 'no price/content actions may be produced');
+  assert.equal(plan.actions[0].type, ACTION.REVIEW_MATCH);
+  assert.equal(plan.actions[0].target, 'none');
+  assert.equal(summarise(plan).titleGuesses, 1);
+});
+
+test('the same pair with storage codes syncs normally', () => {
+  const plan = buildPlan({
+    vintedItems: [vintedItem({ storageCode: '13-8-24', title: 'Floral dress', price: 20 })],
+    shopifyItems: [shopifyItem({ storageCode: '13-8-24', title: 'Floral dress', price: 24 })],
+    settings: settingsWith({ content: DIRECTION.OFF }),
+  });
+
+  assert.equal(plan.actions[0].type, ACTION.UPDATE_PRICE);
+  assert.equal(plan.actions[0].target, 'vinted');
+});
+
+test('a re-boxed garment reads as two one-sided items, not a wrong pair', () => {
+  const plan = buildPlan({
+    vintedItems: [vintedItem({ storageCode: '13-8-24', title: 'Wool coat' })],
+    shopifyItems: [shopifyItem({ storageCode: '14-2-7', title: 'Wool coat' })],
+    settings: settingsWith({}),
+  });
+
+  assert.deepEqual(plan.actions.map((a) => a.type), [ACTION.UNMATCHED, ACTION.UNMATCHED]);
+  assert.equal(summarise(plan).matched, 0);
+});

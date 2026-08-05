@@ -13,6 +13,10 @@ colour, condition) rather than generic products.
 Current version: **v_0.1.0** — reads both sides and reports every difference.
 Shopify writes work. **Vinted writes do not exist yet.**
 
+**The pairing key is the storage code** (`13-8 24` = column 13, box 8, item 24)
+at the end of every listing description, on both platforms. Not the SKU field —
+that is only on some items. See `docs/PROJECT_INFO.md §2A`.
+
 ## Read these before working
 
 | File | When |
@@ -55,7 +59,7 @@ source/
   connectors/                  one file per platform
   contentScripts/              runs inside the Vinted tab
   popupPanel/  settingsPage/   UI
-tests/                 npm test — 21 tests, nothing to install
+tests/                 npm test — 36 tests, nothing to install
 docs/                  everything above
 ```
 

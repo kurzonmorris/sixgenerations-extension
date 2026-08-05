@@ -17,7 +17,13 @@ const MSG = {
 };
 
 const PER_PAGE = 96;
-const MAX_PAGES = 20;
+// 2000+ garments at 96 a page is ~22 requests; this cap is headroom, not a target.
+const MAX_PAGES = 80;
+// Vinted sits behind DataDome (docs/PROJECT_INFO.md §2.4). Paced requests from a
+// real signed-in session look like browsing; a burst of 20+ does not.
+const PAGE_DELAY_MS = 900;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   const handler = {
@@ -118,12 +124,17 @@ async function scrapeWardrobe({ username } = {}) {
 async function viaApi(userId) {
   const items = [];
   for (let page = 1; page <= MAX_PAGES; page += 1) {
+    if (page > 1) await sleep(PAGE_DELAY_MS);
     const data = await json(`/api/v2/users/${userId}/items?page=${page}&per_page=${PER_PAGE}`);
     const batch = data.items ?? [];
     items.push(...batch.map(normaliseApiItem));
-    if (batch.length < PER_PAGE) break;
+    if (batch.length < PER_PAGE) return items;
   }
-  return items;
+  // Hitting the cap means the wardrobe is bigger than expected — say so loudly
+  // rather than returning a silently truncated catalogue to the parity engine.
+  throw new Error(
+    `Vinted wardrobe exceeded ${MAX_PAGES * PER_PAGE} items — read stopped early and would be incomplete. Raise MAX_PAGES in vintedPageReader.js.`,
+  );
 }
 
 /**
@@ -136,14 +147,17 @@ function normaliseApiItem(raw) {
   const hidden = Boolean(raw.is_hidden);
   const photos = Array.isArray(raw.photos) ? raw.photos : raw.photo ? [raw.photo] : [];
 
+  const description = (raw.description ?? '').replace(/\s+/g, ' ').trim();
+
   return {
-    sku: extractSku(raw.description ?? '') || '',
+    sku: '', // Vinted has no SKU field; the storage code is the key
+    storageCode: extractStorageCode(description),
     source: 'vinted',
     sourceId: String(raw.id ?? ''),
     variantId: '',
     url: raw.url ?? raw.path ?? '',
     title: raw.title ?? '',
-    description: (raw.description ?? '').replace(/\s+/g, ' ').trim(),
+    description,
     price: Number.isFinite(price) ? price : null,
     currency: raw.price?.currency_code ?? raw.currency ?? 'GBP',
     quantity: sold ? 0 : 1, // Vinted listings are single-item by nature
@@ -161,15 +175,21 @@ function normaliseApiItem(raw) {
 }
 
 /**
- * A SKU carried in the listing description is the most reliable way to pair a
- * Vinted listing with a Shopify variant, since Vinted has no SKU field.
- * Convention: a line containing `SKU: ABC-123` (or `[ABC-123]`).
+ * The physical storage code at the end of every description — "13-8 24" meaning
+ * column 13, box 8 high, item 24. This is the pairing key.
+ *
+ * ⚠ Kept in sync by hand with `parseStorageCode()` in core/storageCode.js.
+ * Content scripts cannot import ES modules, so the pattern is duplicated rather
+ * than shared. Change one, change the other —
+ * tests/storageCode.test.mjs asserts the two agree.
  */
-function extractSku(description) {
-  const tagged = description.match(/\bSKU[:\s#]+([A-Za-z0-9._-]{2,40})\b/i);
-  if (tagged) return tagged[1];
-  const bracketed = description.match(/\[([A-Za-z0-9._-]{2,40})\]/);
-  return bracketed ? bracketed[1] : '';
+function extractStorageCode(description) {
+  const match = String(description ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .match(/(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*[-–—\s]\s*(\d{1,4})[\s.,;:]*$/);
+
+  return match ? `${Number(match[1])}-${Number(match[2])}-${Number(match[3])}` : '';
 }
 
 /** Last resort: read the wardrobe grid that is already on screen. */
@@ -183,6 +203,9 @@ function viaDom() {
 
     return {
       sku: '',
+      // The grid does not render descriptions, so there is no code to read here.
+      // DOM-fallback items can only ever match on title + size.
+      storageCode: '',
       source: 'vinted',
       sourceId: href.match(/\/items\/(\d+)/)?.[1] ?? '',
       variantId: '',

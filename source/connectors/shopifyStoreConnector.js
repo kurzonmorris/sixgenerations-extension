@@ -20,6 +20,7 @@ export class ShopifyAdapter {
   constructor(settings) {
     this.settings = settings.shopify;
     this.currency = 'GBP';
+    this.throttle = null; // last reported leaky-bucket state
   }
 
   get configured() {
@@ -54,7 +55,12 @@ export class ShopifyAdapter {
     }
 
     const payload = await response.json();
+    // Every response reports the remaining budget; read it rather than guess.
+    this.throttle = payload.extensions?.cost?.throttleStatus ?? this.throttle;
+
     if (payload.errors?.length) {
+      const throttled = payload.errors.some((e) => e.extensions?.code === 'THROTTLED');
+      if (throttled) throw new ThrottledError('Shopify throttled the request');
       throw new Error(`Shopify GraphQL: ${payload.errors.map((e) => e.message).join('; ')}`);
     }
     return payload.data;
@@ -80,16 +86,40 @@ export class ShopifyAdapter {
     };
   }
 
-  /** Walks every product/variant and flattens to one normalised item per variant. */
-  async fetchItems({ pageSize = 50, maxPages = 40 } = {}) {
+  /**
+   * Waits until the leaky bucket has room for the next page.
+   *
+   * Shopify restores points at a fixed rate per second (50 on Standard), so the
+   * wait is arithmetic, not a guess. See docs/PROJECT_INFO.md §1.5.
+   */
+  async #waitForBudget(estimatedCost) {
+    const status = this.throttle;
+    if (!status || status.currentlyAvailable >= estimatedCost) return;
+
+    const deficit = estimatedCost - status.currentlyAvailable;
+    const seconds = Math.ceil(deficit / Math.max(status.restoreRate ?? 50, 1));
+    logger.debug(`Shopify budget low (${status.currentlyAvailable} pts) — waiting ${seconds}s`);
+    await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+  }
+
+  /**
+   * Walks every product/variant and flattens to one normalised item per variant.
+   *
+   * Page size is deliberately small. Shopify charges a *calculated cost* per
+   * query and rejects any single query costing over 1000 points, and nested
+   * connections multiply: `products(first: N)` with `variants(first: M)` costs
+   * roughly N + (N x M). At 50 x 25 that is ~1300 — over the cap, rejected
+   * outright on every plan. 25 x 10 is ~275, which is safe at any catalogue size.
+   */
+  async fetchItems({ pageSize = 25, maxPages = 400 } = {}) {
     const query = `
       query($cursor: String, $pageSize: Int!) {
         products(first: $pageSize, after: $cursor, sortKey: UPDATED_AT) {
           pageInfo { hasNextPage endCursor }
           nodes {
             id title handle descriptionHtml status vendor productType updatedAt onlineStoreUrl
-            images(first: 10) { nodes { url } }
-            variants(first: 25) {
+            images(first: 5) { nodes { url } }
+            variants(first: 10) {
               nodes {
                 id sku price inventoryQuantity
                 selectedOptions { name value }
@@ -101,19 +131,30 @@ export class ShopifyAdapter {
       }
     `;
 
+    const estimatedCost = pageSize * 12;
     const items = [];
     let cursor = null;
+
     for (let page = 0; page < maxPages; page += 1) {
-      const data = await this.graphql(query, { cursor, pageSize });
+      await this.#waitForBudget(estimatedCost);
+
+      const data = await this.#withThrottleRetry(() => this.graphql(query, { cursor, pageSize }));
       const { nodes, pageInfo } = data.products;
       for (const product of nodes) items.push(...this.#flatten(product));
       logger.debug(`Shopify page ${page + 1}: ${nodes.length} products`, { total: items.length });
-      if (!pageInfo.hasNextPage) break;
+
+      if (!pageInfo.hasNextPage) {
+        logger.info(`Shopify: loaded ${items.length} variants`);
+        return items;
+      }
       cursor = pageInfo.endCursor;
     }
 
-    logger.info(`Shopify: loaded ${items.length} variants`);
-    return items;
+    // Never hand a truncated catalogue to the parity engine — it would read as
+    // "these products only exist on Vinted" and propose archiving real listings.
+    throw new Error(
+      `Shopify catalogue exceeded ${maxPages * pageSize} products — read stopped early and would be incomplete.`,
+    );
   }
 
   #flatten(product) {
@@ -146,6 +187,18 @@ export class ShopifyAdapter {
         raw: { inventoryItemId: variant.inventoryItem?.id ?? '' },
       });
     });
+  }
+
+  /** One retry after a throttle, with the wait the bucket actually needs. */
+  async #withThrottleRetry(run) {
+    try {
+      return await run();
+    } catch (error) {
+      if (!(error instanceof ThrottledError)) throw error;
+      logger.warn('Shopify throttled — backing off and retrying once');
+      await this.#waitForBudget(this.throttle?.maximumAvailable ?? 1000);
+      return run();
+    }
   }
 
   // --- writes ---------------------------------------------------------------
@@ -224,6 +277,8 @@ export class ShopifyAdapter {
     return data.productUpdate.product;
   }
 }
+
+class ThrottledError extends Error {}
 
 function assertNoUserErrors(result) {
   const errors = result?.userErrors ?? [];

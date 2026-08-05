@@ -48,7 +48,8 @@ In the store admin:
 
 In the extension's settings page:
 
-- **Store domain** — the permanent `xxx.myshopify.com` one, not a custom domain
+- **Store domain** — `1kaa6a-ua.myshopify.com` (the permanent one, not
+  sixgenerations.co.uk — the Admin API only answers on the myshopify.com domain)
 - **Admin API access token** — paste it
 - **API version** — leave at `2025-01` unless you have read
   `PROJECT_INFO.md §1.2` about what changes in newer versions
@@ -75,22 +76,33 @@ opened.
 The extension never sees your Vinted password. It reads through the session that
 tab already has.
 
-## 5. Set up matching — do this before any live run
+## 5. Matching — how items pair up
 
-Shopify variants have a SKU field. Vinted has nothing equivalent, so the code
-goes in the **Vinted listing description**:
+Items pair on the **storage code at the end of the description**, which is
+already on every listing on both sites:
 
 ```
 Lovely wool coat, barely worn.
 
-SKU: COAT-001
+13-8 24
 ```
 
-`SKU: COAT-001` or `[COAT-001]` both work. It must match the Shopify variant's
-SKU exactly (case is ignored).
+That reads as column 13, box 8 high, item 24. These all parse identically:
+`13-8 24`, `13-8-24`, `13 - 8 24`, `03-08 04`.
 
-Anything without a SKU falls back to matching on title + size. That is reported
-so you can see it, but it is **never** used to drive a write.
+The code must be **at the end** of the description. That is deliberate — it stops
+a size range like "fits 10-12" being mistaken for a location.
+
+Order of preference:
+
+1. **Storage code** — used whenever present, on both sides
+2. **SKU field** — only where a code is missing and Shopify has a SKU
+3. **Title + size** — a guess. Shown in the plan as *review-match*, and
+   **never written from**. To confirm one, add the storage code to whichever
+   listing is missing it
+
+⚠ **If a garment is re-boxed, update both listings.** The pair breaks otherwise,
+and both sides start reporting as one-sided.
 
 ## 6. First run
 
@@ -102,7 +114,13 @@ You get a plan: how many matched, how many exist on only one side, and every
 difference found. Nothing is written.
 
 Read the plan carefully the first time — it is the fastest way to find garments
-that are missing a SKU, or priced differently to what you expected.
+whose storage code is missing or mistyped on one side, or priced differently to
+what you expected.
+
+At 2000+ garments the first plan will be long. Start by reading the summary
+counts at the top: *matched*, *vinted only*, *shopify only*, and *title guesses*.
+A large one-sided count almost always means storage codes are not being read,
+not that 500 garments are genuinely missing.
 
 Only when the plan looks right, untick **Dry run** and run it again.
 
@@ -127,7 +145,9 @@ Automatic runs need a signed-in Vinted tab open, same as manual ones.
 | "Vinted content script did not answer" | Page still loading, or Vinted changed something | Reload the tab; if it repeats, check the activity log for which read path was tried |
 | Wardrobe reads as 0 items | Vinted changed their endpoint | Check the log for `via` — see `PROJECT_INFO.md §2.2` |
 | "No Shopify location selected" | Location never resolved | Press **Test connection** on the settings page |
-| Everything shows as "present on one side only" | SKUs do not match | Compare a Shopify variant SKU against the `SKU:` line in the matching Vinted description |
+| Everything shows as "present on one side only" | Storage codes not being read | Check one listing's description actually ends with the code, e.g. `13-8 24`, and that nothing follows it |
+| A garment shows as one-sided on both platforms | It was re-boxed on one side only | Make the two codes match |
+| "read stopped early and would be incomplete" | Catalogue outgrew the page cap | Raise `MAX_PAGES` in `vintedPageReader.js` (Vinted) or `maxPages` in `shopifyStoreConnector.js` |
 
 ### Where to look when something goes wrong
 
@@ -143,5 +163,5 @@ cd %USERPROFILE%\Documents\sixgenerations-extension
 npm test
 ```
 
-21 tests, nothing to install — it uses Node's built-in runner. Worth running
+36 tests, nothing to install — it uses Node's built-in runner. Worth running
 after any change, and always after a version bump.

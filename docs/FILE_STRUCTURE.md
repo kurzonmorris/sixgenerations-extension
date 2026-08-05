@@ -23,6 +23,7 @@ sixgenerations-extension/
 │   │   ├── messageTypes.js           Message names, storage keys, default settings
 │   │   ├── settingsStore.js          Reads/writes settings + the SKU link table
 │   │   ├── activityLog.js            Ring-buffer log of everything a run does
+│   │   ├── storageCode.js            Parses the "13-8 24" location code — THE pairing key
 │   │   ├── garmentItem.js            The normalised garment: size, brand, colour, condition,
 │   │   │                             plus the size/price normalisation and the pairing key
 │   │   ├── parityEngine.js           Compares both catalogues, produces the action plan.
@@ -50,8 +51,9 @@ sixgenerations-extension/
 │   │
 │   └── sharedStyles.css              Colours, dark mode, buttons — shared by both pages
 │
-├── tests/                            Run with `npm test`. No dependencies to install
+├── tests/                            Run with `npm test` — 36 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
+│   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
 │   ├── parityEngine.test.mjs         The matching and diff rules
 │   ├── extensionWiring.test.mjs      Service worker message handling, settings, token redaction
 │   └── versionConsistency.test.mjs   Fails if the version drifts between its four homes

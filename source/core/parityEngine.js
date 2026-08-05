@@ -5,7 +5,7 @@
  */
 
 import { DIRECTION } from './messageTypes.js';
-import { keyFor, toMinorUnits, normaliseSize, normaliseText } from './garmentItem.js';
+import { keyFor, keyConfidence, toMinorUnits, normaliseSize, normaliseText } from './garmentItem.js';
 
 export const ACTION = {
   UPDATE_PRICE: 'update-price',
@@ -14,6 +14,7 @@ export const ACTION = {
   CREATE: 'create',
   ARCHIVE: 'archive',
   UNMATCHED: 'unmatched',
+  REVIEW_MATCH: 'review-match',
 };
 
 const CONTENT_FIELDS = ['title', 'description', 'brand', 'size', 'colour', 'condition'];
@@ -71,7 +72,7 @@ export function buildPlan({ vintedItems = [], shopifyItems = [], settings }) {
 
   const actions = [];
   const pairs = [];
-  const stats = { matched: 0, vintedOnly: 0, shopifyOnly: 0 };
+  const stats = { matched: 0, vintedOnly: 0, shopifyOnly: 0, titleGuesses: 0 };
 
   for (const key of keys) {
     const vinted = vintedIndex.get(key) ?? null;
@@ -96,6 +97,22 @@ export function buildPlan({ vintedItems = [], shopifyItems = [], settings }) {
     }
 
     stats.matched += 1;
+
+    // Pairs found only by title + size are a guess. They are surfaced so they can
+    // be confirmed (usually by adding the storage code), but nothing is ever
+    // written from them — a wrong pair would edit the wrong garment.
+    if (keyConfidence(vinted) === 'title-guess') {
+      stats.titleGuesses += 1;
+      actions.push({
+        type: ACTION.REVIEW_MATCH,
+        key,
+        target: 'none',
+        item: shopify,
+        confidence: 'title-guess',
+        reason: 'Matched on title + size only — add the storage code to confirm',
+      });
+      continue;
+    }
 
     // --- sold / stock parity -------------------------------------------------
     const inventoryTarget = targetOf(rules.inventory);

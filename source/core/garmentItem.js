@@ -8,11 +8,15 @@
  * get wrong for a wardrobe.
  */
 
+import { parseStorageCode } from './storageCode.js';
+
 /** @typedef {'active'|'sold'|'draft'|'hidden'|'unknown'} ItemStatus */
 
 export function makeItem(fields = {}) {
   return {
     sku: fields.sku ?? '',
+    // Parsed from the description unless a connector supplies it directly.
+    storageCode: fields.storageCode ?? parseStorageCode(fields.description),
     source: fields.source ?? 'unknown', // 'vinted' | 'shopify'
     sourceId: fields.sourceId ?? '',
     variantId: fields.variantId ?? '',
@@ -86,13 +90,27 @@ export function hashItem(item, fields) {
 }
 
 /**
- * The shared key. Preferring an explicit SKU keeps control with the user; the
- * title fallback exists so a first run can still propose matches for a wardrobe
- * that was never SKU'd.
+ * The shared key, in order of trustworthiness:
+ *
+ *   1. storage code — on every item, on both platforms. The real key.
+ *   2. SKU field    — only some items have one, and only Shopify has the field.
+ *   3. title + size — a guess. Reported so it is visible, but never written from.
+ *
+ * Both sides derive the key the same way, so two listings pair when their best
+ * available key agrees.
  */
 export function keyFor(item) {
+  if (item.storageCode) return `loc:${item.storageCode}`;
   if (item.sku) return item.sku.trim().toLowerCase();
   const title = normaliseText(item.title).toLowerCase();
   const size = normaliseSize(item.size);
   return title ? `title:${title}${size ? `:${size}` : ''}` : '';
+}
+
+/** How confident the pairing is — surfaced in the plan so guesses are obvious. */
+export function keyConfidence(item) {
+  if (item.storageCode) return 'storage-code';
+  if (item.sku) return 'sku';
+  if (normaliseText(item.title)) return 'title-guess';
+  return 'none';
 }

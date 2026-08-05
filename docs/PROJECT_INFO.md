@@ -5,7 +5,7 @@ they never have to be looked up again. If something here turns out to be wrong
 when tested against the live sites, **correct it here in the same commit as the
 code fix** — this file is the memory, not the chat.
 
-Last verified: **2026-08-02**. Sources are linked at the bottom.
+Last verified: **2026-08-05**. Store and wardrobe details confirmed by Kurzon. Sources are linked at the bottom.
 
 ---
 
@@ -20,6 +20,9 @@ Last verified: **2026-08-02**. Sources are linked at the bottom.
 | Auth header | `X-Shopify-Access-Token: shpat_…` |
 | Content type | `application/json` |
 | API version in use | `2025-01` (set in settings, changeable without a code edit) |
+| **Store domain** | `1kaa6a-ua.myshopify.com` |
+| **Public storefront** | `sixgenerations.co.uk` (not used by the API — Admin calls always go to the myshopify.com domain) |
+| Plan | unknown — see OPEN_QUESTIONS.md Q8. Sets the rate-limit budget below |
 
 The token comes from a **custom app** in the store admin:
 `Settings → Apps and sales channels → Develop apps → Create an app`.
@@ -49,7 +52,7 @@ and the connector it calls.**
 
 | Job | Mutation | Notes |
 |---|---|---|
-| Read catalogue | `products(first:, after:)` connection | Paginated, `nodes { … variants(first: 25) { nodes … } }` |
+| Read catalogue | `products(first:, after:)` connection | Paginated, 25 products × 10 variants a page. **See the nested-cost trap below before changing either number** |
 | Update price | `productVariantsBulkUpdate(productId:, variants:)` | **`productVariantUpdate` is deprecated/removed — do not use it.** Takes an array even for one variant. |
 | Set stock | `inventorySetQuantities(input:)` | `name: "available"`, `reason: "correction"`, `ignoreCompareQuantity: true`. **Changed in 2026-01 — re-verify if the API version is raised.** |
 | Title / description / vendor | `productUpdate(input: ProductInput)` | `descriptionHtml`, not `description` |
@@ -74,9 +77,26 @@ GraphQL Admin uses a **calculated-cost leaky bucket**, not a request count:
   `currentlyAvailable` and `restoreRate` — read it rather than guessing.
 - Over-budget requests return a `THROTTLED` error (and/or HTTP 429).
 
-**Practical effect here:** a wardrobe of a few hundred garments is nowhere near
-these limits at 50 products per page. Backoff is still a phase-3 item (F-10)
-because a first full sync of a large store could hit it.
+### The nested-cost trap — this bit the code once already
+
+Cost is charged per returned object, and **nested connections multiply**:
+
+```
+products(first: N) { … variants(first: M) { … } }   ≈  N + (N × M) points
+```
+
+The original code used `products(first: 50)` with `variants(first: 25)` ≈ **1300
+points — above the 1000-point hard cap, so the query is rejected outright**, on
+every plan, regardless of how long you wait. It now uses **25 × 10 ≈ 275**.
+
+**Before raising either number, do the multiplication.**
+
+**Practical effect at ~2000 garments:** roughly 80 pages at 25 products each. On
+a Standard plan (50 pts/sec restore, 275 per page) that is a page every ~5.5
+seconds if the bucket runs dry — a few minutes for a full read, which is fine for
+a manual or daily sync. `shopifyStoreConnector` reads
+`extensions.cost.throttleStatus` and waits exactly as long as the bucket needs,
+rather than sleeping blindly.
 
 ### 1.6 Identifiers
 
@@ -105,8 +125,10 @@ say so instead of quietly returning an empty wardrobe.
 
 ### 2.2 Endpoints (confirmed against public references)
 
-Base: `https://www.vinted.co.uk` (domain is a setting — `.fr`, `.de`, etc. all
-expose the same paths).
+Base: `https://www.vinted.co.uk`. Confirmed as the only site in use, so the
+other Vinted country domains have been **removed from `host_permissions`** —
+which shortens the permission warning Chrome shows on install. The same paths
+exist on `.fr`, `.de` etc. if another country is ever added back.
 
 | Purpose | Path | Parameters |
 |---|---|---|
@@ -168,12 +190,55 @@ each defensively with fallbacks. Known names:
 (ACTIVE/DRAFT/ARCHIVED). `garmentItem.js` keeps them apart: `condition` vs
 `status`. Do not merge them.
 
-### 2.6 No SKU field
+### 2.6 Pagination and volume
 
-Vinted listings have nowhere to put a SKU. The convention this project uses is a
-code in the **description**: `SKU: ABC-123` or `[ABC-123]`, parsed by
-`extractSku()` in `vintedPageReader.js`. Without it, pairing falls back to
-title + size, which is reported but never used to drive a write.
+The wardrobe is **2000+ garments**, read 96 at a time — about 22 requests. Pages
+are spaced by `PAGE_DELAY_MS` (900 ms) because 22 requests in a burst is exactly
+the shape DataDome looks for; paced requests from a real signed-in session are
+not. A full read takes roughly 20 seconds.
+
+If the read ever exceeds `MAX_PAGES`, it **throws** rather than returning what it
+has. A truncated catalogue would look to the parity engine like "these garments
+no longer exist on Vinted", and with `archiveSold` on that would propose
+archiving live Shopify products.
+
+---
+
+## 2A. The storage code — the pairing key
+
+**This is the most important convention in the project.**
+
+Every garment carries its physical location at the **end of the listing
+description**, on both platforms:
+
+```
+13-8 24     →  column 13, box 8 high, item 24
+```
+
+SKU fields are populated on only *some* items, and Vinted has no SKU field at
+all — but the storage code is on everything, which is what makes it the key.
+
+| Rank | Key | Used for |
+|---|---|---|
+| 1 | **storage code** | Real pairing. Writes allowed |
+| 2 | SKU field | Fallback when no code is present. Writes allowed |
+| 3 | title + size | A guess. **Reported for review, never written from** |
+
+Parsing lives in `source/core/storageCode.js` and is duplicated (deliberately, by
+necessity) in `vintedPageReader.js`, since content scripts cannot import ES
+modules. `tests/storageCode.test.mjs` fails if the two ever drift apart.
+
+Accepted spellings, all normalising to `13-8-24`:
+`13-8 24`, `13-8-24`, `13 - 8 24`, `13–8 24`, `03-08 04`, and a trailing full stop.
+
+The pattern is **anchored to the end of the description**. That is what stops a
+size range like "fits 10-12" mid-text being read as a location.
+
+⚠ **The re-boxing hazard.** The key describes where a garment physically is. Move
+something to a different box and update only one platform, and the pair silently
+breaks: both sides then report as one-sided rather than mispairing. That is the
+safe failure — but it is still a failure, and at 2000 items it will happen. See
+OPEN_QUESTIONS.md Q11.
 
 ---
 
@@ -195,7 +260,9 @@ title + size, which is reported but never used to drive a write.
 | Fact | File |
 |---|---|
 | Shopify endpoint, headers, mutations, error handling | `source/connectors/shopifyStoreConnector.js` |
-| Vinted endpoints, headers, field mapping, SKU parsing | `source/contentScripts/vintedPageReader.js` |
+| Vinted endpoints, headers, field mapping | `source/contentScripts/vintedPageReader.js` |
+| Storage-code parsing (the pairing key) | `source/core/storageCode.js` |
+| Query-cost budgeting and throttle backoff | `source/connectors/shopifyStoreConnector.js` |
 | Tab lifecycle, "is there a signed-in tab" | `source/connectors/vintedWardrobeConnector.js` |
 | CORS-sensitive traffic | `source/backgroundServiceWorker.js` only |
 | Size/price normalisation rules | `source/core/garmentItem.js` |

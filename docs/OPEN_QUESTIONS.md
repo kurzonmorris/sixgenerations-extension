@@ -6,58 +6,67 @@ answered in the session where they came up. Each one is cheap to reverse.
 **Answer these and the choice gets locked in — or corrected — in the next
 commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md.
 
-> **Note on how these got here:** the interactive question prompt did not reach
-> Kurzon in the sessions where this work was done (asked twice, no answer both
-> times). That is why the questions live in this file. Answers can be given in
-> plain chat, or by editing this file directly.
+> **Why these live in a file:** the interactive question prompt has been
+> unreliable in these sessions, and chat history is not project memory anyway.
+> Answers can be given in plain chat or by editing this file directly.
+
+---
+
+# Answered — 2026-08-05
+
+- **Q8 Shopify domain** → `1kaa6a-ua.myshopify.com`, storefront
+  `sixgenerations.co.uk`. Recorded in PROJECT_INFO.md §1.1. **Plan still
+  unknown** — it sets the rate-limit budget, so worth filling in.
+- **Q9 Vinted domain** → `vinted.co.uk`. The other seven country domains have
+  been removed from `host_permissions` and from the settings dropdown.
+- **Q10 Scale** → **2000+ garments.** This broke two limits that were fine for a
+  small wardrobe; both are fixed, see CHANGELOG.
+- **Q1 / Q2 versioning** → keep `v_0.1.0` and the root marker file. Settled.
+- **Matching** → storage codes (`13-8 24`) at the end of every description, on
+  both platforms. This replaced the `SKU: ABC-123` convention entirely.
+
+**Q7 (what to build next) was not answered.** The scale and key format answers
+made the priority obvious on their own, so the read path was hardened first —
+that work is done. The question is still open for what comes *after* a live dry
+run.
 
 ---
 
 # Answer these next
 
-The set below blocks the next piece of work. **Q7 is the one that matters most.**
+## Q11 — What happens when a garment is re-boxed?
 
-## Q7 — What gets built next?
+The pairing key is a *physical location*. Move a garment to a different box and
+update only one platform, and the pair breaks — both sides then report as
+one-sided. That is the safe failure rather than a wrong edit, but at 2000 items
+it will happen regularly.
 
-Nothing is being written until this is answered, because the options conflict.
+Options:
+1. **Leave it.** Re-boxing means editing both listings by hand, as now.
+2. **Build the re-box helper (F-22).** Change the code on both platforms in one
+   action. Needs Vinted writes (F-02) first.
+3. **Add a second, stable key** — a code that never changes when an item moves —
+   and treat the storage code as location data rather than identity.
 
-| Option | What it is | Argument for |
-|---|---|---|
-| **F-01 — verify the Vinted read path** ← *recommended* | Prove the wardrobe read works against the real account, harden the field mapping, make failures loud | It is the one part written from public references rather than a live account. Everything downstream trusts it. Writing to Vinted before this is proven risks writing to the wrong listing |
-| **F-07 — bulk SKU assignment** | A helper that proposes a SKU per garment and writes it to both sides | The right first move *if the wardrobe was never SKU'd* — without SKUs nothing pairs, and a dry run just reports everything as one-sided |
-| **F-02 / F-03 — Vinted writes** | Price changes, hiding sold listings | The road to v_1.0.0, but premature until F-01 is proven |
-| **Nothing yet** | Kurzon installs v_0.1.0, runs a dry run, reports what it got wrong | The fastest way to find out what is actually broken |
+Option 3 is the robust answer but means touching all 2000 listings once.
 
-**Feeding into this:** are the Vinted listings already SKU'd, or is the wardrobe
-untouched? That single fact decides between F-01 and F-07.
+## Q12 — Do Shopify SKU fields hold the same storage code?
 
-## Q8 — Shopify store domain
+You said SKUs are on *some* items on both platforms. If a Shopify variant's SKU
+field contains something **other** than the storage code, and that item's
+description has no code, it will never pair with its Vinted twin.
 
-The permanent `xxx.myshopify.com` one. Guessed candidates were
-`sixgenerations.myshopify.com` / `six-generations.myshopify.com`, neither
-confirmed. Also useful: **which Shopify plan**, since it sets the rate-limit
-budget (PROJECT_INFO.md §1.5).
+Knowing what those SKU fields actually contain decides whether the SKU fallback
+is useful or should be dropped.
 
-Not blocking — it is typed into the settings page at setup — but without it no
-one can debug a wrong-domain error from the outside.
+## Q13 — Are storage codes unique per garment?
 
-## Q9 — Which Vinted domain
-
-Assumed `www.vinted.co.uk` (GBP, UK sizes). Confirming it means the other seven
-Vinted domains can be dropped from `host_permissions`, which shortens the
-permission warning Chrome shows on install.
-
-A non-UK domain would need the size normalisation re-checked.
-
-## Q10 — Scale
-
-Roughly how many garments are in the wardrobe and in the store? It changes
-whether rate-limit backoff (F-10) is a real concern or a theoretical one, and
-whether the first dry run will be readable or a wall of text.
+The engine assumes one garment per code. If a box can hold two items that share
+`13-8 24`, the first wins and the second is reported as one-sided.
 
 ---
 
-# Already decided (without an answer)
+# Earlier decisions, taken without an answer
 
 ## Q1 — Version format: `v_0.1.0` or `.js_v0.1.0` on every file?
 
@@ -117,9 +126,9 @@ page. Worth recording here once known, since they are needed for any real test:
 
 | Thing | Value | Notes |
 |---|---|---|
-| Shopify store domain | `?` | The permanent `xxx.myshopify.com` one |
-| Shopify plan | `?` | Sets the API rate limit budget — see PROJECT_INFO.md §1.5 |
-| Vinted domain | assumed `www.vinted.co.uk` | Changeable in settings |
+| Shopify store domain | ✅ `1kaa6a-ua.myshopify.com` | Storefront is `sixgenerations.co.uk` |
+| Shopify plan | `?` | **Still open.** Sets the rate-limit budget — PROJECT_INFO.md §1.5 |
+| Vinted domain | ✅ `www.vinted.co.uk` | Only domain now permitted |
 | Vinted username | `?` | Optional; only a safety check that the right account is signed in |
 | Is the store actually called "Six Generations"? | assumed yes | It is in the extension name and both UI headers |
 

@@ -72,7 +72,8 @@ export class SyncRun {
         status: 'pending',
       };
 
-      if (dryRun || action.type === ACTION.UNMATCHED) {
+      const neverApplied = action.type === ACTION.UNMATCHED || action.type === ACTION.REVIEW_MATCH;
+      if (dryRun || neverApplied) {
         record.status = dryRun ? 'would-apply' : 'skipped';
         results.skipped += 1;
         results.actions.push(record);

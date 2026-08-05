@@ -47,9 +47,10 @@ custom app and the Vinted session.
                                                               dry run: report  |  live: apply
 ```
 
-- **Matching** is by SKU. Shopify variants have the field; Vinted does not, so the
-  code goes in the listing description as `SKU: ABC-123` or `[ABC-123]`. Without
-  one, items fall back to title + size — reported, never written to.
+- **Matching** is by the storage code already at the end of every description on
+  both sites — `13-8 24`, meaning column 13, box 8 high, item 24. SKU fields are
+  used only where a code is missing. Title + size is a last resort: it is shown
+  in the plan as *review-match* and is **never written from**.
 - **Direction is per field group.** Stock defaults to Vinted → Shopify (a garment
   usually sells on Vinted first), price and content default to Shopify → Vinted.
   Each can be reversed or switched off.
@@ -66,9 +67,10 @@ custom app and the Vinted session.
 npm test
 ```
 
-21 tests, no dependencies to install — Node's built-in runner. They cover the
-matching and diff rules, the service worker's message handling, token redaction,
-and that the version has not drifted between the five places it appears.
+36 tests, no dependencies to install — Node's built-in runner. They cover the
+storage-code parsing and its false-match guards, the matching and diff rules,
+the service worker's message handling, token redaction, and that the version has
+not drifted between the five places it appears.
 
 ## Security
 
