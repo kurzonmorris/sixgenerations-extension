@@ -59,12 +59,21 @@ sixgenerations-extension/
 │   └── versionConsistency.test.mjs   Fails if the version drifts between its four homes
 │
 └── docs/
+    ├── FEATURE_SPECIFICATION.md      ★ What the product is meant to do, across all three
+    │                                 platforms and the ledger. Read with FUTURE_FEATURES
     ├── PROJECT_INFO.md               ★ API and web-code reference. Researched once, kept here
+    ├── INTERFACE_PRINCIPLES.md       ★ The rules the screens must follow. Not decoration —
+    │                                 the daily user has autism, ADHD and sensory needs
+    ├── LEDGER_DESIGN.md              The purchases and sales spreadsheet: columns, where it
+    │                                 lives, what each platform can actually tell us
+    ├── CROSS_LISTING_TOOLS_RESEARCH.md  Prior art — Vendoo, List Perfectly, Crosslist and the
+    │                                 rest. What to copy, what to avoid, why none does Vinted
     ├── FILE_STRUCTURE.md             This file
     ├── SETUP_GUIDE.md                Install and configure, written for the Windows VM
     ├── VERSIONING.md                 The v_x.x.x rules and the bump checklist
     ├── CHANGELOG.md                  What changed in each version
-    ├── FUTURE_FEATURES.md            The backlog, with IDs (F-01, F-02, …)
+    ├── FUTURE_FEATURES.md            The backlog. IDs: F- Vinted/Shopify, E- eBay,
+    │                                 L- ledger, U- interface, X- cross-platform
     ├── OPEN_QUESTIONS.md             ★ Decisions made without an answer — check and correct
     └── Explained-user_kurzon.md      How Kurzon works. Reference doc from the ikabot project
 ```

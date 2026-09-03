@@ -7,7 +7,51 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
-## Unreleased
+## Unreleased — 2026-09-03 · scope: eBay, the ledger, and the interface
+
+**Documents only. No code changed.** The project grew from a two-platform sync
+into a three-platform bridge with a ledger, and the planning had to be written
+down before anything could be built.
+
+New:
+
+- **`docs/FEATURE_SPECIFICATION.md`** — what the product is meant to do across
+  Vinted, eBay and Shopify plus the purchases/sales ledger, with a proposed build
+  order from v_0.1.x to v_1.0.0.
+- **`docs/CROSS_LISTING_TOOLS_RESEARCH.md`** — Vendoo, List Perfectly, Crosslist,
+  PrimeLister and the rest. The finding that matters: **none of them reliably
+  handles Vinted**, which is why this exists. Also what to copy (dry run,
+  one-item-many-listings, delist-when-sold) and what to avoid (busy dashboards,
+  half-filled listings, subscriptions).
+- **`docs/INTERFACE_PRINCIPLES.md`** — the screen rules, written because the
+  daily user has autism, ADHD and sensory sensitivities. These override normal UI
+  convention and they are requirements, not polish.
+- **`docs/LEDGER_DESIGN.md`** — the purchases and sales spreadsheet: proposed
+  columns, the three options for where it lives, what each platform can actually
+  tell us about fees, and job-lot cost apportionment.
+
+Changed:
+
+- **`PROJECT_INFO.md` gained §3, eBay** — OAuth and why the client secret is a
+  real problem for an extension, which Sell APIs matter, daily call limits, the
+  inventory/offer model, and the fact that eBay's mandatory unique SKU is a
+  better pairing key than a code parsed off a description. **Written from
+  secondary sources — `developer.ebay.com` was unreachable from the session, so
+  it is flagged unverified throughout.** Old §3 and §4 became §4 and §5.
+- **`FUTURE_FEATURES.md`** now uses ID prefixes: `F-` Vinted/Shopify, `E-` eBay,
+  `L-` ledger, `U-` interface, `X-` cross-platform. F-13 and F-21 moved to U-06
+  and U-07.
+- **`OPEN_QUESTIONS.md`** gained Q14–Q25. Q15 (eBay API or tab-driven) and Q19
+  (where the spreadsheet lives) block the most work; Q22 asks whether the Vinted
+  account is a business account, which would unlock Vinted's own documented API
+  and replace the fragile tab-driven read entirely.
+- `CLAUDE.md`, `README.md`, `FILE_STRUCTURE.md` updated to match.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
+## Unreleased — earlier
 
 Version deliberately **not** bumped — no new number was given. These changes sit
 on top of v_0.1.0 until one is.

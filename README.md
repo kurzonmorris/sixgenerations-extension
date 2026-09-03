@@ -1,14 +1,20 @@
-# Six Generations — Vinted ↔ Shopify Sync
+# Six Generations — marketplace bridge
 
 **v_0.1.0**
 
-A Chrome extension (Manifest V3) that keeps the Six Generations **Vinted**
-wardrobe and **Shopify** store in parity — stock, price, and listing content.
-Built around garments, not generic products.
+A Chrome extension (Manifest V3) that keeps the same second-hand garments in step
+across **Vinted**, **eBay** and the **Shopify** store — stock, price and listing
+content — and records what each one cost and what it sold for. Built around
+garments, not generic products.
 
-> **Status:** reads both sides and reports every difference. Shopify writes work.
-> **Vinted writes do not exist yet** — that is the road to v_1.0.0.
-> Dry run is **on by default**; nothing is written until you turn it off.
+> **Status today:** Vinted and Shopify are read and compared; Shopify writes work.
+> **Vinted writes do not exist yet.** **eBay is not connected yet**, and the
+> ledger is not built. Dry run is **on by default**; nothing is written until you
+> turn it off.
+>
+> Where it is going is in **[docs/FEATURE_SPECIFICATION.md](docs/FEATURE_SPECIFICATION.md)**.
+> A dozen questions have to be answered before the eBay and ledger work can start
+> — they are in **[docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md)**.
 
 ---
 
@@ -29,9 +35,13 @@ custom app and the Vinted session.
 | File | What is in it |
 |---|---|
 | **[docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)** | Install, connect both sites, first run, troubleshooting |
+| **[docs/FEATURE_SPECIFICATION.md](docs/FEATURE_SPECIFICATION.md)** | What the whole product is meant to do — three platforms and the ledger — and the order to build it in |
 | **[docs/PROJECT_INFO.md](docs/PROJECT_INFO.md)** | API and web-code reference: endpoints, headers, mutations, rate limits, bot protection. Researched once and kept |
+| **[docs/INTERFACE_PRINCIPLES.md](docs/INTERFACE_PRINCIPLES.md)** | The rules every screen must follow. A requirement, not styling |
+| **[docs/LEDGER_DESIGN.md](docs/LEDGER_DESIGN.md)** | The purchases and sales spreadsheet |
+| **[docs/CROSS_LISTING_TOOLS_RESEARCH.md](docs/CROSS_LISTING_TOOLS_RESEARCH.md)** | What Vendoo, List Perfectly, Crosslist and the rest do, and why none of them handles Vinted |
 | **[docs/FILE_STRUCTURE.md](docs/FILE_STRUCTURE.md)** | What every file is for |
-| **[docs/FUTURE_FEATURES.md](docs/FUTURE_FEATURES.md)** | The backlog, F-01 to F-20 |
+| **[docs/FUTURE_FEATURES.md](docs/FUTURE_FEATURES.md)** | The backlog — F- Vinted/Shopify, E- eBay, L- ledger, U- interface, X- cross-platform |
 | **[docs/VERSIONING.md](docs/VERSIONING.md)** | The `v_x.x.x` rules and the bump checklist |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | What changed in each version |
 | **[docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md)** | Decisions taken without an answer — worth a read |

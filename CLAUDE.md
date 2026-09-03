@@ -5,26 +5,39 @@ chat history.** Everything needed is in `docs/`.
 
 ## What this is
 
-A Chrome extension (Manifest V3) that keeps the Six Generations **Vinted**
-wardrobe and **Shopify** store in parity — stock, price, and listing content.
-The products are clothes, and the code is built around garments (size, brand,
-colour, condition) rather than generic products.
+A Chrome extension (Manifest V3) that bridges the three places the same
+second-hand garments are sold — **Vinted**, **eBay** and the **Shopify** store —
+keeping stock, price and listing content in step, and recording purchases and
+sales in a spreadsheet. The products are clothes, and the code is built around
+garments (size, brand, colour, condition) rather than generic products.
 
-Current version: **v_0.1.0** — reads both sides and reports every difference.
-Shopify writes work. **Vinted writes do not exist yet.**
+Current version: **v_0.1.0** — Vinted and Shopify are read and compared, and
+Shopify writes work. **Vinted writes do not exist yet. eBay is not connected at
+all. The ledger is not built.** `docs/FEATURE_SPECIFICATION.md` is the plan;
+`docs/OPEN_QUESTIONS.md` Q14–Q25 are what block it.
+
+**The interface is a hard requirement, not styling.** The person who uses this
+daily has autism, ADHD and sensory sensitivities: a busy screen makes the tool
+unusable. `docs/INTERFACE_PRINCIPLES.md` overrides normal UI convention.
 
 **The pairing key is the storage code** (`13-8 24` = column 13, box 8, item 24)
-at the end of every listing description, on both platforms. Not the SKU field —
-that is only on some items. See `docs/PROJECT_INFO.md §2A`.
+at the end of every listing description. Not the SKU field — that is only on some
+items. Confirmed on Vinted and Shopify; **whether eBay carries it is Q16**, and
+on eBay it may belong in the SKU field instead (`docs/PROJECT_INFO.md §3.5`).
+See `docs/PROJECT_INFO.md §2A`.
 
 ## Read these before working
 
 | File | When |
 |---|---|
-| `docs/PROJECT_INFO.md` | **Before any API work.** Endpoints, headers, mutations, rate limits, bot protection, field names. Researched already — do not go looking again |
+| `docs/FEATURE_SPECIFICATION.md` | **Before starting anything new.** What the product is meant to be, all three platforms plus the ledger, and the build order |
+| `docs/PROJECT_INFO.md` | **Before any API work.** Endpoints, headers, mutations, rate limits, bot protection, field names. Researched already — do not go looking again. §3 (eBay) is unverified — read it before believing it |
+| `docs/INTERFACE_PRINCIPLES.md` | **Before touching any screen.** Non-negotiable |
+| `docs/LEDGER_DESIGN.md` | Before any purchases/sales work |
+| `docs/CROSS_LISTING_TOOLS_RESEARCH.md` | Prior art. Worth ten minutes before designing a feature from scratch |
 | `docs/OPEN_QUESTIONS.md` | **At the start of a session.** Decisions taken without an answer. Check whether any have been settled |
 | `docs/FILE_STRUCTURE.md` | Before adding a file, or when looking for where something lives |
-| `docs/FUTURE_FEATURES.md` | Before starting a feature — it may already have an ID (F-01…F-20) |
+| `docs/FUTURE_FEATURES.md` | Before starting a feature — it may already have an ID (F- Vinted/Shopify, E- eBay, L- ledger, U- interface, X- cross-platform) |
 | `docs/VERSIONING.md` | Before touching a version number |
 | `docs/Explained-user_kurzon.md` | How Kurzon works: communication style, conventions, expectations |
 
@@ -47,6 +60,13 @@ that is only on some items. See `docs/PROJECT_INFO.md §2A`.
    turns it off.
 9. Minimal, focused changes. No speculative abstractions, no comments that
    restate the code.
+10. **No third-party server, no account, no subscription.** Everything runs on
+    the one machine. That is the whole point of building this instead of paying
+    for Vendoo or List Perfectly.
+11. **Nothing on screen that does not need to be there.** No animation, no
+    toasts, no dashboards, no jargon on the first screen.
+    `docs/INTERFACE_PRINCIPLES.md` has the full list, and it wins over normal UI
+    convention.
 
 ## Layout at a glance
 

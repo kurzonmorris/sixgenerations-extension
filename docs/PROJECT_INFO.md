@@ -5,7 +5,11 @@ they never have to be looked up again. If something here turns out to be wrong
 when tested against the live sites, **correct it here in the same commit as the
 code fix** — this file is the memory, not the chat.
 
-Last verified: **2026-08-05**. Store and wardrobe details confirmed by Kurzon. Sources are linked at the bottom.
+Last verified: **2026-08-05** for Shopify and Vinted; store and wardrobe details
+confirmed by Kurzon. **§3 (eBay) was added 2026-09-03 from secondary sources
+only** — the official developer site is unreachable from the session it was
+written in, so treat it as a briefing, not as verified fact. Sources are linked
+at the bottom.
 
 ---
 
@@ -242,7 +246,130 @@ OPEN_QUESTIONS.md Q11.
 
 ---
 
-## 3. Chrome extension platform (MV3)
+## 3. eBay — Sell APIs
+
+**Researched September 2026, from secondary sources.** `developer.ebay.com` is
+blocked by this session's network proxy, so everything below came from search
+results, community threads and third-party documentation. **Verify against the
+official docs before writing code** — that is a job for a normal machine, and it
+is the only section of this file not read from the source.
+
+### 3.1 The situation
+
+Unlike Vinted, eBay has a real, documented, permitted seller API. Using it does
+not fight the site and does not risk the account. That makes eBay the *easiest*
+of the three platforms technically and the *hardest* to set up, because of
+authentication.
+
+Setting it up once, by hand:
+
+1. A free eBay developer account.
+2. A production **keyset** — App ID (client_id), Cert ID (client_secret), Dev ID.
+3. An **RuName** (eBay's redirect identifier — used instead of a URL).
+4. Consenting once as the selling account, which yields a refresh token.
+
+### 3.2 OAuth — the fork in the road
+
+The user-token flow, as far as the secondary sources agree:
+
+| Step | Detail |
+|---|---|
+| Consent | Send the seller to eBay's consent page with `client_id`, the scopes, and `redirect_uri` set to **the RuName**, not a URL |
+| Exchange | `POST https://api.ebay.com/identity/v1/oauth2/token`, `grant_type=authorization_code`, with header `Authorization: Basic base64(client_id:client_secret)` |
+| Access token | Valid **7,200 seconds — 2 hours** |
+| Refresh token | Valid **47,304,000 seconds — about 18 months** |
+| Refresh | `grant_type=refresh_token`, the scopes again as a URL-encoded space-delimited list, and **the same Basic secret header** |
+
+**The problem: the client secret is needed on every refresh, every two hours.**
+Nothing shipped to a browser is secret — an extension's files are readable by
+anyone with the machine. No PKCE / public-client flow was found in the sources.
+
+Options, none of them free of cost:
+
+| Option | How it works | Cost |
+|---|---|---|
+| **A. Secret in `chrome.storage.local`** | Treated exactly like the Shopify token: entered on the settings page, never in the repo, redacted from exports | Same risk profile as the Shopify Admin token, which is already accepted. Weaker than eBay intends, but on a single-user machine it is one more secret in the same box |
+| **B. Helper on Unraid** | A tiny local service holds the secret and hands the extension a fresh access token | The one place the secret is not in the browser. But it is a second thing to run, and it breaks "no server" |
+| **C. Paste a token by hand** | No secret at all; a fresh user token is pasted in | Every 2 hours. Unusable |
+| **D. No API at all** | Drive `ebay.co.uk` in a tab, exactly like Vinted | No credentials anywhere, one pattern for two platforms — but slower, fragile, and gives up eBay's biggest advantage |
+
+→ **Q15.** This is the single decision that shapes the whole eBay half.
+
+### 3.3 Which APIs
+
+| API | Use here |
+|---|---|
+| **Sell Inventory** | The modern model: an *inventory item* (the garment) and an *offer* (the listing). Create, revise price/quantity, end |
+| **Sell Fulfillment** | `getOrders` — the source of sales for the ledger |
+| **Sell Account** | Payment, postage and return **business policies**. An offer cannot publish without them |
+| **Trading (legacy XML)** | Older, still widely used, much lower call limit. Avoid unless something is missing from the REST APIs |
+| **Developer Analytics** | `getUserRateLimits` — reports the real remaining budget rather than a guess |
+
+### 3.4 Rate limits
+
+Reported default daily limits, **application-level, not per user**:
+
+| API | Calls/day |
+|---|---|
+| Trading (legacy) | 5,000 |
+| Inventory | 2,000,000 |
+| Account | 25,000 |
+| Feed | 100,000 |
+
+Responses carry `X-eBay-C-RateLimit-Limit`, `-Remaining` and `-Reset`. Limits can
+be raised by a free "Application Growth Check".
+
+For one seller with ~2000 garments the REST limits are effectively unlimited; the
+legacy Trading limit is not. Another reason to prefer Inventory over Trading.
+
+### 3.5 The item model — and a better pairing key
+
+eBay's inventory model is keyed on a **SKU that is mandatory and unique per
+seller**. Vinted has no such field and Shopify's is optional, which is why the
+storage code lives in the description on those two.
+
+**On eBay the storage code can go in the SKU field itself** — a first-class,
+indexed, exact-match key rather than a string parsed off the end of a
+description. If the eBay listings do not already carry it, that is a one-time
+back-fill, and it makes eBay the most reliable of the three to match.
+
+→ **Q16** asks what the existing eBay listings actually contain.
+
+### 3.6 What a garment listing needs
+
+More required fields than either other platform:
+
+- A **leaf category** — eBay will not accept a parent category.
+- **Item specifics**: brand, size, colour, style, material. Some are mandatory per
+  category and eBay pushes hard on them.
+- A **condition** from eBay's own enumeration, not free text.
+- The three **business policies** above.
+- Photos, with eBay's own size and count rules.
+
+This is why "create an eBay listing" (E-04) is a much bigger job than "change an
+eBay price" (E-02), and why the build order puts it last.
+
+### 3.7 If the tab-driven route is chosen instead
+
+eBay tolerates automation far less badly than Vinted does, but the same rules
+apply as in §2.4: act only as the signed-in user, on that user's own listings, at
+human pace. `ebay.co.uk` would need adding to `host_permissions` and a second
+content script alongside `vintedPageReader.js`.
+
+### 3.8 Confidence
+
+| Fact | Confidence |
+|---|---|
+| Token lifetimes (2 h / 18 months) | High — consistent across several sources |
+| Basic-auth secret required for refresh | High — consistent |
+| No PKCE / public-client flow | **Medium.** Absence of evidence; check the official docs |
+| Daily call limits per API | Medium — from community and third-party pages |
+| SKU mandatory and unique in the Inventory API | High |
+| Exact scope strings, endpoint paths, request shapes | **Not verified.** Read the official docs before coding |
+
+---
+
+## 4. Chrome extension platform (MV3)
 
 | Constraint | Consequence for this project |
 |---|---|
@@ -255,7 +382,7 @@ OPEN_QUESTIONS.md Q11.
 
 ---
 
-## 4. Where each fact is used in the code
+## 5. Where each fact is used in the code
 
 | Fact | File |
 |---|---|
@@ -266,6 +393,7 @@ OPEN_QUESTIONS.md Q11.
 | Tab lifecycle, "is there a signed-in tab" | `source/connectors/vintedWardrobeConnector.js` |
 | CORS-sensitive traffic | `source/backgroundServiceWorker.js` only |
 | Size/price normalisation rules | `source/core/garmentItem.js` |
+| eBay — nothing yet. §3 is reference only until Q15 is answered | — |
 
 ---
 
@@ -281,3 +409,8 @@ OPEN_QUESTIONS.md Q11.
 - [Vinted API endpoint reference (hipsuc/Vinted-API)](https://github.com/hipsuc/Vinted-API/blob/main/VintedApi.py)
 - [Vinted API guide — endpoints, headers, DataDome](https://www.lobstr.io/blog/vinted-api)
 - [Vinted Pro API docs (business accounts only)](https://pro-docs.svc.vinted.com/)
+- [eBay OAuth — exchanging the authorization code](https://developer.ebay.com/api-docs/static/oauth-auth-code-grant-request.html) *(blocked by the proxy in this session — unread)*
+- [eBay OAuth best practices](https://developer.ebay.com/api-docs/static/oauth-best-practices.html) *(unread)*
+- [eBay API call limits](https://developer.ebay.com/develop/get-started/api-call-limits) *(unread)*
+- [eBay Sell authorization guide](https://developer.ebay.com/develop/guides/sell/authorization) *(unread)*
+- [eBay OAuth quick guide (KB 5075)](https://developers.ebay.com/support/kb-article?KBid=5075) *(unread)*

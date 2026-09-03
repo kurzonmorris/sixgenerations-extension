@@ -34,6 +34,134 @@ run.
 
 # Answer these next
 
+> **Q14–Q25 came in with the eBay + ledger + interface request on 2026-09-03.**
+> They are the ones that block work. Everything below Q13 is older and still
+> open.
+
+## Q14 — Build on what exists, or start again?
+
+The request read like a fresh start: "create a base extension with minimal
+features and slowly build it up". This repo already **is** that base — v_0.1.0
+reads both platforms, matches on the storage code, writes to Shopify, and has 36
+passing tests.
+
+**Taken:** eBay and the ledger get added to this extension. Nothing is thrown
+away. The build order is in `FEATURE_SPECIFICATION.md §4`.
+
+**Say so if that is wrong** and the intent really was to start from an empty
+folder.
+
+## Q15 — eBay: API or tab? The big one
+
+Full detail in `PROJECT_INFO.md §3.2`. eBay has a proper API, but refreshing the
+token every 2 hours needs a client secret, and an extension cannot keep a secret.
+
+1. **Secret in `chrome.storage.local`**, treated exactly like the Shopify token.
+2. **A small helper on the Unraid server** holds the secret.
+3. **No API** — drive `ebay.co.uk` in a tab, like Vinted.
+
+Option 1 is the smallest step and matches how the Shopify token is already
+handled. Option 3 is the only one with no credentials anywhere. **Nothing eBay
+gets built until this is answered.**
+
+## Q16 — What is in the eBay listings now?
+
+- Do they carry the storage code (`13-8 24`)? In the description, or in the
+  custom label / SKU field?
+- If the SKU field is free, the code belongs there — it is exact-match and
+  indexed, better than any of the three currently have (`PROJECT_INFO.md §3.5`).
+- How many listings are there, and is it the same business account?
+
+Without this, eBay pairing cannot be designed — only guessed at.
+
+## Q17 — Which platform wins, for which field?
+
+Two platforms means one choice per field. Three means a matrix. Fill it in:
+
+| | Stock | Price | Title / description | Photos |
+|---|---|---|---|---|
+| **Wins** | ? | ? | ? | ? |
+
+Current two-platform behaviour: stock Vinted → Shopify, price and content
+Shopify → Vinted. Best guess for three is that Shopify stays the catalogue of
+record for price and content while stock is "whoever sold it first wins" — but
+that is a guess.
+
+## Q18 — Does it need to work with the computer off?
+
+An extension only runs while Chrome is open. A garment can sell on Vinted at 2am
+and stay live on eBay until morning.
+
+1. Accept it — run the check once or twice a day.
+2. Leave Chrome open on the Unraid Windows VM.
+3. Move the eBay half to the server (possible for eBay, impossible for Vinted).
+
+## Q19 — Where does the spreadsheet live?
+
+Options and trade-offs in `LEDGER_DESIGN.md §3`.
+
+1. **Google Sheets** — live, works from a phone, extension-friendly OAuth.
+2. **A local `.csv`/`.xlsx`** — no account, no cloud, but one-way.
+3. **Inside the extension**, with export.
+
+And: does a spreadsheet already exist? If purchases are being recorded somewhere
+today, the design should match that rather than replace it. **Send a copy with
+the columns and a couple of example rows** and this stops being a question.
+
+## Q20 — The interface — ask her, not me
+
+`INTERFACE_PRINCIPLES.md` is written from general neurodivergent-UX guidance. It
+is a starting point, not an answer.
+
+- Is she the only person who uses it day to day? On which machine?
+- What specifically makes a screen unusable — density, movement, colour, choice,
+  wording, all of it?
+- Is there an app or site she finds **easy**? Copying something that already
+  works beats designing from principles.
+- Light or dark? Bigger text?
+
+## Q21 — Job lots: how is cost split?
+
+A £40 bin bag of 30 garments has no per-item price.
+
+1. Even split (£1.33 each).
+2. Weighted by what the item is worth.
+3. Track the lot only, no per-item profit.
+
+This changes the shape of the Purchases sheet, so it is worth settling early.
+
+## Q22 — Private or business Vinted account?
+
+Two consequences, both large:
+
+- **Fees.** UK private sellers pay no selling fee; business (Pro) accounts do.
+  The ledger's fee column depends on which this is.
+- **A real API.** Vinted publishes API documentation for **business accounts**
+  (`pro-docs.svc.vinted.com`). If this is a Pro account, the whole fragile
+  tab-driven Vinted approach may be replaceable with a supported API — which
+  would be the biggest single improvement available to this project.
+
+## Q23 — How is a Vinted sale confirmed?
+
+A listing disappearing is not proof of a sale — it may have been deleted, ended,
+or hidden. The ledger must never invent a sale. What does the wardrobe actually
+show for a sold item, and is there a sold/completed section that can be read?
+
+## Q24 — Is quantity ever more than one?
+
+Everything so far assumes one-of-a-kind garments: one item, three listings, and
+selling it anywhere means removing it everywhere. If anything is stocked in
+multiples, that assumption breaks and stock has to be counted rather than
+switched.
+
+## Q25 — Where does the "purchase" side come from?
+
+Purchases have to be typed by someone — no platform provides them. Who types
+them, when, and on what device? If it is on a phone at a car boot sale, that
+alone decides Q19 in favour of Google Sheets.
+
+---
+
 ## Q11 — What happens when a garment is re-boxed?
 
 The pairing key is a *physical location*. Move a garment to a different box and
