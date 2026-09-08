@@ -8,6 +8,13 @@ sixgenerations-extension/
 ├── VERSION_v_0.1.0              Version marker — the number is visible in the file listing
 ├── package.json                 Test runner config + version. NOT a build step; Chrome ignores it
 ├── CLAUDE.md                    Read first by Claude Code each session — points at these docs
+├── EXPLAINED_six-generations_Extension.md   ★★ The project's memory. How the code works, which
+│                                 lines matter, platform facts, traps, and a parking lot of
+│                                 things found but not used. Updated with EVERY change
+├── FEATURE_six-generations_creep.md         ★★ Everything the system does today (Part A) plus
+│                                 everything planned or floated. Check before building
+├── doyouwantfeatures.md         252 features awaiting a yes/no. Ticked ones move into the
+│                                 creep file
 ├── README.md                    Start here: what this is, how to install, how to run it
 ├── .gitignore
 │
@@ -59,6 +66,13 @@ sixgenerations-extension/
 │   └── versionConsistency.test.mjs   Fails if the version drifts between its four homes
 │
 └── docs/
+    ├── SYSTEM_ARCHITECTURE.md        ★ Extension vs Docker container, and why Vinted cannot
+    │                                 move to the server. The whole flow, end to end
+    ├── DATA_MODEL.md                ★ Items, multiple sizes/colours/categories per item,
+    │                                 images, orders, and the four CSVs
+    ├── CLAUDE_BROWSER_TASKS.md      Ready-to-paste prompts for gathering facts from Vinted,
+    │                                 eBay, Shopify and Crosslist with the Claude browser
+    │                                 extension
     ├── FEATURE_SPECIFICATION.md      ★ What the product is meant to do, across all three
     │                                 platforms and the ledger. Read with FUTURE_FEATURES
     ├── PROJECT_INFO.md               ★ API and web-code reference. Researched once, kept here

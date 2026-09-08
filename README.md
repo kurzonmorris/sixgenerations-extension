@@ -35,6 +35,12 @@ custom app and the Vinted session.
 | File | What is in it |
 |---|---|
 | **[docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)** | Install, connect both sites, first run, troubleshooting |
+| **[EXPLAINED_six-generations_Extension.md](EXPLAINED_six-generations_Extension.md)** | **The project's memory.** How the code works, which lines matter, every platform fact, every trap, and a parking lot of things found but not used |
+| **[FEATURE_six-generations_creep.md](FEATURE_six-generations_creep.md)** | **Everything the system does today**, plus everything planned. Check here before asking for something twice |
+| **[doyouwantfeatures.md](doyouwantfeatures.md)** | 252 possible features awaiting a yes or no |
+| **[docs/SYSTEM_ARCHITECTURE.md](docs/SYSTEM_ARCHITECTURE.md)** | Extension vs Docker container, and why Vinted cannot move to the server |
+| **[docs/DATA_MODEL.md](docs/DATA_MODEL.md)** | Items with several sizes, colours and categories at once; images; orders; the four CSVs |
+| **[docs/CLAUDE_BROWSER_TASKS.md](docs/CLAUDE_BROWSER_TASKS.md)** | Ready-to-paste prompts for gathering facts from the live sites |
 | **[docs/FEATURE_SPECIFICATION.md](docs/FEATURE_SPECIFICATION.md)** | What the whole product is meant to do — three platforms and the ledger — and the order to build it in |
 | **[docs/PROJECT_INFO.md](docs/PROJECT_INFO.md)** | API and web-code reference: endpoints, headers, mutations, rate limits, bot protection. Researched once and kept |
 | **[docs/INTERFACE_PRINCIPLES.md](docs/INTERFACE_PRINCIPLES.md)** | The rules every screen must follow. A requirement, not styling |

@@ -34,7 +34,8 @@ run.
 
 # Answer these next
 
-> **Q14–Q25 came in with the eBay + ledger + interface request on 2026-09-03.**
+> **Q14–Q25 came in with the eBay + ledger + interface request; Q26–Q33 with the
+> Docker/database/orders plan on 2026-09-08.**
 > They are the ones that block work. Everything below Q13 is older and still
 > open.
 
@@ -159,6 +160,75 @@ switched.
 Purchases have to be typed by someone — no platform provides them. Who types
 them, when, and on what device? If it is on a phone at a car boot sale, that
 alone decides Q19 in favour of Google Sheets.
+
+---
+
+## Q26 — Database or CSV as the store?
+
+`docs/SYSTEM_ARCHITECTURE.md §5` argues: **SQLite is the store, CSVs are
+exports.** At 100,000 items a pile of CSVs stops working, and "cut a row from one
+file and paste it into another" is where data goes missing when something crashes
+mid-write.
+
+You still get all four files exactly as described — they are written from the
+database, so they are always correct and can never lose a row.
+
+**Say if you would rather the CSVs were genuinely the store.** It is your data
+and your call; I would just be building something I expect to have to fix later.
+
+## Q27 — How does the extension hand data to the container?
+
+1. **Direct** — the extension POSTs the wardrobe to the container over the home
+   network. Fast, automatic, needs the container's address in the settings.
+2. **Via a file** — the extension saves a file, you drop it in a watched folder.
+   Simpler, works even when the container is down, one manual step.
+
+Option 1 with option 2 as the fallback is the obvious answer unless the machine
+running Chrome cannot reach the server.
+
+## Q28 — Automatic, or automatic with approval?
+
+Per action type, probably:
+
+| Action | Suggested |
+|---|---|
+| Delist something that sold | **Automatic** — the whole point, and the risk of not doing it is a double sale |
+| Update a price to match | Automatic |
+| Create a new listing on another platform | **Approval** — it costs money on eBay and is public |
+| Delete anything | Approval, always |
+
+## Q29 — Are original photos kept forever?
+
+100,000 items × 5 photos × ~300 KB ≈ **150 GB**. That is fine on a server with
+disks, but it should be a decision rather than a surprise. Options: keep all
+originals; keep originals only for unsold items and compress the rest; keep
+originals for 2 years then compress.
+
+## Q30 — How long are buyer details kept?
+
+Financial records for 5 years is normal and is what the archive is for. Buyer
+names, addresses and message histories are personal data and are a separate
+question. A reasonable default: full record for as long as a return or dispute is
+possible, then trim the address and the message bodies, keeping the money.
+
+Not legal advice — worth deciding deliberately rather than by accident.
+
+## Q31 — Is the web interface reachable from outside the house?
+
+Home network only is simpler and safer. Reachable from a phone anywhere is more
+useful when standing at a car boot sale, and needs a password in front of it.
+
+## Q32 — What happens to the existing Chrome extension?
+
+Under the new plan it shrinks to one job: read Vinted, hand it over, and later
+perform Vinted writes. Everything else moves to the container. Nothing is thrown
+away — `docs/SYSTEM_ARCHITECTURE.md §10` lists where each piece goes.
+
+## Q33 — Where do buyer messages go in `sold_items.csv`?
+
+A conversation inside a spreadsheet cell is unreadable. Options: a separate text
+file per order, referenced from the row (recommended); all messages joined into
+one cell; or a separate `messages.csv` with one row per message.
 
 ---
 

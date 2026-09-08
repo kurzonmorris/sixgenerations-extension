@@ -7,7 +7,51 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
-## Unreleased — 2026-09-03 · scope: eBay, the ledger, and the interface
+## Unreleased — 2026-09-08 · scope: the system grows a server
+
+**Documents only. No code changed.** The project turned from a browser extension
+into a system: Vinted as the primary platform, a Docker container on the home
+server holding the data, and a full order/postage/archive lifecycle.
+
+New, in the repo root because they are read constantly:
+
+- **`EXPLAINED_six-generations_Extension.md`** — the project's memory. Every file
+  documented with the lines that matter, the conventions, the traps already
+  learned the hard way, and a **parking lot** of things found but not yet used
+  that is never deleted from. **To be updated in the same commit as every code
+  change and every investigation.**
+- **`FEATURE_six-generations_creep.md`** — 43 features that work today with the
+  file and line that implements each, plus what is half-built, what deliberately
+  refuses, what is planned, and what is only an idea.
+- **`doyouwantfeatures.md`** — 252 possible features in 24 groups, awaiting a
+  yes or no.
+
+New in `docs/`:
+
+- **`SYSTEM_ARCHITECTURE.md`** — the answer to "should this be a Docker
+  container?": yes for everything except Vinted, which has no API and sits behind
+  bot protection and so must stay in the browser session. Recommends SQLite as
+  the store with the four CSVs as exports, and explains why "cut a row from one
+  file into another" is the one part of the plan not to build literally.
+- **`DATA_MODEL.md`** — items with several sizes, colours and categories at once;
+  full-resolution images numbered in original order; orders, messages, shipments
+  and the 5-year archive; the exact columns of all four CSVs.
+- **`CLAUDE_BROWSER_TASKS.md`** — ten ready-to-paste prompts for gathering facts
+  from Vinted, eBay, Shopify and Crosslist with the Claude browser extension.
+
+Changed:
+
+- `OPEN_QUESTIONS.md` gained Q26–Q33 (database vs CSV, hand-over method,
+  automatic vs approved, photo retention, buyer-data retention, remote access,
+  the extension's future, where messages go).
+- `CLAUDE.md`, `README.md`, `FILE_STRUCTURE.md` updated, including a standing
+  rule that the EXPLAINED and FEATURE files are updated with every change.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
+## Unreleased — 2026-09-08 · scope: eBay, the ledger, and the interface
 
 **Documents only. No code changed.** The project grew from a two-platform sync
 into a three-platform bridge with a ledger, and the planning had to be written

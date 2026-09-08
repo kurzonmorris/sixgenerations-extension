@@ -6,7 +6,7 @@ when tested against the live sites, **correct it here in the same commit as the
 code fix** — this file is the memory, not the chat.
 
 Last verified: **2026-08-05** for Shopify and Vinted; store and wardrobe details
-confirmed by Kurzon. **§3 (eBay) was added 2026-09-03 from secondary sources
+confirmed by Kurzon. **§3 (eBay) was added 2026-09-08 from secondary sources
 only** — the official developer site is unreachable from the session it was
 written in, so treat it as a briefing, not as verified fact. Sources are linked
 at the bottom.
