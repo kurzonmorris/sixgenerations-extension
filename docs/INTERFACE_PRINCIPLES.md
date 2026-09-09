@@ -11,6 +11,12 @@ difference between a tool that gets used and one that gets avoided.
 
 ## 1. The five rules
 
+> **Exception, agreed 2026-09-09:** a **home dashboard with a left menu** was
+> asked for directly, showing six item counts and four money figures. It is being
+> built as asked. `docs/INTERFACE_LAYOUT.md` specifies it, and keeps every other
+> rule below intact — no movement, no tiles, no charts, plain words, muted
+> colour. Q37 asks whether it suits the person who actually uses it.
+
 ### U-01 — One screen, one job
 The popup shows the current state and one action. Nothing else. No dashboard, no
 tiles, no counters running in the corner. Anything that is not needed right now

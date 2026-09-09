@@ -167,7 +167,22 @@ documentation for it anywhere.
 > them next to each category name. I need the structure, not every leaf — go
 > three levels deep and tell me roughly how many options are at each level.
 
-## Task 10 — a sanity check on the interface
+## Task 10 — can the three sites be shown inside our own page?
+
+**Open:** any page, with the browser's developer tools available.
+
+> For each of `https://www.vinted.co.uk`, `https://www.ebay.co.uk` and
+> `https://sixgenerations.co.uk`, tell me the response headers, specifically
+> `X-Frame-Options` and any `Content-Security-Policy` containing
+> `frame-ancestors`. Then tell me plainly, for each one, whether that site can be
+> displayed inside an iframe on a different website. Also check the Shopify admin
+> at `admin.shopify.com` separately from the shop's own storefront.
+
+**Why:** the dashboard asks for these three to load inside the web interface.
+Marketplaces normally forbid it, and the answer decides between embedding and
+opening a tab. See `docs/INTERFACE_LAYOUT.md §4`.
+
+## Task 11 — a sanity check on the interface
 
 **Open:** nothing. This one is for the person who will use the system daily.
 

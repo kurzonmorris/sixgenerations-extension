@@ -129,6 +129,53 @@ Everything here is a Chrome extension feature. There is no server yet.
 
 # Part D — planned
 
+## D.0 — accepted 2026-09-09
+
+**118 features said yes to**, from `doyouwantfeatures.md` (D-001 to D-120, less
+D-084 and D-106 which came back unmarked). They are not repeated line by line
+here — that file is the record — but they land in the areas below, and these are
+the ones that changed the plan:
+
+| From | What it settled |
+|---|---|
+| D-014 | Vinted stays browser-based: the account is private, and will not be a business account for at least 8 months |
+| D-029 | **The SKU and the storage code are the same thing.** `7-4 21` = column 7, box 4, item 21. Call it "the SKU" on screen — that is what the business calls it |
+| D-034 | Photo filenames carry the order they appear online **and the SKU** |
+| D-044 | Backups matter: nightly, onsite to the server, **offsite to pCloud** |
+| D-055 | `orders.csv` is the profit-and-loss working file, not a thin index. **An orders file already exists and needs remaking** |
+| D-060 | Exports must open cleanly in **LibreOffice Calc**, not Excel |
+| D-061 + D-063 | The Google Sheet is **two-way** — purchases are typed there on a phone and read back |
+| D-075 | A simultaneous sale on two platforms is an **urgent** alert |
+| D-097 | Preload the next items in the review queue so moving on is instant |
+| D-209 | **Tailscale** — nothing needs exposing to the internet |
+| D-233 | Generated descriptions must be trivially editable or replaceable |
+| D-239 | Box QR codes: not needed now, but the design should be ready for them |
+
+New features that came out of those answers:
+
+| ID | Status | Feature |
+|---|---|---|
+| **X-06** | 📋 | **Reversible holding area.** When something sells it is delisted everywhere immediately, but the delisted listings are held — not destroyed — until the sale is confirmed, and one press puts them back. Kurzon's design, and better than what the paid tools do |
+| **X-07** | 📋 | **Urgent double-sale alert** — the one event allowed to be loud |
+| **S-11** | 📋 | **Offsite backup to pCloud**, alongside the onsite copy |
+| **S-12** | 📋 | **Reachable over Tailscale**, with nothing exposed publicly |
+| **S-13** | 📋 | **LibreOffice Calc compatibility** as an export requirement, tested |
+| **S-14** | 📋 | **Two-way Google Sheet** for purchases entered on a phone |
+| **U-09** | 📋 | **Dashboard with a left menu** — specified in `docs/INTERFACE_LAYOUT.md`. Overrides U-01 for the home screen only |
+| **U-10** | 📋 | **Console viewer**, frozen by default, never live-tailing |
+| **U-11** | 📋 | **Phone-first entry screens, desk-first packing screens** — two shapes, not one compromise |
+| **U-12** | ❓ | **Links out to Vinted / eBay / the shop.** Embedding them in the page will almost certainly be refused by those sites — see `INTERFACE_LAYOUT.md §4` |
+| **F-28** | 📋 | Read views, likes, offers and listing age from Vinted |
+| **F-29** | 📋 | Read the Vinted category tree once and keep it |
+| **L-11** | 📋 | Import the existing orders file rather than replacing it blind |
+
+**Still unanswered:** sections 11–24 of `doyouwantfeatures.md` (D-121 to D-252)
+came back with no checkboxes at all — notifications, money, analytics,
+automation, interface detail, bulk editing, safety, the server, privacy, the
+Crosslist migration, other platforms and the physical workflow. Notes were
+written in that range, so it was read; nothing was ticked.
+
+
 Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
 
 ## D.1 The server (new — this is where the system is going)

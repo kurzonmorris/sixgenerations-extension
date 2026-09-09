@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-09 | **118 features accepted** and five forks answered (`doyouwantfeatures.md`). Added §2A — the operator's own setup and workflow, in his words. eBay settled as API-in-container; Vinted stays browser-based for at least 8 months; the dashboard layout is specified in `docs/INTERFACE_LAYOUT.md` |
 
 ---
 
@@ -75,6 +76,88 @@ backgroundServiceWorker.js       (the coordinator; the only place Shopify calls 
 `core/` never imports `connectors/` — except `syncRunner.js`, the one place the
 two meet. That rule is what lets the matching logic be tested in Node with no
 browser.
+
+---
+
+# 2A. The setup this runs in — told to us, not guessed
+
+Answers given 2026-09-09. These are facts about how the business actually
+operates, and several of them change design decisions.
+
+## 2A.1 The accounts
+
+| Thing | State |
+|---|---|
+| **Vinted account** | **Private, not business.** *"It will change eventually but not for at least 8 months."* So the tab-based reader stays, and the Vinted connector must be shaped so the official Pro API can replace it later without disturbing anything else |
+| **eBay** | To be driven by the **Sell API from the container**, not the browser: *"where possible I'd rather use the API on a container"*. The client secret lives in the container's secrets file |
+| **Shopify** | Admin GraphQL, already working |
+| **Crosslist** | Currently paid for. To be replaced |
+
+## 2A.2 The SKU *is* the storage code
+
+Against D-029 (a permanent internal id):
+
+> *"we use an sku system box column, box, item ex. 7-4 21"*
+
+So `7-4 21` and `13-8 24` are the same convention, and it is understood in the
+business as **the SKU**. Two consequences:
+
+- The words matter. On screen it should be called **the SKU**, not "the storage
+  code" or "the pairing key" — those are this project's words, not the
+  business's.
+- It is still a *location*, so it still changes when a garment is re-boxed
+  (§7.6). The internal permanent id sits underneath it and is never shown.
+
+## 2A.3 Files, and the tools that open them
+
+| Fact | Consequence |
+|---|---|
+| *"we use libre office not microsoft so make it compatable with calc"* | Exports are tested in **LibreOffice Calc**. UTF-8 CSV with a proper separator, and any `.xlsx` written in a way Calc opens cleanly |
+| *"the current [orders] file needs remaking"* | **An orders file already exists.** It should be obtained and used as the starting shape rather than replaced blind |
+| `orders.csv` *"will be bigger as it will be used to analyse profit and loss"* | It is not a thin index — it is the profit-and-loss working file |
+| Google Sheet: *"not just updates itself but also is read to update other systems"* | **Two-way.** The sheet is an input, not just an output — purchases get typed there |
+| *"purchases.csv … needs to be updated in conjunction with the google sheet as that is likely where the user will add things"* | The purchase side is entered on a phone, in Sheets, and read back by the container |
+
+## 2A.4 The server and the network
+
+| Fact | Consequence |
+|---|---|
+| *"security is also very important with regular onsite and offsite backups [onsite use server, offsite use pcloud]"* | Backups are a first-class feature: nightly, onsite to the server, offsite to **pCloud**, and restorable |
+| *"I use tail scale across all my devices"* | **Nothing needs exposing to the internet.** Tailscale gives the phone access to the container without a public port, which answers Q31 the safe way |
+| Unraid now, **HexOS** later | One container, one compose file, no host-specific anything |
+
+## 2A.5 Where the work physically happens
+
+> *"the input of new entries happens next to the box's but the lable printing and
+> packing happens at a desk, still using a phone but there is a laptop or windows
+> tablet if needed."*
+
+Two different screen shapes, not one compromise — see
+`docs/INTERFACE_LAYOUT.md §6`.
+
+## 2A.6 What happens when something sells
+
+> *"when manualy instigated it should show the plan but if it's an item has sold
+> it should auto delist but keep it in a holding place until it has been
+> confirmed that it has been sold so it can be reversed if there is a mistake"*
+
+This is a genuinely good design and it is not what most tools do. It becomes
+**X-06, the reversible holding area**:
+
+1. A sale is detected on one platform.
+2. The item is delisted everywhere else **immediately** — the risk of not doing
+   so is a double sale.
+3. The delisted listings go into a **holding state**, not the bin: everything
+   needed to restore them is kept.
+4. When the sale is confirmed, the hold is released and the item is archived.
+5. If the sale falls through or was misread, **one press puts it all back**.
+
+And, from D-075:
+
+> *"if an item is sold at same time on multiple sites, inform user urgently to
+> manualy resolve the issue."*
+
+A double sale is the one event allowed to be loud.
 
 ---
 

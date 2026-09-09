@@ -13,8 +13,8 @@ sixgenerations-extension/
 │                                 things found but not used. Updated with EVERY change
 ├── FEATURE_six-generations_creep.md         ★★ Everything the system does today (Part A) plus
 │                                 everything planned or floated. Check before building
-├── doyouwantfeatures.md         252 features awaiting a yes/no. Ticked ones move into the
-│                                 creep file
+├── doyouwantfeatures.md         252 features. 118 answered yes on 2026-09-09; sections
+│                                 11-24 still unmarked. Holds Kurzon's own notes verbatim
 ├── README.md                    Start here: what this is, how to install, how to run it
 ├── .gitignore
 │
@@ -66,6 +66,8 @@ sixgenerations-extension/
 │   └── versionConsistency.test.mjs   Fails if the version drifts between its four homes
 │
 └── docs/
+    ├── INTERFACE_LAYOUT.md          ★ The dashboard and left menu, as asked for. What is on
+    │                                 each screen, and why the three sites cannot be embedded
     ├── SYSTEM_ARCHITECTURE.md        ★ Extension vs Docker container, and why Vinted cannot
     │                                 move to the server. The whole flow, end to end
     ├── DATA_MODEL.md                ★ Items, multiple sizes/colours/categories per item,

@@ -12,6 +12,64 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-09
+
+From the returned `doyouwantfeatures.md`. Details in
+`EXPLAINED_six-generations_Extension.md` §2A.
+
+- **Q15 eBay: API or tab** → **API, from the container.** *"Where possible I'd
+  rather use the API on a container."* The client secret lives in the container's
+  secrets file. Settled.
+- **Q19 Where the ledger lives** → **All three.** Database in the container, CSVs
+  exported for LibreOffice Calc, and a **two-way Google Sheet** for purchases
+  typed on a phone next to the boxes.
+- **Q22 Vinted account type** → **Private, not business.** *"It will change
+  eventually but not for at least 8 months."* So the browser route stays, and the
+  Vinted connector is shaped so the Pro API can drop in later.
+- **Q25 Who enters purchases, and where** → In the Google Sheet, on a phone,
+  next to the boxes. Packing and label printing happen at a desk.
+- **Q26 Database or CSV** → Database, CSVs exported. Confirmed by D-043.
+- **Q28 Automatic or approved** → **Both, and better than either.** A manual run
+  shows the plan first. A sale delists everywhere immediately **into a reversible
+  holding area**, and is only finalised once the sale is confirmed. Now X-06.
+- **Q31 Reachable from outside** → **Tailscale**, so nothing is exposed publicly
+  and the phone still reaches it. Best possible answer.
+- **The dashboard** → specified in full. See `docs/INTERFACE_LAYOUT.md`.
+
+---
+
+# Answer these next — new on 2026-09-09
+
+## Q34 — What does "To table" mean?
+
+It is the first item on the left menu, so it needs a definition. Items waiting to
+be photographed? Waiting to be entered into the system? Something else?
+
+## Q35 — The existing orders file
+
+You said the current one *"needs remaking"*. **Send it.** The replacement should
+be built from the shape you already use, so nothing you rely on goes missing.
+
+## Q36 — Sections 11 to 24 of the feature list
+
+They came back with no checkboxes at all — 134 items covering notifications,
+money, analytics, automation, the interface, bulk editing, safety, the server,
+privacy, the Crosslist migration and the physical workflow. You wrote notes in
+that range, so it was read.
+
+Quickest way to close it: **"yes to everything in 11-24"**, or name the ones you
+do not want. Several are already implied by what you have written elsewhere —
+notifications, profit and loss, backups, Tailscale.
+
+## Q37 — Does the dashboard suit the person who uses it?
+
+`INTERFACE_PRINCIPLES.md` U-01 says no dashboard. You have asked for one, and it
+is being built as asked. It is worth showing her the layout in
+`docs/INTERFACE_LAYOUT.md §2` before it is built — if ten numbers on one screen
+is too much, the fix is small and much cheaper now than later.
+
+---
+
 # Answered — 2026-08-05
 
 - **Q8 Shopify domain** → `1kaa6a-ua.myshopify.com`, storefront
@@ -53,6 +111,8 @@ away. The build order is in `FEATURE_SPECIFICATION.md §4`.
 folder.
 
 ## Q15 — eBay: API or tab? The big one
+
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
 
 Full detail in `PROJECT_INFO.md §3.2`. eBay has a proper API, but refreshing the
 token every 2 hours needs a client secret, and an extension cannot keep a secret.
@@ -99,6 +159,8 @@ and stay live on eBay until morning.
 
 ## Q19 — Where does the spreadsheet live?
 
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
+
 Options and trade-offs in `LEDGER_DESIGN.md §3`.
 
 1. **Google Sheets** — live, works from a phone, extension-friendly OAuth.
@@ -133,6 +195,8 @@ This changes the shape of the Purchases sheet, so it is worth settling early.
 
 ## Q22 — Private or business Vinted account?
 
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
+
 Two consequences, both large:
 
 - **Fees.** UK private sellers pay no selling fee; business (Pro) accounts do.
@@ -157,6 +221,8 @@ switched.
 
 ## Q25 — Where does the "purchase" side come from?
 
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
+
 Purchases have to be typed by someone — no platform provides them. Who types
 them, when, and on what device? If it is on a phone at a car boot sale, that
 alone decides Q19 in favour of Google Sheets.
@@ -164,6 +230,8 @@ alone decides Q19 in favour of Google Sheets.
 ---
 
 ## Q26 — Database or CSV as the store?
+
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
 
 `docs/SYSTEM_ARCHITECTURE.md §5` argues: **SQLite is the store, CSVs are
 exports.** At 100,000 items a pile of CSVs stops working, and "cut a row from one
@@ -187,6 +255,8 @@ Option 1 with option 2 as the fallback is the obvious answer unless the machine
 running Chrome cannot reach the server.
 
 ## Q28 — Automatic, or automatic with approval?
+
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
 
 Per action type, probably:
 
@@ -214,6 +284,8 @@ possible, then trim the address and the message bodies, keeping the money.
 Not legal advice — worth deciding deliberately rather than by accident.
 
 ## Q31 — Is the web interface reachable from outside the house?
+
+> **Answered 2026-09-09.** See the top of this file. Kept for the reasoning.
 
 Home network only is simpler and safer. Reachable from a phone anywhere is more
 useful when standing at a car boot sale, and needs a password in front of it.

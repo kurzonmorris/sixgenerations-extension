@@ -7,6 +7,38 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-09 · scope: 118 features accepted, and the dashboard
+
+**Documents only. No code changed.** `doyouwantfeatures.md` came back marked up,
+with notes that change several design decisions.
+
+- **118 of 252 features accepted** (D-001 to D-120, less D-084 and D-106).
+  Sections 11–24 came back with no checkboxes at all and are still open — Q36.
+- **The SKU and the storage code are the same thing.** `7-4 21` = column 7, box 4,
+  item 21, and the business calls it the SKU. Screens should use that word.
+- **eBay is settled: the Sell API, from the container.**
+- **Vinted is settled for now: private account, browser session**, and not a
+  business account for at least 8 months — so the Pro API is a later migration,
+  and the connector should be shaped for it.
+- **Sold → delist everywhere → reversible holding area** (X-06), Kurzon's own
+  design and better than what the paid tools do. A simultaneous sale on two
+  platforms is the one alert allowed to be loud (X-07).
+- **Tailscale** answers remote access without exposing anything (S-12).
+  **pCloud** is the offsite backup (S-11). **LibreOffice Calc**, not Excel, is
+  what exports must open in (S-13). The **Google Sheet is two-way** (S-14).
+- New: **`docs/INTERFACE_LAYOUT.md`** — the dashboard and left menu exactly as
+  asked for, with two problems stated plainly: it contradicts the
+  one-screen-one-job rule written for the daily user (Q37), and Vinted, eBay and
+  Shopify will almost certainly refuse to be loaded inside another page, so the
+  site links open tabs instead.
+- `EXPLAINED` gained §2A, the operator's own setup and workflow in his words.
+- `OPEN_QUESTIONS.md`: Q15, Q19, Q22, Q25, Q26, Q28 and Q31 answered; Q34–Q37
+  added.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
 ## Unreleased — 2026-09-08 · scope: the system grows a server
 
 **Documents only. No code changed.** The project turned from a browser extension
