@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-10 | **`sixgenbot` planned** — six stages, module contract, stack. `docs/SIXGENBOT_PLAN.md`. Nothing built yet; Q42–Q45 decide repo, version, framework and stage order |
 | 2026-09-09 (4) | **The SKU is permanent and never recycled** — a returned item keeps its number and goes back in the same box. Item numbers run to five digits. **This exposed a real bug: the parser only accepted four**, so `5-6 17735` would not have parsed. Fixed in `storageCode.js` and the content-script copy, with a test. Dashboard purpose confirmed |
 | 2026-09-09 (3) | **All 252 features answered** — 239 yes, 13 no, read straight from the Google Doc (checkbox state survives only a markdown export). D-173 and D-174 declined, which settles the dashboard question. **Listing throughput confirmed at 3–6 items a day** — added as §2A.9, and it reframes the whole build order |
 | 2026-09-09 (2) | **The real ledger read** — `six_generations_2.xlsx`, 63 monthly sheets, 2,864 sales, £11,010.77 since Oct 2021. Full analysis in `docs/EXISTING_LEDGER.md`. "The Table" defined as the searchable item grid. The re-sent PDF carried the same 118 ticks as the .odt |

@@ -66,6 +66,7 @@ idea does not come round again.
 |---|---|
 | `EXPLAINED_six-generations_Extension.md` | **First, every session.** What is known and how it works |
 | `FEATURE_six-generations_creep.md` | **Before building anything.** It may already exist |
+| `docs/SIXGENBOT_PLAN.md` | **Before writing any Python.** The stages, the module contract, the stack, and the rules that keep modules from breaking each other |
 | `docs/SYSTEM_ARCHITECTURE.md` | Before any structural work. Extension vs container, and why |
 | `docs/DATA_MODEL.md` | Before touching item fields, images, or the CSVs |
 | `docs/INTERFACE_LAYOUT.md` | Before building any screen. The dashboard and menu, as asked for |

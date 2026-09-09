@@ -7,6 +7,32 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-10 · sixgenbot planned
+
+**Documents only. No code changed.**
+
+- **`docs/SIXGENBOT_PLAN.md`** — how the Python service gets built. Six stages,
+  each ending in something that works on its own: skeleton → database → import →
+  web interface → Vinted read → Vinted write. Vinted only; eBay and Shopify wait.
+- **One correction to the proposed order**: database and import before the web
+  interface, because the Table's search cannot be judged over an empty table and
+  the dashboard cannot be judged without real numbers. A browser page still
+  exists at the end of stage 1.
+- **The module contract**: one folder per feature with a `module.py` exposing
+  `NAME`, `VERSION` and `register(bot)`. Three rules do the work — modules never
+  import each other, `core/` never imports a module, and they communicate through
+  the database and an event bus. A test enforces the first, so it cannot rot.
+- **Stack recommended**: FastAPI + Jinja + SQLite/SQLAlchemy + APScheduler,
+  synchronous endpoints, one container. Server-rendered HTML, no JavaScript
+  framework, no build step — which is most of the "nothing moves" requirement met
+  by construction. Flask offered as the plainer alternative.
+- Q42–Q45 added: one repo or two, sixgenbot's starting version, FastAPI or Flask,
+  and whether to correct the stage order.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
 ## Unreleased — 2026-09-09 (4) · the SKU is permanent, and a bug that found
 
 **One code fix**, and it matters: `source/core/storageCode.js` and the

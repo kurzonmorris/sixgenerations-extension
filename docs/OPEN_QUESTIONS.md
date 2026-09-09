@@ -12,6 +12,42 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answer these next — before sixgenbot is written
+
+Full reasoning in `docs/SIXGENBOT_PLAN.md`.
+
+## Q42 — One repo or two?
+
+Proposal: **this repo**, with sixgenbot in a new top-level folder beside the
+extension. They have to stay in step (the extension posts to the bot), the docs
+are already here, and one commit can change both. The repo *name* becomes wrong,
+but renaming on GitHub is painless and redirects old links.
+
+## Q43 — What version does sixgenbot start at?
+
+`v_0.1.0` unless told otherwise — and the standing rule is that a version number
+is never picked without being given it.
+
+Related: **Python cannot import a file called `vintedReader.py_v1.0.0`** — the
+dots break the import. So each module carries `VERSION = "v_0.1.0"` inside
+`module.py` instead of in its filename. Say if you want it the other way and it
+means a loader that imports by path rather than by name.
+
+## Q44 — FastAPI or Flask?
+
+FastAPI recommended: routers are per-module by design, and it validates whatever
+the extension posts. Flask is a little plainer to read with no validation layer.
+Either way: server-rendered HTML, no JavaScript framework, no build step.
+
+## Q45 — Stage order
+
+`SIXGENBOT_PLAN.md §1` suggests swapping the web interface and the database, so
+the screens are built over 2,000 real garments rather than an empty table. You
+still get a page in a browser at the end of stage 1. Your order works too — it
+just costs some rework on the screens.
+
+---
+
 # Answered — 2026-09-09 (fourth pass)
 
 - **D-248 / Q11 the SKU and re-boxing** → **The SKU is permanent and never

@@ -68,6 +68,9 @@ sixgenerations-extension/
 └── docs/
     ├── INTERFACE_LAYOUT.md          ★ The dashboard and left menu, as asked for. What is on
     │                                 each screen, and why the three sites cannot be embedded
+    ├── SIXGENBOT_PLAN.md            ★ How the Python service gets built: six stages, the
+    │                                 module contract, the stack, and the three rules that
+    │                                 stop features breaking each other
     ├── SYSTEM_ARCHITECTURE.md        ★ Extension vs Docker container, and why Vinted cannot
     │                                 move to the server. The whole flow, end to end
     ├── DATA_MODEL.md                ★ Items, multiple sizes/colours/categories per item,
