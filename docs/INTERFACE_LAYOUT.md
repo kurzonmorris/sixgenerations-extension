@@ -77,13 +77,12 @@ Your list, plus the ones the workflow needs.
 
 ```
   TODAY
-    To table            items waiting to be listed          ← meaning to confirm
     To review           missing information before listing
     To post             sold, waiting to go in a bag
 
   ITEMS
-    All items           search and filter everything
-    Boxes               what is in each storage box
+    The Table           every item, searchable and editable   ← see §4
+    Boxes               what is in each box, and what is free
     Sold
     Archive
 
@@ -106,11 +105,78 @@ Your list, plus the ones the workflow needs.
 - The menu never reorders itself and never hides items based on what is in them.
 - The item you are on is marked with a word or a solid marker, never by colour
   alone.
-- **"To table"** — this needs a definition before it can be built. Items waiting
-  to be photographed? Waiting to be entered? It is the first thing on the menu,
-  so it is worth getting right.
+- **"The Table"** was "To table" in the first sketch. Defined on 2026-09-09:
 
-## 4. The three site links — and why they cannot be embedded
+  > *"The table is a way to search the items. Sometimes people ask 'do you have
+  > an item with x in it' and we want a way to look through every item. Crosslist
+  > has a way to see all the items it is storing for search and editing — I want
+  > something similar."*
+
+  Specified in §4. It is the most-used screen in the system.
+
+## 4. The Table — every item, searchable and editable
+
+The screen that answers *"do you have anything with X in it?"* while the customer
+is still standing there. Crosslist's inventory grid is the reference; this needs
+to do the same job at 2,000 items today and 100,000 later.
+
+### 4.1 The search box is the point
+
+One box at the top. Type anything, get matches from **every** field at once:
+
+- Title, description, brand, colour, material, category
+- **SKU** — `13-8` finds everything in that box; `13-8 24` finds the one item
+- Private notes, and the buyer's name on a sold item
+- Partial words: `velv` finds "velvet". Misspellings within reason: `cardigan`
+  should still find `cardgan` if that is what was typed on the day
+
+Results appear when the search is submitted, not while typing — a list that
+reshuffles on every keystroke is exactly the movement U-03 forbids.
+
+### 4.2 What a row shows
+
+| Column | Why |
+|---|---|
+| Thumbnail | Recognising a garment by sight is faster than by name |
+| **SKU** | It is how the item is found in the room |
+| Title | |
+| Size | The main one; the rest on the item |
+| Price | |
+| Status | In words: *on sale*, *to review*, *sold*, *posted*, *archived* |
+| Where it is listed | Vinted / eBay / Shop — as words or ticks, never colour alone |
+| Age | How long it has been listed |
+
+Columns can be turned off, and the choice is remembered.
+
+### 4.3 Filters, down the side
+
+Platform · status · size · brand · colour · category · box · price range · age ·
+has photos · missing information. Every filter states what it is doing in words
+above the results: *"On sale, size 12, not on eBay — 34 items."*
+
+### 4.4 Editing, in place
+
+- Click a cell, change it, press enter. No modal, no separate edit page.
+- A change is saved when it is confirmed, never on blur, never on hover.
+- **Every edit says where it will go** before it is applied: *"Price £12 → £10.
+  Will update Vinted and eBay."*
+- Select several rows and change one field on all of them (D-189).
+- Undo the last change from the same screen (D-198).
+
+### 4.5 At 100,000 items
+
+- Server-side search and paging. Nothing loads the whole table.
+- Fixed page size with plain paging — no infinite scroll, which is both a
+  movement problem and a way to lose your place.
+- The result count is always shown, so "2,041 items" is never a guess.
+- Sorting is a choice, not a default that changes under you.
+
+### 4.6 Not on this screen
+
+No charts, no totals bar, no "recently viewed", no suggestions. It is a list and
+a search box. Everything else has its own screen.
+
+## 5. The three site links — and why they cannot be embedded
 
 You asked for Vinted, eBay and Shopify to load **inside** the web interface.
 
@@ -135,7 +201,7 @@ Three ways to have it anyway:
 A and B together give you almost everything embedding would, and cost nothing.
 C stays on the list if it still matters once the rest works.
 
-## 5. The Console view
+## 6. The Console view
 
 A screen that shows what the container is doing without opening a terminal.
 
@@ -147,7 +213,7 @@ A screen that shows what the container is doing without opening a terminal.
 - Never the first thing anyone sees, and never a live tail on the home page — a
   scrolling log is exactly what U-03 exists to prevent.
 
-## 6. Two shapes, not one
+## 7. Two shapes, not one
 
 From your answer about where the work happens:
 
@@ -160,14 +226,13 @@ The same screens should not try to be both. The item-entry queue is a phone
 screen that happens to work on a laptop; the packing list is a desk screen that
 happens to survive on a phone.
 
-## 7. Screens behind each menu item
+## 8. Screens behind each menu item
 
 | Menu item | Screen |
 |---|---|
-| To table | Items in the earliest stage, ready to be worked through one at a time |
+| The Table | Every item, searchable and editable — §4 |
 | To review | The missing-information queue: one item, only the fields that are missing (D-096, D-097) |
 | To post | Sold and unposted, with the Posted button and the parcel photo (D-107) |
-| All items | Search, filter, and bulk change (D-186 to D-189) |
 | Boxes | What is in each storage code, and what is free (D-245, D-248) |
 | Sold / Archive | The record, searchable |
 | Sales / Purchases / Totals | The money screens (D-141 onwards) |

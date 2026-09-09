@@ -167,7 +167,12 @@ New features that came out of those answers:
 | **U-12** | ❓ | **Links out to Vinted / eBay / the shop.** Embedding them in the page will almost certainly be refused by those sites — see `INTERFACE_LAYOUT.md §4` |
 | **F-28** | 📋 | Read views, likes, offers and listing age from Vinted |
 | **F-29** | 📋 | Read the Vinted category tree once and keep it |
-| **L-11** | 📋 | Import the existing orders file rather than replacing it blind |
+| **L-11** | 📋 | **Import the existing ledger** — 63 monthly sheets, 2,864 sales, five years. `docs/EXISTING_LEDGER.md` |
+| **L-12** | 📋 | **Petrol and posting trips in the profit calculation**, exactly as the sheet already does it: `trips × 0.959 × price per litre`, and profit = sold − (stock + petrol). This is existing behaviour, not a new feature |
+| **L-13** | 📋 | **Recreate the monthly sheet as an export**, with the same totals, so nothing is lost by moving off it |
+| **L-14** | 📋 | **The SKU on every sale record** — the missing link that makes profit-per-item, time-to-sell and per-platform comparison possible at all |
+| **U-13** | 📋 | **The Table** — every item, one search box across every field, filters, in-place editing, at 100,000 rows. `docs/INTERFACE_LAYOUT.md §4`. The most-used screen in the system |
+| **X-08** | 📋 | **Clear the unlisted backlog** — roughly 3,000 items bought and never listed. Stock already paid for |
 
 **Still unanswered:** sections 11–24 of `doyouwantfeatures.md` (D-121 to D-252)
 came back with no checkboxes at all — notifications, money, analytics,

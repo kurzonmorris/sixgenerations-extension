@@ -12,6 +12,54 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-09 (second pass)
+
+- **Q34 What "To table" means** → **The item grid.** *"A way to search the items…
+  Crosslist has a way to see all the items it is storing for search and editing —
+  I want something similar."* Specified as `docs/INTERFACE_LAYOUT.md §4`, and it
+  is the most-used screen in the system.
+- **Q35 The existing orders file** → **Received:** `six_generations_2.xlsx`. 63
+  monthly sheets, 2,864 sales, £11,010.77 since October 2021. Analysed in
+  `docs/EXISTING_LEDGER.md`.
+- **Q21 Job lots** → answered by the file rather than in words: 8,196 items for
+  £2,234.35. Lots are the normal case and per-item cost is always apportioned.
+- **Q36 Sections 11–24** → **still open.** The re-sent PDF carries exactly the
+  same 118 ticks as the .odt: D-121 to D-252 have no checkbox in the source file
+  at all, so there was nothing to tick. The boxes are now written as `( )` in
+  `doyouwantfeatures.md` so they survive the next export.
+
+---
+
+# Answer these next — from the ledger
+
+## Q38 — What are `Ava sales` and `James toys`?
+
+Two sheets sitting alongside the monthly ones — 19 sales / £223.27 and 27 sales /
+£168.80. A different seller, a different category, or someone else's stock? It
+decides whether they are part of the same books or kept separate.
+
+## Q39 — Import all five years, or start clean?
+
+2,864 historic sales can be imported so the totals and history carry over, or
+left in the spreadsheet as an archive and the new system starts from today.
+Importing is the better answer if the history is ever wanted for tax or for
+"what sells".
+
+## Q40 — Is the petrol calculation still right?
+
+The formula is `trips × 0.959 × price per litre`, with £1.40 in the recent
+months. Is 0.959 litres per posting trip still accurate, and should the price per
+litre be updated by hand each month or held as a setting?
+
+## Q41 — The unlisted backlog
+
+The ledger says roughly **5,332 items bought and not yet sold**, against about
+2,000 listed on Vinted — so on the order of **3,000 items bought and never
+listed**. Is that right? If it is, clearing it is worth more than any other
+feature here, and the system should be built around that queue.
+
+---
+
 # Answered — 2026-09-09
 
 From the returned `doyouwantfeatures.md`. Details in
@@ -42,10 +90,14 @@ From the returned `doyouwantfeatures.md`. Details in
 
 ## Q34 — What does "To table" mean?
 
+> **Answered 2026-09-09.** See the top of this file.
+
 It is the first item on the left menu, so it needs a definition. Items waiting to
 be photographed? Waiting to be entered into the system? Something else?
 
 ## Q35 — The existing orders file
+
+> **Answered 2026-09-09.** See the top of this file.
 
 You said the current one *"needs remaking"*. **Send it.** The replacement should
 be built from the shape you already use, so nothing you rely on goes missing.
@@ -184,6 +236,8 @@ is a starting point, not an answer.
 - Light or dark? Bigger text?
 
 ## Q21 — Job lots: how is cost split?
+
+> **Answered 2026-09-09.** See the top of this file.
 
 A £40 bin bag of 30 garments has no per-item price.
 

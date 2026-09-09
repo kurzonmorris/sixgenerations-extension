@@ -38,7 +38,8 @@ custom app and the Vinted session.
 | **[EXPLAINED_six-generations_Extension.md](EXPLAINED_six-generations_Extension.md)** | **The project's memory.** How the code works, which lines matter, every platform fact, every trap, and a parking lot of things found but not used |
 | **[FEATURE_six-generations_creep.md](FEATURE_six-generations_creep.md)** | **Everything the system does today**, plus everything planned. Check here before asking for something twice |
 | **[doyouwantfeatures.md](doyouwantfeatures.md)** | 252 possible features — 118 answered yes, with Kurzon's own notes; sections 11–24 still open |
-| **[docs/INTERFACE_LAYOUT.md](docs/INTERFACE_LAYOUT.md)** | The dashboard and left menu, as asked for |
+| **[docs/INTERFACE_LAYOUT.md](docs/INTERFACE_LAYOUT.md)** | The dashboard, the left menu and the item Table, as asked for |
+| **[docs/EXISTING_LEDGER.md](docs/EXISTING_LEDGER.md)** | Five years of real books, analysed — and what the new system must not lose |
 | **[docs/SYSTEM_ARCHITECTURE.md](docs/SYSTEM_ARCHITECTURE.md)** | Extension vs Docker container, and why Vinted cannot move to the server |
 | **[docs/DATA_MODEL.md](docs/DATA_MODEL.md)** | Items with several sizes, colours and categories at once; images; orders; the four CSVs |
 | **[docs/CLAUDE_BROWSER_TASKS.md](docs/CLAUDE_BROWSER_TASKS.md)** | Ready-to-paste prompts for gathering facts from the live sites |

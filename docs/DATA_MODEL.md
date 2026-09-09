@@ -134,7 +134,8 @@ demand and are disposable.
 | Column | Notes |
 |---|---|
 | `purchase_id`, `date`, `source`, `total_cost`, `notes` | Typed by hand — no platform provides this |
-| `lot_id`, `lot_cost`, `item_count`, `apportionment_method` | Job lots: even split, weighted, or lot-level only (Q21) |
+| `lot_id`, `lot_cost`, `item_count`, `apportionment_method` | **Job lots are the normal case, not the exception** — the real ledger shows 8,196 items bought for £2,234.35, about £0.27 each. Per-item cost is always derived |
+| `trip_id`, `date`, `trips`, `litres_per_trip`, `price_per_litre` | **Posting trips and petrol.** Already in the existing books as `trips × 0.959 × price per litre`, and part of how profit is worked out. See `EXISTING_LEDGER.md §3` |
 
 ### 2.9 `event` — the audit trail
 

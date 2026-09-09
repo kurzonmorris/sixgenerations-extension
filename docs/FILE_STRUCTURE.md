@@ -80,6 +80,9 @@ sixgenerations-extension/
     ├── PROJECT_INFO.md               ★ API and web-code reference. Researched once, kept here
     ├── INTERFACE_PRINCIPLES.md       ★ The rules the screens must follow. Not decoration —
     │                                 the daily user has autism, ADHD and sensory needs
+    ├── EXISTING_LEDGER.md           ★ The real books, analysed: six_generations_2.xlsx, 63
+    │                                 monthly sheets, 2,864 sales since Oct 2021, job lots,
+    │                                 petrol in the profit formula, and no SKU anywhere
     ├── LEDGER_DESIGN.md              The purchases and sales spreadsheet: columns, where it
     │                                 lives, what each platform can actually tell us
     ├── CROSS_LISTING_TOOLS_RESEARCH.md  Prior art — Vendoo, List Perfectly, Crosslist and the

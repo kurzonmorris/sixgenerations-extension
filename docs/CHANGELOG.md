@@ -7,6 +7,38 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-09 (2) · scope: the real books, and the Table
+
+**Documents only. No code changed.**
+
+- **The existing ledger arrived and was analysed** — `six_generations_2.xlsx`,
+  63 monthly sheets, **2,864 sales, £11,010.77 since October 2021**, and 8,196
+  items bought for £2,234.35. Written up as **`docs/EXISTING_LEDGER.md`**. Three
+  findings change the design:
+  - **Job lots are the normal case** (£0.27 an item), so per-item cost is always
+    apportioned.
+  - **Petrol is already in the profit formula** — `trips × 0.959 × price per
+    litre`, and profit = sold − (stock + petrol). D-149 was sitting unanswered in
+    the feature list when it is in fact existing behaviour.
+  - **No SKU anywhere in the ledger.** Sales are free-text names, so nothing can
+    be joined to a listing. Putting the SKU on the sale record is what unlocks
+    profit-per-item, time-to-sell and per-platform comparison (L-14).
+  - Also visible: roughly **3,000 items bought and never listed**, and tracking
+    numbers recorded on **1%** of sales.
+- **"The Table" defined** — not a workflow stage but the item grid: one search
+  box across every field, filters, in-place editing, at 100,000 rows. Specified
+  as `docs/INTERFACE_LAYOUT.md §4` and it is the most-used screen in the system.
+  The left menu was corrected to match.
+- **The re-sent PDF carries the same 118 ticks as the .odt.** The problem was not
+  the export: D-121 onwards have no checkbox in the source at all. The open items
+  in `doyouwantfeatures.md` now use `( )` boxes, which survive the conversion.
+- Q21, Q34 and Q35 answered; Q38–Q41 added (the two side sheets, whether to
+  import five years of history, the petrol constants, and the unlisted backlog).
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
 ## Unreleased — 2026-09-09 · scope: 118 features accepted, and the dashboard
 
 **Documents only. No code changed.** `doyouwantfeatures.md` came back marked up,

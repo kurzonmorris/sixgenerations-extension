@@ -31,13 +31,14 @@ that way and why Vinted cannot move to the server.
 daily has autism, ADHD and sensory sensitivities: a busy screen makes the tool
 unusable. `docs/INTERFACE_PRINCIPLES.md` overrides normal UI convention.
 
-**The pairing key is the SKU** — which in this business *is* the storage code
-(`13-8 24` = column 13, box 8, item 24; `7-4 21` = column 7, box 4, item 21).
-**Call it "the SKU" on screen**, because that is what the business calls it.
-at the end of every listing description. Not the SKU field — that is only on some
-items. Confirmed on Vinted and Shopify; **whether eBay carries it is Q16**, and
-on eBay it may belong in the SKU field instead (`docs/PROJECT_INFO.md §3.5`).
-See `docs/PROJECT_INFO.md §2A`.
+**The pairing key is the SKU** — which in this business *is* the storage code:
+`13-8 24` means column 13, box 8, item 24, and `7-4 21` means column 7, box 4,
+item 21. It sits at the **end of every listing description**, and it is on every
+item, which is what makes it a better key than Shopify's SKU field (populated on
+only some) or title matching (a guess). **Call it "the SKU" on screen** — that is
+what the business calls it. Whether eBay's listings carry it is Q16; on eBay it
+probably belongs in the SKU field itself (`docs/PROJECT_INFO.md §3.5`). Details
+in `docs/PROJECT_INFO.md §2A`.
 
 ## The two files that must never go stale
 
@@ -64,6 +65,7 @@ idea does not come round again.
 | `docs/PROJECT_INFO.md` | **Before any API work.** Endpoints, headers, mutations, rate limits, bot protection, field names. Researched already — do not go looking again. §3 (eBay) is unverified — read it before believing it |
 | `docs/INTERFACE_PRINCIPLES.md` | **Before touching any screen.** Non-negotiable |
 | `docs/LEDGER_DESIGN.md` | Before any purchases/sales work |
+| `docs/EXISTING_LEDGER.md` | **Before any money work.** Five years of real books: 2,864 sales, job lots, petrol in the profit formula, and no SKU anywhere |
 | `docs/CROSS_LISTING_TOOLS_RESEARCH.md` | Prior art. Worth ten minutes before designing a feature from scratch |
 | `docs/OPEN_QUESTIONS.md` | **At the start of a session.** Decisions taken without an answer. Check whether any have been settled |
 | `docs/FILE_STRUCTURE.md` | Before adding a file, or when looking for where something lives |

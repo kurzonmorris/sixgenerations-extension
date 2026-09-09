@@ -1,7 +1,15 @@
 # Ledger Design — purchases and sales
 
 The spreadsheet side: what a garment cost, what it sold for, where, and what was
-left. Everything here is a **proposal**. Q19 and Q21–Q23 decide it.
+left.
+
+> **Read `docs/EXISTING_LEDGER.md` first.** The real books arrived on 2026-09-09
+> — five years, 2,864 sales, £11,010.77 — and they answer several of the
+> questions this file was written to ask. In particular: **job lots are the
+> normal case**, **petrol is already part of the profit formula**, and **nothing
+> in the current ledger can be joined to a listing** because there is no SKU on a
+> sale. The design below stands, with those three facts moved from "proposed" to
+> "required".
 
 ---
 

@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-09 (2) | **The real ledger read** — `six_generations_2.xlsx`, 63 monthly sheets, 2,864 sales, £11,010.77 since Oct 2021. Full analysis in `docs/EXISTING_LEDGER.md`. "The Table" defined as the searchable item grid. The re-sent PDF carried the same 118 ticks as the .odt |
 | 2026-09-09 | **118 features accepted** and five forks answered (`doyouwantfeatures.md`). Added §2A — the operator's own setup and workflow, in his words. eBay settled as API-in-container; Vinted stays browser-based for at least 8 months; the dashboard layout is specified in `docs/INTERFACE_LAYOUT.md` |
 
 ---
@@ -158,6 +159,34 @@ And, from D-075:
 > manualy resolve the issue."*
 
 A double sale is the one event allowed to be loud.
+
+## 2A.7 The books, as they actually are
+
+`six_generations_2.xlsx`, read 2026-09-09. Full analysis in
+`docs/EXISTING_LEDGER.md`. The facts that change decisions:
+
+| Fact | Consequence |
+|---|---|
+| **2,864 sales, £11,010.77, since October 2021** | Five years of history exists and should be imported, not abandoned |
+| **8,196 items bought for £2,234.35** — £0.27 each | **Job lots are the normal case.** Per-item cost is always an apportionment |
+| **≈5,332 bought and unsold**, against ~2,000 listed | Roughly **3,000 items bought and never listed.** The biggest single lever on income in the whole system |
+| **Profit = sold − (stock + petrol)**, by formula: `trips × 0.959 × price per litre` | **Petrol is already load-bearing.** D-149 "mileage and expenses" is not optional, it is existing behaviour |
+| Post date on 61% of sales, **tracking on 1%** | Typing tracking numbers by hand does not happen. Capturing them automatically is the whole value of D-108 |
+| **No SKU anywhere in the ledger** — sales are free-text names | Nothing can be joined to a listing. **Putting the SKU on the sale record unlocks every analysis feature** |
+| One sheet per month, rows capped at 81, dates as `d.m.yy` **text** | Import traps — see `EXISTING_LEDGER.md §5` |
+
+## 2A.8 What "the table" means
+
+Answered 2026-09-09:
+
+> *"The table is a way to search the items. Sometimes people ask 'do you have an
+> item with x in it' and we want a way to look through every item. Crosslist has a
+> way to see all the items it is storing for search and editing — I want something
+> similar."*
+
+So it is not a workflow stage. It is **the item grid**: search everything, filter,
+edit in place, at 100,000 rows. Specified in `docs/INTERFACE_LAYOUT.md §4`, and it
+is the most-used screen in the system.
 
 ---
 
@@ -565,7 +594,13 @@ listed at the bottom of that file.
 the messages endpoint. **Unverified here.** It is the likely source for the
 buyer/seller message copies the sold-items record needs.
 
-## 9.10 Cookie-auth fragility
+## 9.10 The two side sheets
+
+`Ava sales` (19 sales, £223.27) and `James toys` (27 sales, £168.80) sit
+alongside the monthly sheets in the ledger. Separate seller, separate category,
+or someone else's stock — unknown. Q38.
+
+## 9.11 Cookie-auth fragility
 
 Public write-ups on Vinted's internal API report that cookie sessions expire
 quickly and that scaling requests produces 403s. This is consistent with the

@@ -55,7 +55,7 @@ that exists, which is the basis of the whole data model.
 API replaces the fragile browser scraping, and orders and notifications come for
 free. It is the single biggest fork in the road.
 
-## Task 3 — Crosslist: get your data out, and find out what it keeps
+## Task 3 — Crosslist: get your data out, and copy the good bits of its table
 
 **Open:** your Crosslist account.
 
@@ -64,7 +64,11 @@ free. It is the single biggest fork in the road.
 > option is and what formats it offers. Then tell me exactly which columns the
 > export contains, with two example rows (you can blank out anything personal).
 > Then, from the listing edit screen, list every field Crosslist stores about an
-> item, and for each one say which marketplaces it maps that field to. Finally
+> item, and for each one say which marketplaces it maps that field to. Then open
+> the inventory table — the screen that lists everything it holds — and describe
+> it in detail: which columns it shows, what the search box searches, what
+> filters exist, whether rows can be edited in place, and how it handles
+> thousands of items (paging, scrolling, how long it takes). Finally
 > describe, as a user would see it, what happens when an item sells on one
 > marketplace — what it does on the others, how quickly, and whether it needs my
 > browser open. I am documenting what I would lose if I cancelled the
@@ -180,7 +184,7 @@ documentation for it anywhere.
 
 **Why:** the dashboard asks for these three to load inside the web interface.
 Marketplaces normally forbid it, and the answer decides between embedding and
-opening a tab. See `docs/INTERFACE_LAYOUT.md §4`.
+opening a tab. See `docs/INTERFACE_LAYOUT.md §5`.
 
 ## Task 11 — a sanity check on the interface
 

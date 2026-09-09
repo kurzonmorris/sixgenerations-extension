@@ -6,14 +6,20 @@ what was said, not a blank form.
 | Mark | Meaning |
 |---|---|
 | `[x]` | **Yes.** 118 of them. Now in `FEATURE_six-generations_creep.md` Part D |
-| `[?]` | **No answer given.** The returned file had no checkbox at all on these — sections 11–24 plus D-084 and D-106 lost their boxes somewhere between here and LibreOffice |
-| *(note)* | Kurzon's own words, kept verbatim in meaning. These change the design and are carried into the docs |
+| `( )` | **Still needs an answer.** 134 of them — sections 11 to 24, plus D-084 and D-106 |
+| *(note)* | Kurzon's own words. These changed the design and are carried into the docs |
 
-**The `[?]` ones still need a yes or no.** Notes were written against D-209, D-233
-and D-239, which are in that range — so the later sections were read, even though
-nothing was ticked there. Several of them are also already implied by the written
-answers at the bottom of this file. Fastest way to close it: say *"yes to
-everything in 11–24"*, or name the exceptions.
+**The PDF sent on 2026-09-09 carries exactly the same 118 ticks as the .odt.**
+The formatting problem was not in the export — the source file had **no checkbox
+at all** on D-121 onwards, so there was nothing there to tick. The boxes below
+are now written as `( )` instead of `[ ]`, because square brackets are what the
+markdown-to-document conversion swallowed.
+
+**Three ways to finish it, easiest first:**
+
+1. Reply *"yes to all of 11–24"*, and name any you do not want.
+2. Reply with just the numbers you want: *"D-128, D-130, D-141…"*.
+3. Mark this file again — the `( )` boxes should survive the trip this time.
 
 ★ = I would recommend it.
 
@@ -130,7 +136,7 @@ everything in 11–24"*, or name the exceptions.
 - [x] **D-081** Sizes and colours as proper variant options rather than text.
 - [x] **D-082** SEO title and description generated from the item.
 - [x] **D-083** ★ Read Shopify orders back for the accounts.
-- [?] **D-084** Publish to Shopify as a draft first, for a look before it goes live.
+- ( ) **D-084** Publish to Shopify as a draft first, for a look before it goes live.
 
 ## 8. Keeping all three in step
 
@@ -165,7 +171,7 @@ to use.)*
 
 ## 10. Orders, postage and delivery
 
-- [?] **D-106** ★ An order record the moment something sells, on any platform.
+- ( ) **D-106** ★ An order record the moment something sells, on any platform.
 - [x] **D-107** ★ A "Posted" button, with the parcel photo attached.
 - [x] **D-108** ★ Store the tracking number.
 - [x] **D-109** ★ Check tracking automatically until it is delivered.
@@ -183,180 +189,180 @@ to use.)*
 
 ## 11. Buyer messages
 
-- [?] **D-121** ★ Copy the whole conversation into the sale record.
-- [?] **D-122** Keep messages arriving after the sale, too.
-- [?] **D-123** ★ Tell you when a buyer has sent a message you have not answered.
-- [?] **D-124** Saved replies for the questions that come up constantly.
-- [?] **D-125** Search every message ever sent.
-- [?] **D-126** Flag messages that sound like a complaint.
-- [?] **D-127** Keep messages from all three platforms in one place.
+- ( ) **D-121** ★ Copy the whole conversation into the sale record.
+- ( ) **D-122** Keep messages arriving after the sale, too.
+- ( ) **D-123** ★ Tell you when a buyer has sent a message you have not answered.
+- ( ) **D-124** Saved replies for the questions that come up constantly.
+- ( ) **D-125** Search every message ever sent.
+- ( ) **D-126** Flag messages that sound like a complaint.
+- ( ) **D-127** Keep messages from all three platforms in one place.
 
 ## 12. Being told things
 
-- [?] **D-128** ★ Something sold.
-- [?] **D-129** ★ Something delivered.
-- [?] **D-130** ★★ A delivery is overdue.
-- [?] **D-131** ★★ Something is broken — a read failed, a token expired, a platform changed.
-- [?] **D-132** ★ Something sold twice.
-- [?] **D-133** An offer or a question came in.
-- [?] **D-134** A daily summary — sold, posted, delivered, waiting.
-- [?] **D-135** A weekly summary with the money in it.
-- [?] **D-136** ★ Choose the channel: phone push (ntfy), Telegram, Discord, email.
-- [?] **D-137** ★ Quiet hours — nothing at night.
-- [?] **D-138** Different urgency for different events.
-- [?] **D-139** Nothing sold in X days on an item — worth a price drop?
-- [?] **D-140** ★ Notifications never appear as pop-ups over the screen.
+- ( ) **D-128** ★ Something sold.
+- ( ) **D-129** ★ Something delivered.
+- ( ) **D-130** ★★ A delivery is overdue.
+- ( ) **D-131** ★★ Something is broken — a read failed, a token expired, a platform changed.
+- ( ) **D-132** ★ Something sold twice.
+- ( ) **D-133** An offer or a question came in.
+- ( ) **D-134** A daily summary — sold, posted, delivered, waiting.
+- ( ) **D-135** A weekly summary with the money in it.
+- ( ) **D-136** ★ Choose the channel: phone push (ntfy), Telegram, Discord, email.
+- ( ) **D-137** ★ Quiet hours — nothing at night.
+- ( ) **D-138** Different urgency for different events.
+- ( ) **D-139** Nothing sold in X days on an item — worth a price drop?
+- ( ) **D-140** ★ Notifications never appear as pop-ups over the screen.
 
 ## 13. Money
 
-- [?] **D-141** ★ Record what each item cost.
-- [?] **D-142** ★ Job lots — one price for a bag of thirty, split across the items.
-- [?] **D-143** Choose how the split works: evenly, or weighted by value.
-- [?] **D-144** ★ Profit per item, after fees and postage.
-- [?] **D-145** ★ Record platform fees where the platform tells us.
-- [?] **D-146** Never guess a fee — leave it blank instead.
-- [?] **D-147** ★ Value of everything still unsold.
-- [?] **D-148** ★ Totals by month, quarter and year.
-- [?] **D-149** Mileage and expenses — car boots, postage supplies.
-- [?] **D-150** An export shaped for a self-assessment tax return.
-- [?] **D-151** Which platform actually makes the most, after fees.
-- [?] **D-152** Average time from buying to selling.
-- [?] **D-153** Items that cost more than they sold for.
+- ( ) **D-141** ★ Record what each item cost.
+- ( ) **D-142** ★ Job lots — one price for a bag of thirty, split across the items.
+- ( ) **D-143** Choose how the split works: evenly, or weighted by value.
+- ( ) **D-144** ★ Profit per item, after fees and postage.
+- ( ) **D-145** ★ Record platform fees where the platform tells us.
+- ( ) **D-146** Never guess a fee — leave it blank instead.
+- ( ) **D-147** ★ Value of everything still unsold.
+- ( ) **D-148** ★ Totals by month, quarter and year.
+- ( ) **D-149** Mileage and expenses — car boots, postage supplies.
+- ( ) **D-150** An export shaped for a self-assessment tax return.
+- ( ) **D-151** Which platform actually makes the most, after fees.
+- ( ) **D-152** Average time from buying to selling.
+- ( ) **D-153** Items that cost more than they sold for.
 
 ## 14. Understanding what sells
 
-- [?] **D-154** Best-selling brands.
-- [?] **D-155** Best-selling sizes and categories.
-- [?] **D-156** How long items take to sell, by type.
-- [?] **D-157** Dead stock — listed a year, never sold.
-- [?] **D-158** Which photos correlate with a faster sale.
-- [?] **D-159** Best day and time to list.
-- [?] **D-160** Seasonality — when coats sell.
-- [?] **D-161** Price-drop suggestions for items going nowhere.
-- [?] **D-162** What is left in each physical box.
-- [?] **D-163** Charts. (Say no if charts are noise.)
+- ( ) **D-154** Best-selling brands.
+- ( ) **D-155** Best-selling sizes and categories.
+- ( ) **D-156** How long items take to sell, by type.
+- ( ) **D-157** Dead stock — listed a year, never sold.
+- ( ) **D-158** Which photos correlate with a faster sale.
+- ( ) **D-159** Best day and time to list.
+- ( ) **D-160** Seasonality — when coats sell.
+- ( ) **D-161** Price-drop suggestions for items going nowhere.
+- ( ) **D-162** What is left in each physical box.
+- ( ) **D-163** Charts. (Say no if charts are noise.)
 
 ## 15. Doing it without you
 
-- [?] **D-164** ★ Read Vinted automatically on a schedule.
-- [?] **D-165** ★ Choose: fully automatic, or automatic-with-approval.
-- [?] **D-166** ★ Automatic for safe things (delisting a sold item), approval for risky things (creating a listing).
-- [?] **D-167** A daily list of what it wants to do, that you approve in one press.
-- [?] **D-168** Bulk price drops on a schedule.
-- [?] **D-169** Relist items that have gone stale, so they resurface.
-- [?] **D-170** Pause everything with one switch.
-- [?] **D-171** ★ Everything it does is written down and reversible.
-- [?] **D-172** Retry automatically when a platform is temporarily unavailable.
+- ( ) **D-164** ★ Read Vinted automatically on a schedule.
+- ( ) **D-165** ★ Choose: fully automatic, or automatic-with-approval.
+- ( ) **D-166** ★ Automatic for safe things (delisting a sold item), approval for risky things (creating a listing).
+- ( ) **D-167** A daily list of what it wants to do, that you approve in one press.
+- ( ) **D-168** Bulk price drops on a schedule.
+- ( ) **D-169** Relist items that have gone stale, so they resurface.
+- ( ) **D-170** Pause everything with one switch.
+- ( ) **D-171** ★ Everything it does is written down and reversible.
+- ( ) **D-172** Retry automatically when a platform is temporarily unavailable.
 
 ## 16. The interface
 
-- [?] **D-173** ★★ One screen, one job. No dashboard of everything at once.
-- [?] **D-174** ★★ Plain sentences, not tables of data.
-- [?] **D-175** ★★ Nothing moves, blinks, slides or pops up.
-- [?] **D-176** ★ Detail hidden until asked for.
-- [?] **D-177** ★ The same button in the same place, always.
-- [?] **D-178** ★ Nothing happens on hover or on selection — only on a press.
-- [?] **D-179** ★ Muted colours, no harsh white, no pure black.
-- [?] **D-180** ★ Colour never the only way something is shown — always a word too.
-- [?] **D-181** Bigger text option.
-- [?] **D-182** Dark mode following the system setting.
-- [?] **D-183** ★ No jargon anywhere on the first screen.
-- [?] **D-184** Works on a phone.
-- [?] **D-185** ★ A "what needs me today?" screen and nothing else on it.
+- ( ) **D-173** ★★ One screen, one job. No dashboard of everything at once.
+- ( ) **D-174** ★★ Plain sentences, not tables of data.
+- ( ) **D-175** ★★ Nothing moves, blinks, slides or pops up.
+- ( ) **D-176** ★ Detail hidden until asked for.
+- ( ) **D-177** ★ The same button in the same place, always.
+- ( ) **D-178** ★ Nothing happens on hover or on selection — only on a press.
+- ( ) **D-179** ★ Muted colours, no harsh white, no pure black.
+- ( ) **D-180** ★ Colour never the only way something is shown — always a word too.
+- ( ) **D-181** Bigger text option.
+- ( ) **D-182** Dark mode following the system setting.
+- ( ) **D-183** ★ No jargon anywhere on the first screen.
+- ( ) **D-184** Works on a phone.
+- ( ) **D-185** ★ A "what needs me today?" screen and nothing else on it.
 
 ## 17. Finding and changing things in bulk
 
-- [?] **D-186** ★ Search everything — title, description, brand, storage code, buyer.
-- [?] **D-187** ★ Filter by platform, status, size, brand, box, age.
-- [?] **D-188** Saved filters you use often.
-- [?] **D-189** ★ Change one field on many items at once.
-- [?] **D-190** Find and replace across descriptions.
-- [?] **D-191** ★ Find items missing a storage code, or with a duplicate one.
-- [?] **D-192** Find items missing photos, sizes or categories.
-- [?] **D-193** Find items on one platform but not another.
-- [?] **D-194** Print a picking list for a box.
+- ( ) **D-186** ★ Search everything — title, description, brand, storage code, buyer.
+- ( ) **D-187** ★ Filter by platform, status, size, brand, box, age.
+- ( ) **D-188** Saved filters you use often.
+- ( ) **D-189** ★ Change one field on many items at once.
+- ( ) **D-190** Find and replace across descriptions.
+- ( ) **D-191** ★ Find items missing a storage code, or with a duplicate one.
+- ( ) **D-192** Find items missing photos, sizes or categories.
+- ( ) **D-193** Find items on one platform but not another.
+- ( ) **D-194** Print a picking list for a box.
 
 ## 18. Not losing anything
 
-- [?] **D-195** ★★ Preview before anything is written. Always.
-- [?] **D-196** ★ Never partly-read a catalogue and act as if it were complete.
-- [?] **D-197** ★ Every action logged with what it was before and after.
-- [?] **D-198** ★ Undo.
-- [?] **D-199** A limit on how many changes one run may make without asking.
-- [?] **D-200** ★ Test mode that touches nothing real.
-- [?] **D-201** Warn before anything irreversible.
-- [?] **D-202** ★ Keep the last N runs, not just the last one.
-- [?] **D-203** A health check that says plainly whether everything is working.
+- ( ) **D-195** ★★ Preview before anything is written. Always.
+- ( ) **D-196** ★ Never partly-read a catalogue and act as if it were complete.
+- ( ) **D-197** ★ Every action logged with what it was before and after.
+- ( ) **D-198** ★ Undo.
+- ( ) **D-199** A limit on how many changes one run may make without asking.
+- ( ) **D-200** ★ Test mode that touches nothing real.
+- ( ) **D-201** Warn before anything irreversible.
+- ( ) **D-202** ★ Keep the last N runs, not just the last one.
+- ( ) **D-203** A health check that says plainly whether everything is working.
 
 ## 19. The server
 
-- [?] **D-204** ★ One Docker container, one compose file.
-- [?] **D-205** ★ Python, matching how you already run things.
-- [?] **D-206** ★ Survives a restart, comes back on its own.
-- [?] **D-207** ★ Logs you can actually read.
-- [?] **D-208** Runs entirely on the home network, nothing exposed.
-- [?] **D-209** Reachable from outside, with a password.
+- ( ) **D-204** ★ One Docker container, one compose file.
+- ( ) **D-205** ★ Python, matching how you already run things.
+- ( ) **D-206** ★ Survives a restart, comes back on its own.
+- ( ) **D-207** ★ Logs you can actually read.
+- ( ) **D-208** Runs entirely on the home network, nothing exposed.
+- ( ) **D-209** Reachable from outside, with a password.
       *You said: I use Tailscale across all my devices.*
-- [?] **D-210** Uses hardly any memory when idle.
-- [?] **D-211** Update by pulling a new image.
-- [?] **D-212** ★ Settings in one file you can read and edit.
+- ( ) **D-210** Uses hardly any memory when idle.
+- ( ) **D-211** Update by pulling a new image.
+- ( ) **D-212** ★ Settings in one file you can read and edit.
 
 ## 20. Keeping it private
 
-- [?] **D-213** ★ Tokens and keys never in the repo, never in a CSV, never in a log.
-- [?] **D-214** ★ Secrets in one place, easy to change when one expires.
-- [?] **D-215** ★ Warn before a token expires rather than after.
-- [?] **D-216** Buyer addresses stored only as long as needed.
-- [?] **D-217** Buyer names removed from the archive after a set time, keeping the money data.
-- [?] **D-218** Encrypt the backups.
-- [?] **D-219** ★ No third party, no account, no subscription. Ever.
+- ( ) **D-213** ★ Tokens and keys never in the repo, never in a CSV, never in a log.
+- ( ) **D-214** ★ Secrets in one place, easy to change when one expires.
+- ( ) **D-215** ★ Warn before a token expires rather than after.
+- ( ) **D-216** Buyer addresses stored only as long as needed.
+- ( ) **D-217** Buyer names removed from the archive after a set time, keeping the money data.
+- ( ) **D-218** Encrypt the backups.
+- ( ) **D-219** ★ No third party, no account, no subscription. Ever.
 
 ## 21. Moving in from Crosslist
 
-- [?] **D-220** ★★ Import the CSV export from Crosslist — your own data, and by far the fastest way to start.
-- [?] **D-221** ★ Compare that import against what Vinted actually shows, to find gaps.
-- [?] **D-222** ★ A note of which fields Crosslist keeps, so nothing is lost when you stop paying.
-- [?] **D-223** Import the photos it holds too.
-- [?] **D-224** Run both side by side for a while before cancelling.
-- [?] **D-225** A checklist for the day you cancel the subscription.
+- ( ) **D-220** ★★ Import the CSV export from Crosslist — your own data, and by far the fastest way to start.
+- ( ) **D-221** ★ Compare that import against what Vinted actually shows, to find gaps.
+- ( ) **D-222** ★ A note of which fields Crosslist keeps, so nothing is lost when you stop paying.
+- ( ) **D-223** Import the photos it holds too.
+- ( ) **D-224** Run both side by side for a while before cancelling.
+- ( ) **D-225** A checklist for the day you cancel the subscription.
 
 ## 22. Other places, later
 
-- [?] **D-226** Depop.
-- [?] **D-227** Etsy.
-- [?] **D-228** Facebook Marketplace.
-- [?] **D-229** Amazon.
-- [?] **D-230** Whatnot / live selling.
-- [?] **D-231** A second Vinted account.
-- [?] **D-232** ★ Built so a new platform is one new file, not a rewrite.
+- ( ) **D-226** Depop.
+- ( ) **D-227** Etsy.
+- ( ) **D-228** Facebook Marketplace.
+- ( ) **D-229** Amazon.
+- ( ) **D-230** Whatnot / live selling.
+- ( ) **D-231** A second Vinted account.
+- ( ) **D-232** ★ Built so a new platform is one new file, not a rewrite.
 
 ## 23. Clever, optional, possibly unnecessary
 
-- [?] **D-233** Write the description automatically from the photos and the fields.
+- ( ) **D-233** Write the description automatically from the photos and the fields.
       *You said: have it create the text automatically, but easy for the user to edit or simply replace.*
-- [?] **D-234** Suggest a price from what similar items sold for.
-- [?] **D-235** Read the care label from a photo.
-- [?] **D-236** Recognise the brand from a photo of the label.
-- [?] **D-237** Suggest the category from the photo.
-- [?] **D-238** Spot a flaw in a photo and flag it.
-- [?] **D-239** Barcode or QR label on each physical box.
+- ( ) **D-234** Suggest a price from what similar items sold for.
+- ( ) **D-235** Read the care label from a photo.
+- ( ) **D-236** Recognise the brand from a photo of the label.
+- ( ) **D-237** Suggest the category from the photo.
+- ( ) **D-238** Spot a flaw in a photo and flag it.
+- ( ) **D-239** Barcode or QR label on each physical box.
       *You said: important in future — not needed right now, but I want it ready for when it is used.*
-- [?] **D-240** Print storage-code labels.
-- [?] **D-241** Voice notes while photographing, turned into item details.
-- [?] **D-242** Rewrite descriptions per platform, in each one's style.
-- [?] **D-243** Translate listings for other Vinted countries.
-- [?] **D-244** Suggest which items to bundle together.
+- ( ) **D-240** Print storage-code labels.
+- ( ) **D-241** Voice notes while photographing, turned into item details.
+- ( ) **D-242** Rewrite descriptions per platform, in each one's style.
+- ( ) **D-243** Translate listings for other Vinted countries.
+- ( ) **D-244** Suggest which items to bundle together.
 
 ## 24. The physical side
 
-- [?] **D-245** ★ Know what is in each box without opening it.
-- [?] **D-246** Warn when a box is full.
-- [?] **D-247** Suggest where to put a new item.
-- [?] **D-248** ★ Free up a storage code when an item is posted.
-- [?] **D-249** A photographing workflow — shoot a batch, assign afterwards.
-- [?] **D-250** Bulk-add items from a folder of photos.
-- [?] **D-251** Track packaging supplies.
-- [?] **D-252** ★ A "what needs posting today" list.
+- ( ) **D-245** ★ Know what is in each box without opening it.
+- ( ) **D-246** Warn when a box is full.
+- ( ) **D-247** Suggest where to put a new item.
+- ( ) **D-248** ★ Free up a storage code when an item is posted.
+- ( ) **D-249** A photographing workflow — shoot a batch, assign afterwards.
+- ( ) **D-250** Bulk-add items from a folder of photos.
+- ( ) **D-251** Track packaging supplies.
+- ( ) **D-252** ★ A "what needs posting today" list.
 
 ---
 
