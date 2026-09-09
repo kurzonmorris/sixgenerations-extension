@@ -7,6 +7,33 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-09 (4) · the SKU is permanent, and a bug that found
+
+**One code fix**, and it matters: `source/core/storageCode.js` and the
+hand-copied regex in `source/contentScripts/vintedPageReader.js` accepted only
+**four digits** for the item number. Kurzon's own example, `5-6 17735`, would
+have parsed as **no code at all** — the garment would have shown as unmatched,
+silently, with nothing in the log to say why. Now five digits (99,999 per box),
+with a test covering `5-6 17735` and `13-8 99999`. 37 tests pass.
+
+Why it was wrong: the limit was sized against *how many items a box holds*
+(20-40) when it needed to be sized against *how many have ever been in it*.
+
+- **The SKU is permanent and never recycled.** A returned garment keeps its
+  number, goes back in the same box, and its listing is re-published unchanged —
+  recycling the number would make it a different item. So the SKU is identity and
+  the internal UUID is only a surrogate; the re-boxing hazard drops from routine
+  to rare, and Q11 is largely closed.
+- **The dashboard's job is settled**: fixing what broke in the copying comes
+  first, seeing how things are going comes second, everything else is "useful,
+  not essential". The home page was reordered so problems sit above counts, and
+  it now shows items listed today — the number that decides whether the backlog
+  clears.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
 ## Unreleased — 2026-09-09 (3) · scope: all 252 answered, and the real constraint
 
 **Documents only. No code changed.**

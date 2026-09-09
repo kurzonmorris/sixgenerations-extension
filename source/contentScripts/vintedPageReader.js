@@ -175,8 +175,9 @@ function normaliseApiItem(raw) {
 }
 
 /**
- * The physical storage code at the end of every description — "13-8 24" meaning
- * column 13, box 8 high, item 24. This is the pairing key.
+ * The storage code at the end of every description — "13-8 24" meaning column 13,
+ * box 8 high, item 24. The business calls it the SKU, and it is the pairing key.
+ * Item numbers are never recycled and run to five digits.
  *
  * ⚠ Kept in sync by hand with `parseStorageCode()` in core/storageCode.js.
  * Content scripts cannot import ES modules, so the pattern is duplicated rather
@@ -187,7 +188,7 @@ function extractStorageCode(description) {
   const match = String(description ?? '')
     .replace(/\s+/g, ' ')
     .trim()
-    .match(/(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*[-–—\s]\s*(\d{1,4})[\s.,;:]*$/);
+    .match(/(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*[-–—\s]\s*(\d{1,5})[\s.,;:]*$/);
 
   return match ? `${Number(match[1])}-${Number(match[2])}-${Number(match[3])}` : '';
 }

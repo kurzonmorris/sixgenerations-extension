@@ -33,8 +33,8 @@ as tables, but it is the same idea whether it ends up in SQLite or Postgres.
 
 | Column | Notes |
 |---|---|
-| `item_id` | **Internal, permanent, never changes.** A UUID |
-| `storage_code` | `13-8 24`. Human key — and it *changes* when something is re-boxed, which is why it is not the identity |
+| `item_id` | Internal surrogate, a UUID. Never shown |
+| `sku` | `13-8 24` — column 13, box 4, item 24. **The business's own permanent identifier.** Never recycled: a returned garment keeps its SKU and goes back in the same box, so its listing can be re-uploaded unchanged. Item numbers run to five digits (99,999 per box) |
 | `status` | `draft` · `needs_info` · `on_sale` · `reserved` · `sold` · `posted` · `completed` · `archived` · `removed` |
 | `title` | |
 | `description` | |
@@ -222,10 +222,22 @@ predictably:
 
 ## 7. Where identity lives
 
-- **`item_id` is identity.** Permanent, meaningless, never reused.
-- **`storage_code` is a label**, not identity — it changes when a garment moves
-  box. That single change fixes the re-boxing hazard in
-  `EXPLAINED_six-generations_Extension.md` §7.6: a re-box updates one field
-  instead of silently breaking the pairing.
-- The storage code stays in the listing descriptions, because that is how the
+- **The SKU is identity**, and the business already treats it that way. It is
+  never recycled, so it survives a sale and return: same number, same box, same
+  listing re-uploaded.
+- **`item_id` is a surrogate** — a UUID the database uses internally and nobody
+  ever sees. It exists so a deliberate re-box can change the SKU without
+  orphaning five years of history, not because the SKU is unreliable.
+- The SKU stays at the end of every listing description, because that is how the
   system recognises a listing it has never seen before.
+
+### Returns
+
+A return is not a new item:
+
+1. The order moves to `returned`; the money and the history stay against it.
+2. The item goes back to `on_sale` **with its original SKU**.
+3. The stored listing content is re-published unchanged — no retyping.
+4. The garment goes back in the same box, in the same numbered slot.
+
+That is only possible because the number was never given to anything else.

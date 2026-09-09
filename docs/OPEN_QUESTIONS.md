@@ -12,6 +12,25 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-09 (fourth pass)
+
+- **D-248 / Q11 the SKU and re-boxing** → **The SKU is permanent and never
+  recycled.** *"Sometimes an item is returned and having the number recycled means
+  it's essentially a new item — this way we can just re-upload the same
+  information and put it back in the same box."* Boxes hold 20-40 items, item
+  numbers run to five digits (`5-6 17735`), and each box has room for 99,999
+  items. So the SKU is identity, the UUID is only a surrogate, and Q11's
+  re-boxing hazard drops from routine to rare.
+  **This found a real bug** — the parser accepted only four digits, so
+  `5-6 17735` would have returned no code and shown as unmatched. Fixed, with a
+  test.
+- **The dashboard's purpose** → *"Mainly to see how things are going and to fix
+  any issues that come up with the copying to other platforms. Everything else is
+  useful, not essential."* So problems go above numbers on the home page —
+  `docs/INTERFACE_LAYOUT.md §2`.
+
+---
+
 # Answered — 2026-09-09 (third pass)
 
 - **Q36 Sections 11–24** → **all answered: 239 yes, 13 no.** Not a formatting
@@ -386,6 +405,10 @@ one cell; or a separate `messages.csv` with one row per message.
 ---
 
 ## Q11 — What happens when a garment is re-boxed?
+
+> **Largely answered 2026-09-09.** The SKU is permanent and never recycled, so
+> re-boxing is a rare deliberate act rather than routine drift. See the top of
+> this file.
 
 The pairing key is a *physical location*. Move a garment to a different box and
 update only one platform, and the pair breaks — both sides then report as

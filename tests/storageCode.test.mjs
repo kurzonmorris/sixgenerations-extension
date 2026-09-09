@@ -28,6 +28,11 @@ test('accepts the spellings that occur in real listings', () => {
   }
 });
 
+test('reads long item numbers — they are never recycled, so they climb forever', () => {
+  assert.equal(parseStorageCode('Vintage silk blouse. 5-6 17735'), '5-6-17735');
+  assert.equal(parseStorageCode('Coat 13-8 99999'), '13-8-99999');
+});
+
 test('strips leading zeros so 03-08 04 and 3-8 4 are the same slot', () => {
   assert.equal(parseStorageCode('Coat 03-08 04'), parseStorageCode('Coat 3-8 4'));
 });

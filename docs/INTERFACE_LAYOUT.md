@@ -42,19 +42,49 @@ What that means in practice, from the rules that *were* accepted:
 
 U-01 and U-02 are retired in `INTERFACE_PRINCIPLES.md`. Q37 is closed.
 
-## 2. Home page
+## 2. What the dashboard is for
+
+Confirmed 2026-09-09:
+
+> *"Go with my written description. It's mainly to be used to see how things are
+> going and to fix any issues that come up with the copying to other platforms.
+> Everything else is useful, not essential."*
+
+So the home page has **two jobs**, and they are not equal:
+
+| | |
+|---|---|
+| **1. Fix what is broken** | Something failed to copy to eBay or the shop; something sold in two places; a connection has stopped working. **This is the essential half** — it is why the screen exists |
+| **2. See how things are going** | The counts and the money. Useful, reassuring, not urgent |
+
+Which means **problems go above numbers**, and a day with no problems shows an
+empty space where they would be — not a hidden section, so their absence is
+itself the reassurance.
+
+Everything else in this document is the "useful, not essential" half. Build the
+two jobs above properly before adding anything to it.
+
+## 3. Home page
 
 Ten rows, plain text, each one a link to the screen that shows those items:
 
 ```
    Six Generations
 
+   NEEDS FIXING
+   2 items did not copy to eBay                        [ Show me ]
+   1 item sold on Vinted and eBay at the same time     [ Show me ]
+
+   NEEDS YOU
+   TO REVIEW             18 items
+   TO POST                3 items
+
+   HOW THINGS ARE GOING
    ON SALE            2,041 items
-   TO REVIEW             18 items        ← needs you
-   TO POST                3 items        ← needs you
    SOLD                  12 items        (this month)
    POSTED                 9 items        (this month)
    ARCHIVE           14,220 items
+   LISTED TODAY           4 items
 
    MONEY IN
    Today                £34
@@ -64,6 +94,12 @@ Ten rows, plain text, each one a link to the screen that shows those items:
 
    Last checked: 14 minutes ago.   [ Check now ]
 ```
+
+When nothing is broken, the first block reads **"Nothing needs fixing."** and
+nothing else changes position.
+
+`LISTED TODAY` is there because 3-6 a day is the number that decides whether the
+backlog ever clears (`EXPLAINED_six-generations_Extension.md` §2A.9).
 
 Rules for it:
 
@@ -75,7 +111,7 @@ Rules for it:
 - No charts on this page. (Charts are D-163, still unanswered — if the answer is
   yes they belong on their own screen, never here.)
 
-## 3. The left menu
+## 4. The left menu
 
 Grouped, because nine flat items is a list to be read and four groups is not.
 Your list, plus the ones the workflow needs.
@@ -86,7 +122,7 @@ Your list, plus the ones the workflow needs.
     To post             sold, waiting to go in a bag
 
   ITEMS
-    The Table           every item, searchable and editable   ← see §4
+    The Table           every item, searchable and editable   ← see §5
     Boxes               what is in each box, and what is free
     Sold
     Archive
@@ -117,9 +153,9 @@ Your list, plus the ones the workflow needs.
   > has a way to see all the items it is storing for search and editing — I want
   > something similar."*
 
-  Specified in §4. It is the most-used screen in the system.
+  Specified in §5. It is the most-used screen in the system.
 
-## 4. The Table — every item, searchable and editable
+## 5. The Table — every item, searchable and editable
 
 The screen that answers *"do you have anything with X in it?"* while the customer
 is still standing there. Crosslist's inventory grid is the reference; this needs
@@ -181,7 +217,7 @@ above the results: *"On sale, size 12, not on eBay — 34 items."*
 No charts, no totals bar, no "recently viewed", no suggestions. It is a list and
 a search box. Everything else has its own screen.
 
-## 5. The three site links — and why they cannot be embedded
+## 6. The three site links — and why they cannot be embedded
 
 You asked for Vinted, eBay and Shopify to load **inside** the web interface.
 
@@ -206,7 +242,7 @@ Three ways to have it anyway:
 A and B together give you almost everything embedding would, and cost nothing.
 C stays on the list if it still matters once the rest works.
 
-## 6. The Console view
+## 7. The Console view
 
 A screen that shows what the container is doing without opening a terminal.
 
@@ -218,7 +254,7 @@ A screen that shows what the container is doing without opening a terminal.
 - Never the first thing anyone sees, and never a live tail on the home page — a
   scrolling log is exactly what U-03 exists to prevent.
 
-## 7. Two shapes, not one
+## 8. Two shapes, not one
 
 From your answer about where the work happens:
 
@@ -231,17 +267,17 @@ The same screens should not try to be both. The item-entry queue is a phone
 screen that happens to work on a laptop; the packing list is a desk screen that
 happens to survive on a phone.
 
-## 8. Screens behind each menu item
+## 9. Screens behind each menu item
 
 | Menu item | Screen |
 |---|---|
-| The Table | Every item, searchable and editable — §4 |
+| The Table | Every item, searchable and editable — §5 |
 | To review | The missing-information queue: one item, only the fields that are missing (D-096, D-097) |
 | To post | Sold and unposted, with the Posted button and the parcel photo (D-107) |
 | Boxes | What is in each storage code, and what is free (D-245, D-248) |
 | Sold / Archive | The record, searchable |
 | Sales / Purchases / Totals | The money screens (D-141 onwards) |
-| Sites | Links out, per §4 |
+| Sites | Links out, per §6 |
 | Settings | Connections, secrets, schedules, backups |
-| Console | Per §5 |
+| Console | Per §7 |
 | Backups | Last run, size, whether the offsite copy went to pCloud |

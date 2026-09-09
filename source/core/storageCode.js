@@ -6,8 +6,15 @@
  *
  *     13-8 24     →  column 13, box 8 high, item 24
  *
- * It is on every item, which is what makes it a better key than the SKU field
- * (populated on only some items) and far better than title + size.
+ * The business calls this the SKU. It is on every item, which makes it a better
+ * key than Shopify's SKU field (populated on only some items) and far better
+ * than title + size.
+ *
+ * The item number is a per-box sequence that is **never reused**. A returned
+ * garment keeps its number and goes back in the same box, so the same listing
+ * can be re-uploaded unchanged. Boxes hold 20-40 items, so the number climbs
+ * slowly, but it climbs forever: "5-6 17735" is a legitimate code and each box
+ * has room for 99,999 items. Hence five digits, not four.
  *
  * Tolerated spellings, all normalising to "13-8-24":
  *     13-8 24     13-8-24     13 - 8 24     13-8  24.
@@ -20,8 +27,11 @@
 /**
  * Anchored to the end of the text, since that is where the code always sits.
  * Anchoring is what stops a size range like "10-12" mid-description matching.
+ *
+ * Item numbers run to five digits (99,999 per box) because they are never
+ * recycled — see the note above.
  */
-const TRAILING_CODE = /(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*[-–—\s]\s*(\d{1,4})[\s.,;:]*$/;
+const TRAILING_CODE = /(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*[-–—\s]\s*(\d{1,5})[\s.,;:]*$/;
 
 /** Normalised form used as the map key: "13-8-24". */
 export function parseStorageCode(text) {

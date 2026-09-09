@@ -190,6 +190,9 @@ together, however interesting the analytics are.
 | **X-09** | 📋 | **Throughput as the headline measure** — items listed per day, shown where it is seen, because it is the number that matters |
 | **U-14** | 📋 | **Batch listing workflow** — photograph a batch, then assign and publish them one after another with no pause between (D-249, D-250, D-097) |
 | **L-15** | 📋 | **Answer memory** — every answer given to the review queue is offered for the next similar item (D-098) |
+| **X-10** | ✅ | **Five-digit item numbers in the SKU.** The parser accepted only four, so `5-6 17735` would have silently failed to match. Fixed in `source/core/storageCode.js:31` and the content-script copy, with a test |
+| **X-11** | 📋 | **Returns keep their SKU** — the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping |
+| **U-15** | 📋 | **"Needs fixing" at the top of the dashboard** — failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half |
 
 
 Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
@@ -302,7 +305,7 @@ six months. A "no" here is "not now", not "never"; ask again and it moves.
 | D-226–D-231 | Depop, Etsy, Facebook, Amazon, Whatnot, a second Vinted account | Not yet — but D-232 **is** wanted, so adding one later stays a single new file |
 | D-240 | Print storage-code labels | Not needed. D-239 (QR-ready) **is** wanted |
 | D-244 | Suggest which items to bundle | |
-| D-248 | Free up a storage code when an item is posted | Worth understanding why — the code may need to stay with the history |
+| D-248 | Free up a storage code when an item is posted | **Answered, and it is a design rule now:** the SKU is bound to the item permanently and never recycled, so a returned garment keeps its number, goes back in the same box, and its listing is re-uploaded unchanged. Item numbers run to five digits — see X-10 |
 
 ---
 

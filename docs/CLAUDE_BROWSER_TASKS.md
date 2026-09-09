@@ -184,7 +184,7 @@ documentation for it anywhere.
 
 **Why:** the dashboard asks for these three to load inside the web interface.
 Marketplaces normally forbid it, and the answer decides between embedding and
-opening a tab. See `docs/INTERFACE_LAYOUT.md §5`.
+opening a tab. See `docs/INTERFACE_LAYOUT.md §6`.
 
 ## Task 11 — a sanity check on the interface
 

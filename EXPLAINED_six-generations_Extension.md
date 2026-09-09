@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-09 (4) | **The SKU is permanent and never recycled** — a returned item keeps its number and goes back in the same box. Item numbers run to five digits. **This exposed a real bug: the parser only accepted four**, so `5-6 17735` would not have parsed. Fixed in `storageCode.js` and the content-script copy, with a test. Dashboard purpose confirmed |
 | 2026-09-09 (3) | **All 252 features answered** — 239 yes, 13 no, read straight from the Google Doc (checkbox state survives only a markdown export). D-173 and D-174 declined, which settles the dashboard question. **Listing throughput confirmed at 3–6 items a day** — added as §2A.9, and it reframes the whole build order |
 | 2026-09-09 (2) | **The real ledger read** — `six_generations_2.xlsx`, 63 monthly sheets, 2,864 sales, £11,010.77 since Oct 2021. Full analysis in `docs/EXISTING_LEDGER.md`. "The Table" defined as the searchable item grid. The re-sent PDF carried the same 118 ticks as the .odt |
 | 2026-09-09 | **118 features accepted** and five forks answered (`doyouwantfeatures.md`). Added §2A — the operator's own setup and workflow, in his words. eBay settled as API-in-container; Vinted stays browser-based for at least 8 months; the dashboard layout is specified in `docs/INTERFACE_LAYOUT.md` |
@@ -95,20 +96,40 @@ operates, and several of them change design decisions.
 | **Shopify** | Admin GraphQL, already working |
 | **Crosslist** | Currently paid for. To be replaced |
 
-## 2A.2 The SKU *is* the storage code
+## 2A.2 The SKU *is* the storage code — and it is permanent
 
 Against D-029 (a permanent internal id):
 
 > *"we use an sku system box column, box, item ex. 7-4 21"*
 
-So `7-4 21` and `13-8 24` are the same convention, and it is understood in the
-business as **the SKU**. Two consequences:
+And, on why a code is never freed when an item is posted (D-248, declined):
 
-- The words matter. On screen it should be called **the SKU**, not "the storage
-  code" or "the pairing key" — those are this project's words, not the
-  business's.
-- It is still a *location*, so it still changes when a garment is re-boxed
-  (§7.6). The internal permanent id sits underneath it and is never shown.
+> *"I want to have a code linked with an item permanently. Sometimes an item is
+> returned and having the number recycled means it's essentially a new item —
+> this way we can just re-upload the same information and put it back in the same
+> box. Each box can only carry 20-40 items depending on size… even an SKU of
+> `5-6 17735` is perfectly useable, so each box can go through 99k worth of
+> items, which is not likely to happen."*
+
+**This is the identity model, and it is a good one.** What follows from it:
+
+| | |
+|---|---|
+| **Format** | `column-box item` — `7-4 21` is column 7, box 4, item 21 |
+| **The item number is a per-box sequence** | It increments forever and is **never reused** |
+| **Boxes hold 20-40 items** | So a box's sequence climbs slowly, but it only ever climbs |
+| **Five digits are legitimate** | `5-6 17735`. Each box has room for 99,999 items |
+| **A return keeps its SKU** | The same listing is re-uploaded unchanged and the garment goes back in the same box. Recycling the number would make it a different item |
+| **So the SKU is identity, not just location** | It is stable across a sale-and-return cycle, which is exactly what D-029 asked for |
+
+Two consequences for the code and the screens:
+
+- **Call it the SKU.** "Storage code" and "pairing key" are this project's words;
+  the business says SKU.
+- **The internal UUID stays**, but it is now a surrogate rather than a
+  correction. The SKU is stable enough to be the human key everywhere, and the
+  re-boxing hazard (§7.6) shrinks to a rare deliberate move rather than a routine
+  one.
 
 ## 2A.3 Files, and the tools that open them
 
@@ -544,17 +565,35 @@ to archive live products.
 pages, from a real signed-in tab, is not. Do not remove the delay to make the
 read faster.
 
-## 7.6 The re-boxing hazard
-The pairing key describes where a garment physically **is**. Move it and update
-only one platform, and the pair silently breaks — both sides then report as
-one-sided. Safe, but at 2,000 items it will happen regularly. This is
-`OPEN_QUESTIONS.md` Q11 and is a strong argument for a **separate immutable
-internal id** with the storage code as a mutable attribute.
+## 7.6 The re-boxing hazard — much smaller than it looked
+The SKU encodes where a garment physically is, so moving it to a different box
+and updating only one platform breaks the pair (both sides then report as
+one-sided — the safe failure, but still a failure).
 
-## 7.7 GraphQL 200 ≠ success
+**Downgraded 2026-09-09.** The SKU is permanent and never recycled, and a
+returned item goes back in the *same* box (§2A.2). So re-boxing is a rare
+deliberate act, not routine drift, and the re-box helper (D-095) covers it. The
+internal UUID stays as a surrogate, but it is no longer load-bearing.
+
+## 7.7 The four-digit SKU limit — found and fixed 2026-09-09
+
+The parser was written as `(\d{1,4})` for the item number, on the assumption that
+a box holds tens of items. It does — but the numbers are **never recycled**, so
+they climb past 9,999 over time, and Kurzon's own example `5-6 17735` would have
+returned **no code at all**. Every such garment would have shown as unmatched,
+silently.
+
+Now `(\d{1,5})` in both `source/core/storageCode.js:31` and the hand-copy in
+`source/contentScripts/vintedPageReader.js`, with a test covering `5-6 17735`
+and `13-8 99999`.
+
+**The lesson worth keeping:** a limit that looks generous against *how many
+things exist* can be far too small against *how many have ever existed*.
+
+## 7.8 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.
 
-## 7.8 MV3 kills the worker
+## 7.9 MV3 kills the worker
 Nothing durable can live in module scope. It is also why an extension alone can
 never be a 24/7 monitor — the browser has to be open.
 
