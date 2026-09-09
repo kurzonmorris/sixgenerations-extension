@@ -7,6 +7,37 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-09 (3) · scope: all 252 answered, and the real constraint
+
+**Documents only. No code changed.**
+
+- **All 252 features are answered: 239 yes, 13 no.** The missing ticks were never
+  a formatting fault — the second half of the list was filled in on Google Docs,
+  which converts `[ ]` into real checkbox objects. Those survive a **markdown**
+  export and are dropped by .odt, .docx, .pdf and plain text, which is why three
+  exports in a row looked blank from D-121 on. Read straight from the Doc, every
+  mark was there. *If it happens again: ask for the Doc, not an export.*
+- **The interface question is settled, not compromised.** D-173 ("one screen, one
+  job, no dashboard") and D-174 ("plain sentences, not tables") were the only two
+  rules in that section declined — and they were exactly the two that ruled out
+  the dashboard. Everything else was accepted. The position is now: **a
+  dashboard, with tables, that is completely still.** U-01 and U-02 are retired in
+  `INTERFACE_PRINCIPLES.md`; Q37 is closed.
+- **The real constraint is 3–6 items listed a day.** Against a buying rate of
+  about 4.6 a day and a backlog of roughly 3,000 unlisted items, the backlog does
+  not clear on its own — it holds steady or grows. Written up as
+  `EXPLAINED_six-generations_Extension.md` §2A.9, with the eleven features that
+  actually buy minutes back. **Every feature should now be judged on whether it
+  puts more items up in a day**, which demotes the analytics sections however
+  interesting they are.
+- The 13 declined features are recorded in `FEATURE_six-generations_creep.md`
+  Part E with reasons, so the same ideas do not come round again.
+- Q36, Q37 and Q41 answered.
+
+Version deliberately **not** bumped — no new number was given.
+
+---
+
 ## Unreleased — 2026-09-09 (2) · scope: the real books, and the Table
 
 **Documents only. No code changed.**

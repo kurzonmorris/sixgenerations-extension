@@ -28,8 +28,17 @@ that way and why Vinted cannot move to the server.
 `docs/OPEN_QUESTIONS.md` Q14–Q33 are what block it.
 
 **The interface is a hard requirement, not styling.** The person who uses this
-daily has autism, ADHD and sensory sensitivities: a busy screen makes the tool
-unusable. `docs/INTERFACE_PRINCIPLES.md` overrides normal UI convention.
+daily has autism, ADHD and sensory sensitivities. The settled position, after
+every rule was put to Kurzon individually: **a dashboard, with tables, that is
+completely still.** No animation, no toasts, no auto-refresh, nothing on hover,
+muted colour with a word beside it, no jargon on the first screen.
+`docs/INTERFACE_LAYOUT.md` is the layout; `docs/INTERFACE_PRINCIPLES.md` is the
+behaviour (U-01 and U-02 are retired — a dashboard and tables were asked for).
+
+**The constraint that should shape everything: 3–6 items can be listed a day**,
+against a backlog of ~3,000 bought-but-unlisted items and a buying rate of ~4.6 a
+day. Judge every feature on whether it puts more items up in a day.
+`EXPLAINED_six-generations_Extension.md` §2A.9.
 
 **The pairing key is the SKU** — which in this business *is* the storage code:
 `13-8 24` means column 13, box 8, item 24, and `7-4 21` means column 7, box 4,
@@ -100,9 +109,8 @@ idea does not come round again.
     the one machine. That is the whole point of building this instead of paying
     for Vendoo or List Perfectly.
 11. **Nothing on screen that does not need to be there.** No animation, no
-    toasts, no dashboards, no jargon on the first screen.
-    `docs/INTERFACE_PRINCIPLES.md` has the full list, and it wins over normal UI
-    convention.
+    toasts, nothing on hover, no jargon on the first screen. A dashboard and
+    tables *are* wanted — see `docs/INTERFACE_LAYOUT.md`.
 
 ## Layout at a glance
 

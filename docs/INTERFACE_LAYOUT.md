@@ -15,27 +15,32 @@ disagreement rather than hiding it.
 
 ---
 
-## 1. The one conflict, stated once
+## 1. The conflict, resolved
 
-`INTERFACE_PRINCIPLES.md` U-01 says **"one screen, one job. No dashboard of
-everything at once."** That rule was written from guidance on designing for
-autism, ADHD and sensory sensitivity — for the person who uses this daily.
+There was one: `INTERFACE_PRINCIPLES.md` U-01 said *"one screen, one job. No
+dashboard of everything at once"*, written from guidance on designing for autism,
+ADHD and sensory sensitivity.
 
-A dashboard with ten numbers on it is the thing that rule exists to prevent.
+**It was put to Kurzon as D-173 and D-174 and both were declined** — the only two
+rules in that whole section he turned down. Every other one was accepted. So this
+is a decision, not an override:
 
-**It is your system and your call, and this is built as asked.** But there is a
-version that gives you the overview and still respects why the rule was there:
+> **A dashboard, with tables, that is completely still.**
 
-| Keeps | Changes |
+What that means in practice, from the rules that *were* accepted:
+
+| Kept | How it shows up here |
 |---|---|
-| Everything on the home page, all ten figures | They are **a plain list of rows**, not tiles, badges, gauges or charts |
-| The left menu, always in the same place | Nothing on it moves, highlights on hover, or shows a count that changes while being read |
-| Money figures for year, month, week, day | One line each, in words: "This week: £412" |
-| Everything reachable in one click | The page **does not refresh itself** while being looked at |
+| D-175 nothing moves | No animation, no toasts, no auto-refresh, no counting up |
+| D-176 detail folded away | The home page has counts; the detail is one press behind each |
+| D-177 same button, same place | The menu never reorders |
+| D-178 nothing on hover | Rows and menu items react to a press only |
+| D-179 muted colour | Off-white and dark grey, never harsh white or pure black |
+| D-180 a word beside every colour | Status always reads *sold*, never just a colour |
+| D-181–D-183 | Bigger text option, dark mode, no jargon on the first screen |
+| D-185 | "What needs me today?" is its own screen |
 
-That version is what is specified below. Worth showing her before it is built —
-if the counts are too much, the fix is small: one line ("6 things need you
-today") with the rest behind it.
+U-01 and U-02 are retired in `INTERFACE_PRINCIPLES.md`. Q37 is closed.
 
 ## 2. Home page
 

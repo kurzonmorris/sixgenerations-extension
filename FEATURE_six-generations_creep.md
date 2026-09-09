@@ -131,10 +131,8 @@ Everything here is a Chrome extension feature. There is no server yet.
 
 ## D.0 — accepted 2026-09-09
 
-**118 features said yes to**, from `doyouwantfeatures.md` (D-001 to D-120, less
-D-084 and D-106 which came back unmarked). They are not repeated line by line
-here — that file is the record — but they land in the areas below, and these are
-the ones that changed the plan:
+**239 of 252 features said yes to.** `doyouwantfeatures.md` is the record. The
+13 declined are listed in Part E. These are the answers that changed the plan:
 
 | From | What it settled |
 |---|---|
@@ -174,11 +172,24 @@ New features that came out of those answers:
 | **U-13** | 📋 | **The Table** — every item, one search box across every field, filters, in-place editing, at 100,000 rows. `docs/INTERFACE_LAYOUT.md §4`. The most-used screen in the system |
 | **X-08** | 📋 | **Clear the unlisted backlog** — roughly 3,000 items bought and never listed. Stock already paid for |
 
-**Still unanswered:** sections 11–24 of `doyouwantfeatures.md` (D-121 to D-252)
-came back with no checkboxes at all — notifications, money, analytics,
-automation, interface detail, bulk editing, safety, the server, privacy, the
-Crosslist migration, other platforms and the physical workflow. Notes were
-written in that range, so it was read; nothing was ticked.
+### The constraint that should drive the build order
+
+**3–6 items can be listed a day.** Against a backlog of roughly 3,000 unlisted
+items and a buying rate of about 4.6 a day, that means the backlog does not clear
+on its own. `EXPLAINED_six-generations_Extension.md` §2A.9 has the arithmetic.
+
+**Every feature should be judged on whether it puts more items up in a day.**
+The ones that do — D-250, D-249, D-098, D-099, D-071, D-100, D-233, D-101,
+D-104, D-097, D-105 — are worth more than everything in sections 13 and 14 put
+together, however interesting the analytics are.
+
+### More features from the second pass
+
+| ID | Status | Feature |
+|---|---|---|
+| **X-09** | 📋 | **Throughput as the headline measure** — items listed per day, shown where it is seen, because it is the number that matters |
+| **U-14** | 📋 | **Batch listing workflow** — photograph a batch, then assign and publish them one after another with no pause between (D-249, D-250, D-097) |
+| **L-15** | 📋 | **Answer memory** — every answer given to the review queue is offered for the next similar item (D-098) |
 
 
 Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
@@ -279,9 +290,19 @@ in that file, it moves into Part D with a real ID; when it is built, it moves to
 Part A. Nothing is deleted — a "no" stays here marked as declined, so the same
 idea does not come round again in six months.
 
-| ID | Status | Idea |
+**Declined 2026-09-09** — recorded so the same idea does not come round again in
+six months. A "no" here is "not now", not "never"; ask again and it moves.
+
+| ID | Idea | Note |
 |---|---|---|
-| 💭 | idea | **The whole of `doyouwantfeatures.md`** — 200+ items awaiting a yes or no |
+| D-084 | Publish to Shopify as a draft first | Publishing goes straight live |
+| D-139 | "Nothing sold in X days" notification | But D-161, price-drop suggestions in a report, **is** wanted. A report, not a nag |
+| **D-173** | One screen, one job. No dashboard | **Retired U-01.** A dashboard is what is wanted |
+| **D-174** | Plain sentences, not tables | **Retired U-02.** Tables are wanted |
+| D-226–D-231 | Depop, Etsy, Facebook, Amazon, Whatnot, a second Vinted account | Not yet — but D-232 **is** wanted, so adding one later stays a single new file |
+| D-240 | Print storage-code labels | Not needed. D-239 (QR-ready) **is** wanted |
+| D-244 | Suggest which items to bundle | |
+| D-248 | Free up a storage code when an item is posted | Worth understanding why — the code may need to stay with the history |
 
 ---
 

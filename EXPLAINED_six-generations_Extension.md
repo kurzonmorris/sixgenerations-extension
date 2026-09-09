@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-09 (3) | **All 252 features answered** — 239 yes, 13 no, read straight from the Google Doc (checkbox state survives only a markdown export). D-173 and D-174 declined, which settles the dashboard question. **Listing throughput confirmed at 3–6 items a day** — added as §2A.9, and it reframes the whole build order |
 | 2026-09-09 (2) | **The real ledger read** — `six_generations_2.xlsx`, 63 monthly sheets, 2,864 sales, £11,010.77 since Oct 2021. Full analysis in `docs/EXISTING_LEDGER.md`. "The Table" defined as the searchable item grid. The re-sent PDF carried the same 118 ticks as the .odt |
 | 2026-09-09 | **118 features accepted** and five forks answered (`doyouwantfeatures.md`). Added §2A — the operator's own setup and workflow, in his words. eBay settled as API-in-container; Vinted stays browser-based for at least 8 months; the dashboard layout is specified in `docs/INTERFACE_LAYOUT.md` |
 
@@ -175,7 +176,25 @@ A double sale is the one event allowed to be loud.
 | **No SKU anywhere in the ledger** — sales are free-text names | Nothing can be joined to a listing. **Putting the SKU on the sale record unlocks every analysis feature** |
 | One sheet per month, rows capped at 81, dates as `d.m.yy` **text** | Import traps — see `EXISTING_LEDGER.md §5` |
 
-## 2A.8 What "the table" means
+## 2A.8 The interface position, settled
+
+D-173 (*"one screen, one job, no dashboard"*) and D-174 (*"plain sentences, not
+tables of data"*) were **declined**. Every other rule in that section was
+accepted. So the design is not a compromise or an override — it is a deliberate
+choice:
+
+> **A dashboard, with tables, that is completely still.**
+
+What still holds, because it was all ticked: nothing moves, blinks or pops up
+(D-175); detail hidden until asked for (D-176); the same button in the same place
+(D-177); nothing on hover or selection (D-178); muted colours, no harsh white or
+pure black (D-179); a word beside every colour (D-180); bigger text (D-181); dark
+mode (D-182); no jargon (D-183); phone-capable (D-184); and a "what needs me
+today?" screen (D-185).
+
+`INTERFACE_PRINCIPLES.md` U-01 and U-02 are therefore **retired**, not bent.
+
+## 2A.8b What "the table" means
 
 Answered 2026-09-09:
 
@@ -187,6 +206,53 @@ Answered 2026-09-09:
 So it is not a workflow stage. It is **the item grid**: search everything, filter,
 edit in place, at 100,000 rows. Specified in `docs/INTERFACE_LAYOUT.md §4`, and it
 is the most-used screen in the system.
+
+## 2A.9 The real constraint: 3–6 items a day
+
+Told to us 2026-09-09:
+
+> *"We are only able to upload about 3-6 items a day at the moment so it will
+> take time to get through the back lot."*
+
+Put that next to the ledger and the picture is stark:
+
+| | |
+|---|---|
+| Bought, five years | 8,196 items — about **4.6 a day** |
+| Sold, five years | 2,864 items — about **1.6 a day** |
+| **Listed** | **3–6 a day** |
+| Backlog | ≈3,000 bought and never listed |
+
+**At 3–6 a day, listing barely keeps pace with buying.** The backlog does not
+clear on its own — it holds roughly steady, or grows. Clearing 3,000 items at
+4.5 a day takes about **22 months**, during which more stock arrives.
+
+### What that means for what gets built
+
+**The bottleneck is human minutes per item, not software.** Every design choice
+should be judged against one question: *does this let more items go up in a day?*
+
+Doubling throughput to 9–12 a day would clear the backlog in under a year and
+turn ~3,000 items of paid-for stock into listings. Nothing else in the feature
+list is worth as much.
+
+The features that buy minutes back, in rough order of value:
+
+| Feature | Why |
+|---|---|
+| **D-250** bulk-add from a folder of photos | The photographing already happens in batches |
+| **D-249** shoot a batch, assign afterwards | Separates the camera work from the typing |
+| **D-098** remember answers for similar items | Most of a wardrobe is the same six answers |
+| **D-099 / D-071** templates per garment type | "Every midi dress starts the same" |
+| **D-100 / D-233** generated descriptions to confirm, not write | Confirming is far quicker than composing |
+| **D-101** bulk-answer one field across many items | "All of these are polyester" |
+| **D-104** keyboard-only entry | No mouse, no waiting |
+| **D-097** preload the next items | Kurzon asked for this specifically — no pause between items |
+| **D-105** works on a phone at the boxes | The listing happens where the stock is |
+
+**Conversely, the features that do not move this number** — analytics, charts,
+seasonality, best-time-to-list — are worth building *after* it, however
+interesting they are.
 
 ---
 

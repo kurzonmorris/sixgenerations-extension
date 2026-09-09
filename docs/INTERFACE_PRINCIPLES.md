@@ -11,18 +11,24 @@ difference between a tool that gets used and one that gets avoided.
 
 ## 1. The five rules
 
-> **Exception, agreed 2026-09-09:** a **home dashboard with a left menu** was
-> asked for directly, showing six item counts and four money figures. It is being
-> built as asked. `docs/INTERFACE_LAYOUT.md` specifies it, and keeps every other
-> rule below intact — no movement, no tiles, no charts, plain words, muted
-> colour. Q37 asks whether it suits the person who actually uses it.
+> ## U-01 and U-02 are retired
+>
+> Both were put to Kurzon as D-173 (*one screen, one job, no dashboard*) and
+> D-174 (*plain sentences, not tables*) on 2026-09-09, and **both were declined**
+> — the only two rules in that section he turned down. A **dashboard with tables**
+> is what is wanted, and it is specified in `docs/INTERFACE_LAYOUT.md`.
+>
+> **Every other rule in this file was accepted and still stands.** The design is
+> not a compromise: *a dashboard, with tables, that is completely still.*
+>
+> U-01 and U-02 are kept below for the reasoning, struck through.
 
-### U-01 — One screen, one job
+### ~~U-01 — One screen, one job~~ *(retired)*
 The popup shows the current state and one action. Nothing else. No dashboard, no
 tiles, no counters running in the corner. Anything that is not needed right now
 lives on another screen that has to be opened deliberately.
 
-### U-02 — Plain language, not data
+### ~~U-02 — Plain language, not data~~ *(retired — but the wording rules in §3 stand)*
 > **3 items sold on Vinted. Remove them from eBay?**   [ Show me ]   [ Do it ]
 
 not a table of `sku | vinted_status | ebay_status | shopify_qty`. The table can

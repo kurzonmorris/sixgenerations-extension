@@ -12,6 +12,27 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-09 (third pass)
+
+- **Q36 Sections 11–24** → **all answered: 239 yes, 13 no.** Not a formatting
+  fault: the second half was written in Google Docs, which turns `[ ]` into real
+  checkbox objects. Those survive a **markdown** export and are dropped by .odt,
+  .docx, .pdf and plain text. Read straight from the Doc, every mark was there.
+  **Worth remembering: if a marked-up file ever looks blank again, ask for the
+  Google Doc, not an export.**
+- **Q37 Does the dashboard suit her?** → **Closed by D-173 and D-174 being
+  declined.** They were the only two rules in the interface section turned down,
+  and they were exactly the two that ruled out a dashboard. The position is
+  settled: *a dashboard, with tables, that is completely still.* U-01 and U-02 are
+  retired.
+- **Q41 The unlisted backlog** → **Confirmed, and worse than it looked.**
+  *"We are only able to upload about 3-6 items a day at the moment."* Against a
+  buying rate of ~4.6 a day, the backlog of ~3,000 items does not clear on its
+  own. See `EXPLAINED_six-generations_Extension.md` §2A.9 — this should drive the
+  build order.
+
+---
+
 # Answered — 2026-09-09 (second pass)
 
 - **Q34 What "To table" means** → **The item grid.** *"A way to search the items…
@@ -52,6 +73,8 @@ months. Is 0.959 litres per posting trip still accurate, and should the price pe
 litre be updated by hand each month or held as a setting?
 
 ## Q41 — The unlisted backlog
+
+> **Answered 2026-09-09.** See the top of this file.
 
 The ledger says roughly **5,332 items bought and not yet sold**, against about
 2,000 listed on Vinted — so on the order of **3,000 items bought and never
@@ -104,6 +127,8 @@ be built from the shape you already use, so nothing you rely on goes missing.
 
 ## Q36 — Sections 11 to 24 of the feature list
 
+> **Answered 2026-09-09.** See the top of this file.
+
 They came back with no checkboxes at all — 134 items covering notifications,
 money, analytics, automation, the interface, bulk editing, safety, the server,
 privacy, the Crosslist migration and the physical workflow. You wrote notes in
@@ -114,6 +139,8 @@ do not want. Several are already implied by what you have written elsewhere —
 notifications, profit and loss, backups, Tailscale.
 
 ## Q37 — Does the dashboard suit the person who uses it?
+
+> **Answered 2026-09-09.** See the top of this file.
 
 `INTERFACE_PRINCIPLES.md` U-01 says no dashboard. You have asked for one, and it
 is being built as asked. It is worth showing her the layout in
