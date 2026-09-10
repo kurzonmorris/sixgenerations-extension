@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-10 (2) | **sixgenbot stage 1 built** — the skeleton runs, loads modules, serves two pages. FastAPI + Jinja, 23 pytest tests. Documented in §3B. Q42–Q45 answered |
 | 2026-09-10 | **`sixgenbot` planned** — six stages, module contract, stack. `docs/SIXGENBOT_PLAN.md`. Nothing built yet; Q42–Q45 decide repo, version, framework and stage order |
 | 2026-09-09 (4) | **The SKU is permanent and never recycled** — a returned item keeps its number and goes back in the same box. Item numbers run to five digits. **This exposed a real bug: the parser only accepted four**, so `5-6 17735` would not have parsed. Fixed in `storageCode.js` and the content-script copy, with a test. Dashboard purpose confirmed |
 | 2026-09-09 (3) | **All 252 features answered** — 239 yes, 13 no, read straight from the Google Doc (checkbox state survives only a markdown export). D-173 and D-174 declined, which settles the dashboard question. **Listing throughput confirmed at 3–6 items a day** — added as §2A.9, and it reframes the whole build order |
@@ -462,9 +463,121 @@ exempt it from CORS.
 
 ---
 
+# 3B. sixgenbot — file by file
+
+**Stage 1 of `docs/SIXGENBOT_PLAN.md`, built 2026-09-10.** It runs, logs, loads
+modules and serves two pages. **No database, no Vinted, no scheduler** — those
+are stages 2 and 5.
+
+Run it: `docker compose -f sixgenbot/docker-compose.yml up -d --build`, or
+`SIXGENBOT_DATA=./data python -m sixgenbot serve`. Check it without opening a
+port: `python -m sixgenbot check`.
+
+## 3B.1 The shape
+
+```
+sixgenbot/
+├── __main__.py          serve | check | version
+├── core/                everything a module may depend on
+│   ├── appConfig.py     config.toml + secrets.toml, defaults merged
+│   ├── appLogging.py    console + rotating file + an in-memory ring buffer
+│   ├── eventBus.py      the notice board
+│   ├── moduleLoader.py  finds, validates and registers modules
+│   └── webApp.py        the Bot object and the FastAPI app
+├── modules/             one folder per feature
+│   ├── systemStatus/    the "is it running" page
+│   └── activityLog/     the Console page
+├── templates/base.html  the shell: left menu, one heading, content
+├── static/sixgenbot.css the calm stylesheet
+└── tests/               23 tests
+```
+
+## 3B.2 `core/webApp.py` — the contract
+
+`Bot` is the whole module API. What a module may call:
+
+| Call | What it does |
+|---|---|
+| `bot.addRoutes(router)` | its own pages |
+| `bot.addMenuItem(label, path, group=, order=)` | where it appears in the left menu |
+| `bot.onEvent(name, handler)` | what it reacts to |
+| `bot.emit(name, **payload)` | what it announces |
+| `bot.templates(folder)` | its own template directory |
+
+**`addJob` and `addMigrations` deliberately do not exist yet.** They arrive with
+the scheduler and the database in stage 2 — a function that silently does nothing
+is worse than one that is not there.
+
+`MENU_GROUPS` (webApp.py:33) fixes the order of the known groups; an unknown
+group is appended rather than rejected, so a new one needs no change to core.
+
+`Bot.currentModule` is set by the loader around each `register()` call, which is
+how a menu item or an event handler knows which module owns it without the module
+having to say.
+
+## 3B.3 `core/moduleLoader.py` — nothing names a module
+
+Scans `sixgenbot/modules/*/module.py`, imports each, checks it declares `NAME`,
+`VERSION` and `register`, and calls it.
+
+- **A module that fails is reported and skipped.** The rest still start — that is
+  the entire point of the arrangement, and `tests/test_moduleLoader.py` proves it
+  against three deliberately broken fixtures rather than trusting it.
+- `loadModules(bot, disabled=, package=)` takes a package name **only so the
+  failure path can be tested** against `tests/fixtureModules/`.
+- Switching a module off is a line in `config.toml`, not a code change.
+
+## 3B.4 `core/appConfig.py` — two files, on purpose
+
+`config.toml` for ordinary settings, `secrets.toml` beside it for tokens. Both
+live in the data directory, so backing up that directory backs up everything.
+Defaults merge recursively, so changing one setting does not mean restating the
+rest. `config.secret(name)` reads the environment first (`SIXGENBOT_<NAME>`) so
+Docker can inject without a file. **Secrets never go through the settings dict**,
+so they cannot be printed by anything that dumps configuration.
+
+## 3B.5 `core/appLogging.py` — three destinations
+
+Console (for `docker logs`), a rotating file in the data directory, and a capped
+in-memory ring buffer that the Console page reads. The buffer is what lets the UI
+show what happened without anyone opening a terminal.
+
+## 3B.6 `core/eventBus.py` — why modules can ignore each other
+
+Publish a named event; anyone interested subscribes. The publisher never learns
+who listened. **A listener that throws is logged and skipped** — one bad
+subscriber must not stop the others, or the isolation is lost.
+
+## 3B.7 The stylesheet is a requirement, not decoration
+
+`static/sixgenbot.css` implements `docs/INTERFACE_PRINCIPLES.md`:
+
+- `transition: none !important` and `animation: none !important` on everything.
+- **No `:hover` rule anywhere** (U-04).
+- No pure white, no pure black, in either scheme.
+- The current menu item is marked by weight *and* a border, never colour alone.
+
+**A test enforces all four** (`tests/test_webApp.py`), with CSS comments stripped
+first — the stylesheet explains why there is no hover rule, and the explanation
+is not a rule.
+
+## 3B.8 The two rules the tests defend
+
+`tests/test_moduleIsolation.py` parses every file with `ast` and fails if:
+
+1. a module imports another module, or
+2. `core` imports a module.
+
+Without those two, "modules" is just folders.
+
+---
+
 # 4. The tests
 
-`npm test` — 36 tests, Node's built-in runner, nothing to install.
+**The extension:** `npm test` — 37 tests, Node's built-in runner, nothing to
+install.
+
+**sixgenbot:** `python -m pytest sixgenbot/tests -q` — 23 tests.
 
 | File | Covers |
 |---|---|

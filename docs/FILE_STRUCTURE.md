@@ -58,7 +58,25 @@ sixgenerations-extension/
 │   │
 │   └── sharedStyles.css              Colours, dark mode, buttons — shared by both pages
 │
-├── tests/                            Run with `npm test` — 36 tests. Nothing to install
+├── sixgenbot/                        THE SERVER. Python, runs in Docker on the home server
+│   ├── __main__.py                   python -m sixgenbot serve | check | version
+│   ├── VERSION_v_0.1.0               its own version, separate from the extension's
+│   ├── config.example.toml           the documented settings template
+│   ├── Dockerfile  docker-compose.yml
+│   ├── core/                         everything a module may depend on. Never imports one
+│   │   ├── appConfig.py              config.toml + secrets.toml, defaults merged
+│   │   ├── appLogging.py             console, rotating file, and a ring buffer the UI reads
+│   │   ├── eventBus.py               named events; publishers never learn who listened
+│   │   ├── moduleLoader.py           finds and registers modules. Names none of them
+│   │   └── webApp.py                 the Bot object modules register against, and the app
+│   ├── modules/                      ONE FOLDER PER FEATURE. Add a folder, add a feature
+│   │   ├── systemStatus/             "is it running", what loaded, what broke
+│   │   └── activityLog/              the Console page
+│   ├── templates/base.html           the shell: left menu, heading, content
+│   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 23 tests
+│
+├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
 │   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
 │   ├── parityEngine.test.mjs         The matching and diff rules

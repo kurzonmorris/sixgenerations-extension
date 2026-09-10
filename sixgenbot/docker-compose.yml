@@ -1,0 +1,19 @@
+# One container, one volume. The same file works on Unraid today and HexOS later.
+#
+#   docker compose up -d --build
+#
+# Build from the repository root:  docker compose -f sixgenbot/docker-compose.yml up -d --build
+
+services:
+  sixgenbot:
+    build:
+      context: ..
+      dockerfile: sixgenbot/Dockerfile
+    container_name: sixgenbot
+    restart: unless-stopped
+    ports:
+      - "8770:8770"
+    volumes:
+      - ./data:/data          # change to an absolute path on the server
+    environment:
+      SIXGENBOT_DATA: /data

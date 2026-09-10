@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block heading %}Console{% endblock %}
+
+{% block content %}
+  <p class="quiet">
+    Newest first. This page does not update itself —
+    {% if problemsOnly %}
+      <a href="/console">show everything</a>
+    {% else %}
+      <a href="/console?only=problems">show problems only</a>
+    {% endif %}
+    or reload to see anything new.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Level</th><th>Where</th><th>What happened</th></tr>
+    </thead>
+    <tbody>
+      {% for line in lines %}
+        <tr>
+          <td class="at">{{ line.at }}</td>
+          <td class="level {% if line.level in ('WARNING','ERROR','CRITICAL') %}state-problem{% endif %}">{{ line.level }}</td>
+          <td class="quiet">{{ line.source }}</td>
+          <td class="message">{{ line.message }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="quiet">Nothing logged yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

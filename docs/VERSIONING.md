@@ -17,6 +17,21 @@ Current version: **v_0.1.0**
 `0.x` means Vinted writes do not work yet. **v_1.0.0 is reserved for the first
 release where parity actually runs both ways.**
 
+## Two versions, two markers
+
+Since 2026-09-10 the repo holds two things, each versioned on its own:
+
+| | Marker | Bumped when |
+|---|---|---|
+| **The Chrome extension** | `VERSION_v_x.x.x` at the repo root | The extension changes |
+| **sixgenbot** | `sixgenbot/VERSION_v_x.x.x` | The server changes |
+
+`tests/versionConsistency.test.mjs` guards the extension's, and requires
+**exactly one** marker at the root — which is why sixgenbot's lives inside its
+own folder. Each sixgenbot module also carries its own `VERSION` inside
+`module.py`; Python cannot import a filename containing dots, so versions never
+go in Python filenames.
+
 ## Where the version appears
 
 | Place | Form | Why |

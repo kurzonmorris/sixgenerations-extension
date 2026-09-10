@@ -16,9 +16,15 @@ there. eBay and Shopify are fed from it. The Vinted account is **private, not
 business**, and will stay that way for at least 8 months, so Vinted must be read
 through the browser session. eBay is driven by its **API from the container**.
 
-Current version: **v_0.1.0** — Vinted and Shopify are read and compared, and
-Shopify writes work. **Vinted writes do not exist yet. eBay is not connected at
-all. The ledger is not built. There is no server yet.**
+**Two things live in this repo**, each with its own version marker:
+
+| | Version | State |
+|---|---|---|
+| **The Chrome extension** (root, `source/`) | `v_0.1.0` | Reads Vinted and Shopify, compares them, writes to Shopify. **No Vinted writes** |
+| **`sixgenbot/`** — the Python server | `v_0.1.0` | **Stage 1: the skeleton.** Runs, logs, loads modules, serves two pages. **No database, no Vinted, no scheduler** |
+
+Next: **stage 2, the database** (`docs/SIXGENBOT_PLAN.md`). eBay and Shopify wait
+until Vinted works end to end.
 
 **Where it is going:** a small Chrome extension that reads Vinted in the user's
 own signed-in session, handing everything to a **Python Docker container** on the
@@ -117,25 +123,38 @@ idea does not come round again.
 
 ```
 manifest.json          Chrome entry point
-VERSION_v_0.1.0        version marker (rename on bump)
-source/
+VERSION_v_0.1.0        the EXTENSION's version marker (rename on bump)
+source/                the extension
   backgroundServiceWorker.js   coordinator; the ONLY place Shopify calls may happen
   core/                        platform-agnostic logic (parityEngine is the heart)
   connectors/                  one file per platform
   contentScripts/              runs inside the Vinted tab
   popupPanel/  settingsPage/   UI
-tests/                 npm test — 36 tests, nothing to install
-docs/                  everything above
+tests/                 npm test — 37 tests, nothing to install
+
+sixgenbot/             the SERVER (Python, Docker)
+  VERSION_v_0.1.0      its own version marker
+  core/                config, logging, events, module loader, web app
+  modules/             one folder per feature — add a folder, add a feature
+  tests/               python -m pytest sixgenbot/tests -q — 23 tests
+
+docs/                  everything else
 ```
 
-Dependency direction: UI → worker → core/connectors → content script.
-`core/` never imports `connectors/`, except `syncRunner.js`.
+**Extension:** UI → worker → core/connectors → content script. `core/` never
+imports `connectors/`, except `syncRunner.js`.
+
+**sixgenbot:** a module never imports another module; `core/` never imports a
+module; they talk through the database and the event bus. Two `ast` tests enforce
+it — see `docs/SIXGENBOT_PLAN.md §3`.
 
 ## Checks before saying a task is done
 
 ```bash
-npm test                      # includes the version-consistency check
-node --check <changed file>   # for anything Chrome loads
+npm test                                # extension: includes the version check
+node --check <changed file>             # for anything Chrome loads
+python -m pytest sixgenbot/tests -q     # sixgenbot
+python -m sixgenbot check               # sixgenbot: does every module still load?
 ```
 
 Then: reload the extension at `chrome://extensions`, and confirm a **dry run**

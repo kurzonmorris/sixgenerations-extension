@@ -23,7 +23,7 @@ one.
 
 | | Yours | Suggested |
 |---|---|---|
-| 1 | Web interface | **Skeleton** — it runs, it logs, one page says it is alive |
+| 1 | Web interface | **Skeleton** ✅ built — it runs, it logs, one page says it is alive |
 | 2 | Database | **Database** — the schema, empty |
 | 3 | Import tool | **Import** — Crosslist export + your five-year ledger. ~2,000 real items |
 | 4 | Manual Vinted update | **Web interface** — the Table and the dashboard, over real data |
@@ -41,7 +41,7 @@ a bit of rework on the screens, nothing more.
 Each one ends with something that works on its own. Nothing later is needed to
 make an earlier stage useful.
 
-### Stage 1 — the skeleton *(v_0.1.0)*
+### Stage 1 — the skeleton *(v_0.1.0)* — **BUILT 2026-09-10**
 
 The spine everything else plugs into. No features.
 
@@ -55,6 +55,11 @@ The spine everything else plugs into. No features.
 
 **Done when:** it starts on the server by itself and the page loads from your
 phone over Tailscale.
+
+**Built.** 23 tests, two example modules, a health check, and a `check` command.
+What is in it, file by file: `EXPLAINED_six-generations_Extension.md` §3B.
+**Still to confirm: that it actually starts on your server and reaches your
+phone** — that is the half of "done" only you can test.
 
 ### Stage 2 — the database *(v_0.2.0)*
 
@@ -262,11 +267,8 @@ your server that you can open from your phone.
 
 Then stop, and you look at it before stage 2.
 
-## 8. Open questions
+## 8. Answered
 
-- **Q42** — one repo or two?
-- **Q43** — what version number does sixgenbot start at? (`v_0.1.0` unless you
-  say otherwise — and the rule is I never pick one.)
-- **Q44** — FastAPI as recommended, or Flask?
-- **Q45** — do you want the stage order corrected as in §1, or built in the order
-  you wrote it?
+- **Q42** one repo. **Q43** `v_0.1.0`. **Q44** FastAPI. **Q45** corrected order.
+
+All settled 2026-09-10, and stage 1 is built against them.

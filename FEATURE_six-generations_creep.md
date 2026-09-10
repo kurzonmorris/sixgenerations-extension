@@ -90,7 +90,27 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-35 | ✅ | Export the whole run as JSON | `backgroundServiceWorker.js:122` |
 | A-36 | ✅ | Snapshot of both catalogues stored after each run | `core/syncRunner.js:108` |
 
-## A.6 Running it
+## A.6 sixgenbot — the server *(new 2026-09-10, v_0.1.0)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-44 | ✅ | **It runs** — as a container, or `python -m sixgenbot serve` | `sixgenbot/__main__.py` |
+| A-45 | ✅ | **`check` command** — loads everything, reports, exits non-zero if broken, no port opened | `__main__.py:52` |
+| A-46 | ✅ | **Module loader** — a feature is a folder; core never names one | `core/moduleLoader.py` |
+| A-47 | ✅ | **A broken module cannot stop the others** — proved against three broken fixtures | `tests/test_moduleLoader.py` |
+| A-48 | ✅ | **Modules switched off from settings**, no code change | `core/appConfig.py` |
+| A-49 | ✅ | **Event bus** — publishers never learn who listened; a bad listener cannot stop the rest | `core/eventBus.py` |
+| A-50 | ✅ | **Settings in one readable file**, secrets in a separate one, environment wins | `core/appConfig.py` |
+| A-51 | ✅ | **Logging** to console, rotating file, and a ring buffer the UI reads | `core/appLogging.py` |
+| A-52 | ✅ | **Console page** — frozen by design, filter to problems only | `modules/activityLog/` |
+| A-53 | ✅ | **Status page** — what loaded, what broke, where things are | `modules/systemStatus/` |
+| A-54 | ✅ | **Left menu**, fixed group order, current page marked by weight and border not colour | `core/webApp.py:33` |
+| A-55 | ✅ | **Calm stylesheet enforced by test** — no animation, no `:hover`, no pure white or black | `static/sixgenbot.css` |
+| A-56 | ✅ | **Health check** for Docker; 503 when a module failed | `core/webApp.py` |
+| A-57 | ✅ | **Modules never import each other**, enforced by an `ast` test | `tests/test_moduleIsolation.py` |
+| A-58 | ✅ | 23 pytest tests | `sixgenbot/tests/` |
+
+## A.7 Running it (the extension)
 
 | ID | Status | Feature | Where |
 |---|---|---|---|

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ siteTitle }}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/sixgenbot.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <nav class="menu" aria-label="Sections">
+    <p class="brand">{{ siteTitle }}<span class="version">{{ version }}</span></p>
+    {% for group, items in menu() %}
+      <p class="group">{{ group }}</p>
+      <ul>
+        {% for item in items %}
+          <li>
+            <a href="{{ item.path }}"
+               {% if request.url.path == item.path %}aria-current="page"{% endif %}>{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </nav>
+
+  <main id="main">
+    <h1>{% block heading %}{% endblock %}</h1>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

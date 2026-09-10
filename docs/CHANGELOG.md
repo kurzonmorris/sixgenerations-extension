@@ -7,6 +7,48 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-10 · sixgenbot v_0.1.0, stage 1
+
+**First Python code.** `sixgenbot/` — the server that will own the database, the
+images, the orders and the platform writes. Stage 1 is the skeleton: it runs, it
+logs, it loads modules, and it serves two pages. **No database, no Vinted, no
+scheduler.**
+
+Answers that shaped it: one repo, `v_0.1.0`, FastAPI, corrected stage order.
+
+**The module system, which is the point of stage 1:**
+
+- A feature is a folder under `sixgenbot/modules/` with a `module.py` declaring
+  `NAME`, `VERSION` and `register(bot)`. Core names none of them.
+- `register()` can add routes, a menu item, an event handler and a template
+  directory. **`addJob` and `addMigrations` deliberately do not exist yet** —
+  they arrive with the scheduler and database, and a function that silently does
+  nothing is worse than one that is absent.
+- **A broken module is reported and skipped; everything else still starts.**
+  Proved against three deliberately broken fixtures, not trusted.
+- Two `ast` tests enforce the rules that make it work: **a module never imports
+  another module**, and **core never imports a module**.
+- Switching a module off is a line in `config.toml`.
+
+**Also in:** settings in `config.toml` with secrets in a separate `secrets.toml`
+(environment wins, so Docker can inject, and secrets never pass through the
+settings dict); logging to console, rotating file and an in-memory ring buffer
+the Console page reads; a health check that returns 503 when a module failed;
+`python -m sixgenbot check` to load everything and report without opening a port;
+Dockerfile and compose file, one volume.
+
+**The stylesheet is enforced, not just written.** A test strips the CSS comments
+and then fails on any `transition`, `animation`, `:hover` rule, pure white or
+pure black — `INTERFACE_PRINCIPLES.md` U-03 and U-04 as a test rather than a
+promise.
+
+Verified: 23 pytest tests, 37 extension tests, and the service was run — pages
+served, health returned ok, a deliberate port clash reported itself clearly.
+**Not verified: that it starts on the Unraid server and reaches a phone over
+Tailscale.** That half of "done" needs Kurzon.
+
+---
+
 ## Unreleased — 2026-09-10 · sixgenbot planned
 
 **Documents only. No code changed.**

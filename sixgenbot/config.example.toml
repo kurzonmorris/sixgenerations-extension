@@ -1,0 +1,21 @@
+# sixgenbot settings.
+#
+# Copy to the data directory as config.toml and edit. Anything left out uses the
+# default shown here. Secrets do NOT go in this file — they go in secrets.toml
+# beside it, which is never committed.
+
+[web]
+host  = "0.0.0.0"   # 0.0.0.0 so Tailscale and the home network can reach it
+port  = 8770
+title = "Six Generations"
+
+[paths]
+data = "/data"      # database, images, exports, logs, backups
+
+[logging]
+level     = "INFO"  # DEBUG when hunting something, INFO the rest of the time
+keepLines = 2000    # how many lines the Console screen holds in memory
+
+[modules]
+# Folder names under sixgenbot/modules/ to leave switched off.
+disabled = []

@@ -1,0 +1,142 @@
+/*
+ * Calm on purpose. The rules in docs/INTERFACE_PRINCIPLES.md are requirements,
+ * not taste — the person who uses this daily has autism, ADHD and sensory
+ * sensitivities.
+ *
+ * So: no transitions, no animation, nothing that reacts to hover, no pure white
+ * and no pure black, and a word beside anything that colour is telling you.
+ */
+
+:root {
+  --paper:      #f4f2ee;
+  --card:       #fbfaf7;   /* off-white, never #fff */
+  --ink:        #2a2825;
+  --quiet:      #6a655e;
+  --line:       #ddd8d0;
+  --menu:       #efece6;
+  --attention:  #7a4b12;   /* used with a word, never alone */
+  --settled:    #3f5f45;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1b1a18;
+    --card:  #232120;
+    --ink:   #e2ded7;
+    --quiet: #9a938a;
+    --line:  #383430;
+    --menu:  #201e1c;
+    --attention: #d8a866;
+    --settled:   #8fb397;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 17px; }
+
+body {
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+}
+
+/* Nothing moves. If a transition or animation is ever wanted, it is not. */
+*, *::before, *::after { transition: none !important; animation: none !important; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 1rem; top: 1rem; background: var(--card); padding: 0.5rem 0.75rem; }
+
+.menu {
+  flex: 0 0 15rem;
+  background: var(--menu);
+  border-right: 1px solid var(--line);
+  padding: 1.5rem 0;
+}
+
+.brand {
+  margin: 0 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.version {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--quiet);
+}
+
+.group {
+  margin: 1.5rem 1.25rem 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  color: var(--quiet);
+}
+
+.menu ul { list-style: none; margin: 0; padding: 0; }
+
+.menu a {
+  display: block;
+  padding: 0.4rem 1.25rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+}
+
+/* Deliberately no :hover rule. The current page is marked with a word-safe
+   border AND a heavier weight, so colour is never carrying it alone. */
+.menu a[aria-current="page"] {
+  border-left-color: var(--ink);
+  font-weight: 600;
+  background: var(--card);
+}
+
+.menu a:focus-visible,
+main a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+main {
+  flex: 1;
+  padding: 2rem 2.5rem 4rem;
+  max-width: 68rem;
+}
+
+h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; font-weight: 600; margin: 2rem 0 0.6rem; }
+
+p { margin: 0 0 0.9rem; max-width: 42rem; }
+
+.quiet { color: var(--quiet); }
+
+.rows { border-top: 1px solid var(--line); max-width: 42rem; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row .value { font-variant-numeric: tabular-nums; }
+
+.state-ok      { color: var(--settled); }
+.state-problem { color: var(--attention); }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--quiet); font-size: 0.8rem; letter-spacing: 0.04em; }
+
+td.at { white-space: nowrap; color: var(--quiet); font-variant-numeric: tabular-nums; }
+td.level { white-space: nowrap; }
+td.message { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.86rem; }
+
+@media (max-width: 46rem) {
+  body { display: block; }
+  .menu { flex: none; width: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding: 1.5rem 1.25rem 3rem; }
+}

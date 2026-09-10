@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block heading %}sixgenbot is running{% endblock %}
+
+{% block content %}
+  {% if broken %}
+    <h2>Needs fixing</h2>
+    <div class="rows">
+      {% for module in broken %}
+        <div class="row">
+          <span>{{ module.folder }} did not load</span>
+          <span class="value state-problem">{{ module.problem }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Nothing needs fixing.</p>
+  {% endif %}
+
+  <h2>What is loaded</h2>
+  <div class="rows">
+    {% for module in working %}
+      <div class="row">
+        <span>{{ module.name }}</span>
+        <span class="value quiet">{{ module.version }}</span>
+      </div>
+    {% endfor %}
+    {% for module in off %}
+      <div class="row">
+        <span>{{ module.folder }}</span>
+        <span class="value quiet">switched off</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2>Inventory</h2>
+  <p class="quiet">
+    No database yet — that is stage 2. Nothing is stored, so there is nothing to
+    count.
+  </p>
+
+  <h2>Where things are</h2>
+  <div class="rows">
+    <div class="row"><span>Data directory</span><span class="value quiet">{{ dataDir }}</span></div>
+    <div class="row"><span>Settings</span><span class="value quiet">{{ dataDir }}/config.toml</span></div>
+    <div class="row"><span>Log file</span><span class="value quiet">{{ dataDir }}/logs/sixgenbot.log</span></div>
+  </div>
+{% endblock %}

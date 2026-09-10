@@ -12,6 +12,28 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-10
+
+- **Q42 One repo or two** → **one.** `sixgenbot/` sits beside the extension.
+- **Q43 Starting version** → **`v_0.1.0`**, with its own marker at
+  `sixgenbot/VERSION_v_0.1.0`. The extension's root marker is untouched, and the
+  existing version test still guards it.
+- **Q44 FastAPI or Flask** → **FastAPI**, as recommended. The difference that
+  mattered: routers are per-module by design, and it validates what the extension
+  will post. Endpoints are synchronous, so nothing about async leaks into the
+  rest of the code. Swapping to Flask later would touch `core/webApp.py` and the
+  two `routes.py` files, and nothing else.
+- **Q45 Stage order** → **corrected**: skeleton → database → import → web
+  interface → Vinted read → Vinted write.
+
+**Stage 1 is built.** `EXPLAINED_six-generations_Extension.md` §3B.
+
+---
+
+# Answered — the sixgenbot questions, for the reasoning
+
+(Kept below. All four are settled above.)
+
 # Answer these next — before sixgenbot is written
 
 Full reasoning in `docs/SIXGENBOT_PLAN.md`.

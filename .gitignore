@@ -2,3 +2,11 @@ node_modules/
 .DS_Store
 *.log
 reports/
+
+# sixgenbot
+__pycache__/
+*.py[cod]
+.pytest_cache/
+sixgenbot/data/
+config.toml
+secrets.toml
