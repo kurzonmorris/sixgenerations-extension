@@ -21,4 +21,8 @@ def status(request: Request):
         off=off,
         dataDir=bot.config.dataDir,
         events=bot.events.events,
+        counts=bot.db.counts(),
+        schemaVersion=bot.db.version,
+        databasePath=bot.db.path,
+        jobs=bot.scheduler.jobs,
     )

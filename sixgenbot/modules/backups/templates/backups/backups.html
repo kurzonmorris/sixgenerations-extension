@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block heading %}Backups{% endblock %}
+
+{% block content %}
+  {% if files %}
+    <p>
+      The newest backup was taken <strong>{{ files[0].takenAt.strftime('%d %B %Y at %H:%M') }}</strong>.
+      Every one listed here has been opened and checked, so none of them is a guess.
+    </p>
+  {% else %}
+    <p>No backup has been taken yet. One runs automatically at 2:30 each morning.</p>
+  {% endif %}
+
+  <form method="post" action="/backups/now">
+    <button type="submit">Back up now</button>
+  </form>
+
+  <h2>Kept here</h2>
+  <table>
+    <thead><tr><th>Taken</th><th>File</th><th>Size</th></tr></thead>
+    <tbody>
+      {% for file in files %}
+        <tr>
+          <td class="at">{{ file.takenAt.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td class="message">{{ file.name }}</td>
+          <td class="at">{{ '{:,}'.format(file.bytes) }} bytes</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3" class="quiet">Nothing yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Where they are</h2>
+  <div class="rows">
+    <div class="row"><span>Backup folder</span><span class="value quiet">{{ folder }}</span></div>
+    <div class="row"><span>Database</span><span class="value quiet">{{ databasePath }}</span></div>
+    <div class="row"><span>Schema</span><span class="value quiet">v{{ schemaVersion }}</span></div>
+    <div class="row"><span>Kept</span><span class="value quiet">the newest 14</span></div>
+  </div>
+
+  <h2>Getting one back</h2>
+  <p class="quiet">
+    Restoring is a command rather than a button, on purpose — it replaces
+    everything, so it should be a deliberate act at a keyboard:
+  </p>
+  <p class="message">docker exec sixgenbot python -m sixgenbot restore</p>
+  <p class="quiet">
+    That puts back the newest backup, and keeps whatever it replaced beside the
+    database as <em>.beforeRestore</em>. Add <em>--file</em> to choose a different one.
+  </p>
+
+  <h2>Offsite</h2>
+  <p class="quiet">
+    Point pCloud Drive or rclone at the backup folder above. sixgenbot never
+    holds a pCloud password — one fewer secret to lose.
+  </p>
+{% endblock %}

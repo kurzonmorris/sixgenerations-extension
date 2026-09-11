@@ -1,4 +1,4 @@
-sixgenbot v_0.1.0 — stage 1, the skeleton.
+sixgenbot v_0.2.0 — stage 2, the database.
 
 Its own version, separate from the Chrome extension's marker at the repo root.
 Bump rules: docs/VERSIONING.md. Never change it without being given the number.

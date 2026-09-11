@@ -12,6 +12,33 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answer this — a decision taken without you
+
+## Q46 — Plain `sqlite3` instead of SQLAlchemy
+
+`SIXGENBOT_PLAN.md §4` recommended SQLAlchemy and you approved the plan. **Stage 2
+does not use it**, and that is a change I made without asking, so here is the
+reasoning and how to reverse it.
+
+**Why:**
+
+1. **The migrations become the only description of the schema.** With an ORM
+   there are two — the models and the migration files — and in my experience
+   they drift, quietly, until something does not match in production.
+2. **Full-text search is the headline feature.** "Do you have anything with
+   velvet in it?" is one line of SQL with SQLite's FTS5, and a fight through an
+   ORM. It is the most-used screen in the whole system.
+3. One fewer dependency, and SQL that anyone can read without learning a library.
+
+**What it costs:** moving to Postgres later would mean rewriting the queries
+rather than changing one line. Postgres only matters if several things write at
+once, which one person and one container will not.
+
+**Reversing it:** every query is in `core/database.py` or a module's
+`routes.py` — nothing is scattered. Say the word and it changes.
+
+---
+
 # Answered — 2026-09-10
 
 - **Q42 One repo or two** → **one.** `sixgenbot/` sits beside the extension.

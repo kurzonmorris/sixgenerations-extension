@@ -33,14 +33,35 @@
   </div>
 
   <h2>Inventory</h2>
-  <p class="quiet">
-    No database yet — that is stage 2. Nothing is stored, so there is nothing to
-    count.
-  </p>
+  {% if counts['items'] %}
+    <div class="rows">
+      <div class="row"><span>Items</span><span class="value">{{ '{:,}'.format(counts['items']) }}</span></div>
+      <div class="row"><span>On sale</span><span class="value">{{ '{:,}'.format(counts['onSale']) }}</span></div>
+      <div class="row"><span>To review</span><span class="value">{{ '{:,}'.format(counts['needsInfo']) }}</span></div>
+      <div class="row"><span>Sold</span><span class="value">{{ '{:,}'.format(counts['sold']) }}</span></div>
+      <div class="row"><span>Orders</span><span class="value">{{ '{:,}'.format(counts['orders']) }}</span></div>
+      <div class="row"><span>Photos</span><span class="value">{{ '{:,}'.format(counts['images']) }}</span></div>
+    </div>
+  {% else %}
+    <p class="quiet">
+      The database is ready and empty. Nothing has been imported yet — that is
+      stage 3.
+    </p>
+  {% endif %}
+
+  <h2>Repeating jobs</h2>
+  <div class="rows">
+    {% for job in jobs %}
+      <div class="row"><span>{{ job.name }}</span><span class="value quiet">{{ job.when }}</span></div>
+    {% else %}
+      <div class="row"><span class="quiet">None scheduled.</span></div>
+    {% endfor %}
+  </div>
 
   <h2>Where things are</h2>
   <div class="rows">
     <div class="row"><span>Data directory</span><span class="value quiet">{{ dataDir }}</span></div>
+    <div class="row"><span>Database</span><span class="value quiet">{{ databasePath }} (schema v{{ schemaVersion }})</span></div>
     <div class="row"><span>Settings</span><span class="value quiet">{{ dataDir }}/config.toml</span></div>
     <div class="row"><span>Log file</span><span class="value quiet">{{ dataDir }}/logs/sixgenbot.log</span></div>
   </div>

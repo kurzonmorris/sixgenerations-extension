@@ -24,7 +24,7 @@ one.
 | | Yours | Suggested |
 |---|---|---|
 | 1 | Web interface | **Skeleton** ✅ built — it runs, it logs, one page says it is alive |
-| 2 | Database | **Database** — the schema, empty |
+| 2 | Database | **Database** ✅ built — the schema, empty |
 | 3 | Import tool | **Import** — Crosslist export + your five-year ledger. ~2,000 real items |
 | 4 | Manual Vinted update | **Web interface** — the Table and the dashboard, over real data |
 | 5 | | **Vinted read** |
@@ -61,7 +61,7 @@ What is in it, file by file: `EXPLAINED_six-generations_Extension.md` §3B.
 **Still to confirm: that it actually starts on your server and reaches your
 phone** — that is the half of "done" only you can test.
 
-### Stage 2 — the database *(v_0.2.0)*
+### Stage 2 — the database *(v_0.2.0)* — **BUILT 2026-09-11**
 
 - SQLite, one file, in the volume (D-043, D-044).
 - The schema from `docs/DATA_MODEL.md`: items, attributes, categories, listings,
@@ -74,6 +74,18 @@ phone** — that is the half of "done" only you can test.
 
 **Done when:** a backup can be restored into an empty container and the data is
 all there (D-051). Not "when the tables exist" — when a restore has been *tried*.
+
+**Built**, and the restore is tried on every test run: fill a database, back it
+up, delete it, put it back, check every row returned. 50 tests.
+
+Two things deliberately left for later: **images are not backed up yet** (they
+are immutable and deduplicated by hash, so they want copying rather than
+snapshotting), and **the offsite copy is a folder rather than code** — pCloud
+Drive or rclone syncs `<data>/backups/`, so sixgenbot never holds a pCloud
+password.
+
+**The stack changed here:** plain `sqlite3` rather than SQLAlchemy. Reasoning in
+§4 and in `docs/OPEN_QUESTIONS.md` Q46.
 
 ### Stage 3 — import *(v_0.3.0)*
 
@@ -215,7 +227,7 @@ served by uvicorn, in one container.**
 | **FastAPI** | Routers are per-module by design, which is exactly the modularity you want. It also validates what the extension posts, which will be a large untrusted payload |
 | **Jinja templates** | Server-rendered HTML. No React, no build step, no bundler. A page that is drawn on the server and then sits still is most of the calm-interface requirement met by construction |
 | **SQLite** | One file. Copy it, back it up, move it to HexOS. Handles millions of rows. Postgres later changes one line if it is ever needed |
-| **SQLAlchemy** | Lets the models be defined once and swapped to Postgres without rewriting queries |
+| ~~SQLAlchemy~~ | **Dropped 2026-09-11.** Plain `sqlite3` instead: the migrations become the only description of the schema, and FTS5 — the most-used feature in the system — is native rather than fought with. See `OPEN_QUESTIONS.md` Q46 |
 | **APScheduler** | In-process scheduling. No cron, no second container |
 | **pytest** | One test folder per module |
 

@@ -7,6 +7,49 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## sixgenbot v_0.2.0 — 2026-09-11 · stage 2, the database
+
+The database, and the backup that has actually been restored. 50 pytest tests,
+37 extension tests.
+
+- **The full schema** from `docs/DATA_MODEL.md` in one numbered migration:
+  items, multi-value attributes, categories, listings, images, orders, messages,
+  lots, purchases, posting trips and events. Money in integer pence, dates in
+  ISO-8601, statuses `CHECK`-constrained so a typo is refused rather than stored.
+- **Migrations run on every start**, each atomically. A deliberately broken
+  migration is used in the tests to prove a failure leaves no trace.
+- **Full-text search across everything** — title, description, brand, SKU,
+  private notes, every attribute and every category, in one query. Whatever
+  someone types is quoted first, so a stray `"` or `*` cannot become FTS syntax.
+- **Nightly backup at 02:30**, taken with SQLite's own online backup rather than
+  a file copy, then verified by opening it. Newest 14 kept.
+- **Restore is a command, not a button**, and keeps whatever it replaced as
+  `.beforeRestore`. **The round trip runs on every test:** fill, back up, delete,
+  restore, check every row came back.
+- **Scheduler** — `bot.addJob(name, when, run)`. A job that throws is logged and
+  the rest carry on.
+- **`docs/INSTALL_GUIDE.md`** — copy-and-paste from clone to running container,
+  with and without Compose, plus backup, restore, update and troubleshooting.
+
+**Changed from the approved plan: plain `sqlite3`, not SQLAlchemy.** The
+migrations then describe the schema and nothing can drift from them, and FTS5 is
+native. Reversible — see `OPEN_QUESTIONS.md` Q46.
+
+**Two bugs the tests found before they could matter:**
+
+- `sqlite3.executescript()` commits any open transaction before it runs, so
+  wrapping a migration in `BEGIN`/`COMMIT` did not work — and a migration failing
+  halfway would have left a half-built schema. `BEGIN` and `COMMIT` now live
+  inside the script.
+- Backups were named to the minute, so pressing "Back up now" twice in one minute
+  silently overwrote the first.
+
+**Left for later on purpose:** images are not in the backup yet (immutable and
+deduplicated, so they want copying rather than snapshotting), and the offsite
+copy is a folder for pCloud to sync rather than code holding a password.
+
+---
+
 ## Unreleased — 2026-09-10 · sixgenbot v_0.1.0, stage 1
 
 **First Python code.** `sixgenbot/` — the server that will own the database, the

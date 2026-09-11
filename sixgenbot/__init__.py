@@ -1,3 +1,3 @@
 """sixgenbot — the Six Generations inventory service."""
 
-VERSION = "v_0.1.0"
+VERSION = "v_0.2.0"
