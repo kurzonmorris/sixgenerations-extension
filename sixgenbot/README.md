@@ -1,8 +1,11 @@
 # sixgenbot
 
-**v_0.1.0 — stage 1, the skeleton.** It runs, it logs, it loads modules, and it
-serves two pages. There is no database and nothing about Vinted yet: that is
-stages 2 and 5 of `../docs/SIXGENBOT_PLAN.md`.
+**v_0.2.0 — stage 2, the database.** It runs, logs, loads modules, serves three
+pages, and owns a migrated SQLite database that backs itself up every night and
+can be restored with one command. Nothing about Vinted yet — that is stage 5 of
+`../docs/SIXGENBOT_PLAN.md`, and importing real data is stage 3.
+
+**Installing it: `../docs/INSTALL_GUIDE.md`** — copy and paste, start to finish.
 
 ## Run it on the server
 
@@ -53,8 +56,25 @@ def register(bot):
 Nothing in `core/` changes. **A module never imports another module** — a test
 enforces it. They talk through the database and the event bus instead.
 
+## Backups
+
+One runs at 2:30 every morning into `<data>/backups/`, and each is opened and
+checked as it is written. The newest 14 are kept.
+
+```bash
+docker exec sixgenbot python -m sixgenbot backup     # take one now
+docker exec sixgenbot python -m sixgenbot restore    # put the newest back
+```
+
+Restoring keeps whatever it replaced beside the database as `.beforeRestore`.
+For the offsite copy, point pCloud Drive or rclone at the backup folder —
+sixgenbot never holds a pCloud password.
+
 ## Tests
 
 ```bash
 python -m pytest sixgenbot/tests -q
 ```
+
+50 tests. The one that matters most puts a backup back and checks the data is
+all there.

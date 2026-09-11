@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-11 | **sixgenbot v_0.2.0, stage 2: the database.** SQLite with numbered migrations, full-text search, nightly backup and a tested restore. **Plain `sqlite3` rather than SQLAlchemy** — reasoning in §3B.9. Two bugs found by the tests: `executescript` breaks an outer transaction, and two backups in the same minute overwrote each other. `docs/INSTALL_GUIDE.md` added |
 | 2026-09-10 (2) | **sixgenbot stage 1 built** — the skeleton runs, loads modules, serves two pages. FastAPI + Jinja, 23 pytest tests. Documented in §3B. Q42–Q45 answered |
 | 2026-09-10 | **`sixgenbot` planned** — six stages, module contract, stack. `docs/SIXGENBOT_PLAN.md`. Nothing built yet; Q42–Q45 decide repo, version, framework and stage order |
 | 2026-09-09 (4) | **The SKU is permanent and never recycled** — a returned item keeps its number and goes back in the same box. Item numbers run to five digits. **This exposed a real bug: the parser only accepted four**, so `5-6 17735` would not have parsed. Fixed in `storageCode.js` and the content-script copy, with a test. Dashboard purpose confirmed |
@@ -570,6 +571,67 @@ is not a rule.
 
 Without those two, "modules" is just folders.
 
+## 3B.9 Stage 2 — the database *(v_0.2.0)*
+
+### The schema
+
+`sixgenbot/migrations/0001_initialSchema.sql`, straight from `docs/DATA_MODEL.md`:
+`item`, `itemAttribute`, `itemCategory`, `listing`, `itemImage`, `salesOrder`,
+`message`, `lot`, `purchase`, `postingTrip`, `event`, plus an FTS5 `itemSearch`.
+
+Two conventions run through all of it:
+
+- **Money is integer pence.** 1250 is £12.50. Never a float.
+- **Dates are ISO-8601 text.** The old ledger's `7.9.26` is converted on import,
+  never copied (`docs/EXISTING_LEDGER.md §5`).
+
+`item.status` and `salesOrder.status` are `CHECK`-constrained to the lifecycles in
+DATA_MODEL.md §3, so a typo in a status is refused rather than stored.
+`salesOrder` is not called `order` because that is an SQL keyword.
+
+### Plain `sqlite3`, not SQLAlchemy — a change from the approved plan
+
+`docs/SIXGENBOT_PLAN.md §4` recommended SQLAlchemy and Kurzon approved it. Stage 2
+does not use it, for three reasons:
+
+1. **The migrations become the only description of the schema.** With an ORM
+   there are two — the models and the migrations — and they drift.
+2. **FTS5 is the headline feature.** "Do you have anything with velvet in it?" is
+   one query in SQL and a fight through an ORM.
+3. One less dependency, and SQL anyone can read.
+
+**Reversible:** every query is in `core/database.py` or a module's `routes.py`.
+Recorded as Q46 in case Kurzon wants it the other way.
+
+### `core/database.py`
+
+| Piece | Note |
+|---|---|
+| `connect()` | WAL (a long read cannot block a write), `foreign_keys = ON`, `busy_timeout = 30s` |
+| `migrate()` | Runs what has not run, in order, each atomically. Safe on every start |
+| `Database` | One connection **per thread** — FastAPI's sync endpoints run in a thread pool and a sqlite3 connection must not cross threads |
+| `reindexItem()` | Rebuilds one item's search text from item + attributes + categories |
+| `searchItems()` | Quotes every word, so a typed `"` or `*` cannot become FTS syntax |
+| `counts()` | What the status page shows |
+
+### `core/backup.py`
+
+SQLite's own `.backup()`, not a file copy — **copying a database mid-write
+produces something that looks fine and is not.** Then gzip, then verify by
+opening it and running `integrity_check`. The newest 14 are kept.
+
+`restore()` verifies before touching anything and keeps the replaced database as
+`.beforeRestore`. **A test does the full round trip on every run**: fill a
+database, back it up, delete it, restore, and check every row came back.
+
+**Offsite is deliberately not in the code.** Backups land in one folder and
+pCloud Drive or rclone copies it. sixgenbot never holds a pCloud password.
+
+### `core/scheduler.py`
+
+APScheduler in-process. `bot.addJob(name, when, run)` takes a crontab line or a
+number of minutes. **A job that throws is logged and the schedule carries on.**
+
 ---
 
 # 4. The tests
@@ -577,7 +639,7 @@ Without those two, "modules" is just folders.
 **The extension:** `npm test` — 37 tests, Node's built-in runner, nothing to
 install.
 
-**sixgenbot:** `python -m pytest sixgenbot/tests -q` — 23 tests.
+**sixgenbot:** `python -m pytest sixgenbot/tests -q` — 50 tests.
 
 | File | Covers |
 |---|---|
@@ -704,10 +766,35 @@ and `13-8 99999`.
 **The lesson worth keeping:** a limit that looks generous against *how many
 things exist* can be far too small against *how many have ever existed*.
 
-## 7.8 GraphQL 200 ≠ success
+## 7.8 `executescript()` throws away your transaction
+
+Python's `sqlite3.executescript()` **commits whatever is open before it starts**.
+So `BEGIN` → `executescript(...)` → `COMMIT` fails with *"cannot commit — no
+transaction is active"*, and worse, a migration that failed halfway would have
+left a half-built schema behind.
+
+The fix is to put `BEGIN;` and `COMMIT;` **inside the script text**. A test
+proves it: a deliberately broken migration leaves no trace and does not count as
+applied (`tests/test_database.py`).
+
+## 7.9 `counts.items` in a Jinja template is the dict's method
+
+`{{ counts.items }}` returns the built-in `dict.items` method, not the value
+under the key `"items"`. It fails with a baffling
+*"unsupported format string passed to builtin_function_or_method"*.
+
+**Use `counts['items']` in templates.** Same trap waits for `keys` and `values`.
+
+## 7.10 A timestamped filename needs seconds
+
+Backups were named to the minute, so pressing "Back up now" twice in the same
+minute silently overwrote the first. Now seconds, plus a counter if that still
+collides. Found by a test, not in use — which is the point of the test.
+
+## 7.11 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.
 
-## 7.9 MV3 kills the worker
+## 7.12 MV3 kills the worker
 Nothing durable can live in module scope. It is also why an extension alone can
 never be a 24/7 monitor — the browser has to be open.
 

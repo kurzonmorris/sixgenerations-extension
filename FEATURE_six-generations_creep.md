@@ -110,6 +110,28 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-57 | ✅ | **Modules never import each other**, enforced by an `ast` test | `tests/test_moduleIsolation.py` |
 | A-58 | ✅ | 23 pytest tests | `sixgenbot/tests/` |
 
+## A.6b sixgenbot — the database *(v_0.2.0, 2026-09-11)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-59 | ✅ | **The full schema** from `DATA_MODEL.md` — items, multi-value attributes, categories, listings, images, orders, messages, lots, purchases, posting trips, events | `migrations/0001_initialSchema.sql` |
+| A-60 | ✅ | **Numbered migrations**, each atomic, safe to re-run, applied on every start | `core/database.py` |
+| A-61 | ✅ | **A failed migration leaves no trace** — proved with a deliberately broken one | `tests/test_database.py` |
+| A-62 | ✅ | **Search across everything at once** — title, description, brand, SKU, notes, every attribute, every category | `core/database.py` `searchItems()` |
+| A-63 | ✅ | Search survives whatever is typed — quotes, stars, punctuation | `core/database.py` |
+| A-64 | ✅ | **Money in integer pence**, dates in ISO-8601 | schema-wide |
+| A-65 | ✅ | **A bad status is refused**, not stored | `CHECK` constraints |
+| A-66 | ✅ | **Nothing is deleted** — status changes and the details stay | tested |
+| A-67 | ✅ | **Nightly backup at 02:30**, checked as it is written, newest 14 kept | `modules/backups/` |
+| A-68 | ✅ | **Restore, with the replaced database kept** as `.beforeRestore` | `core/backup.py` |
+| A-69 | ✅ | **The round trip is tested** — fill, back up, delete, restore, check every row | `tests/test_backup.py` |
+| A-70 | ✅ | A damaged backup is refused rather than restored | `core/backup.py` |
+| A-71 | ✅ | **Scheduler** — `bot.addJob(name, when, run)`; a job that throws does not stop the others | `core/scheduler.py` |
+| A-72 | ✅ | `migrate`, `backup`, `restore` commands; `check` reports schema, counts and backups | `__main__.py` |
+| A-73 | ✅ | The status page shows real counts and the scheduled jobs | `modules/systemStatus/` |
+| A-74 | ✅ | **Copy-and-paste install guide**, with and without Compose | `docs/INSTALL_GUIDE.md` |
+| A-75 | ✅ | 50 pytest tests | `sixgenbot/tests/` |
+
 ## A.7 Running it (the extension)
 
 | ID | Status | Feature | Where |

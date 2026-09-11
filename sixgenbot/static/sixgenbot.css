@@ -127,6 +127,23 @@ p { margin: 0 0 0.9rem; max-width: 42rem; }
 .state-ok      { color: var(--settled); }
 .state-problem { color: var(--attention); }
 
+/* No hover rule, deliberately. A button looks the same until it is pressed or
+   focused — U-04, nothing happens on hover. */
+button {
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+}
+
+button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+button:active { border-color: var(--ink); }
+
+form { margin: 0 0 1.5rem; }
+
 table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 th, td { text-align: left; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-weight: 600; color: var(--quiet); font-size: 0.8rem; letter-spacing: 0.04em; }

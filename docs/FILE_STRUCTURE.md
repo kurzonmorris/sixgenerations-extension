@@ -63,18 +63,24 @@ sixgenerations-extension/
 │   ├── VERSION_v_0.1.0               its own version, separate from the extension's
 │   ├── config.example.toml           the documented settings template
 │   ├── Dockerfile  docker-compose.yml
+│   ├── migrations/                   numbered SQL, each applied once, in order
+│   │   └── 0001_initialSchema.sql    the whole schema from docs/DATA_MODEL.md
 │   ├── core/                         everything a module may depend on. Never imports one
 │   │   ├── appConfig.py              config.toml + secrets.toml, defaults merged
 │   │   ├── appLogging.py             console, rotating file, and a ring buffer the UI reads
+│   │   ├── backup.py                 SQLite online backup, verify, restore, prune
+│   │   ├── database.py               connection per thread, migrations, full-text search
 │   │   ├── eventBus.py               named events; publishers never learn who listened
 │   │   ├── moduleLoader.py           finds and registers modules. Names none of them
+│   │   ├── scheduler.py              repeating jobs; one failing job cannot stop the rest
 │   │   └── webApp.py                 the Bot object modules register against, and the app
 │   ├── modules/                      ONE FOLDER PER FEATURE. Add a folder, add a feature
 │   │   ├── systemStatus/             "is it running", what loaded, what broke
-│   │   └── activityLog/              the Console page
+│   │   ├── activityLog/              the Console page
+│   │   └── backups/                  nightly backup, and the page that proves it ran
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 23 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 50 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
@@ -86,6 +92,8 @@ sixgenerations-extension/
 └── docs/
     ├── INTERFACE_LAYOUT.md          ★ The dashboard and left menu, as asked for. What is on
     │                                 each screen, and why the three sites cannot be embedded
+    ├── INSTALL_GUIDE.md             ★ Copy-and-paste install, Unraid first. With and without
+    │                                 Compose, plus backup, restore, update and troubleshooting
     ├── SIXGENBOT_PLAN.md            ★ How the Python service gets built: six stages, the
     │                                 module contract, the stack, and the three rules that
     │                                 stop features breaking each other

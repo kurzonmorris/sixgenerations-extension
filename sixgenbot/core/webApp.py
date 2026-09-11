@@ -7,16 +7,20 @@
     bot.onEvent(name, handler)               what it reacts to
     bot.emit(name, **payload)                what it announces
     bot.templates(folder)                    its own templates
+    bot.addJob(name, when, run)              repeating work
+    bot.db.connection()                      the database
 
-`addJob` and `addMigrations` arrive with the scheduler and the database in
-stage 2 — they are not stubbed here, because a function that silently does
-nothing is worse than one that does not exist yet.
+`addMigrations` still does not exist: every migration so far belongs to the
+shared schema and lives in `sixgenbot/migrations/`. A module that needs tables
+of its own can have it then, rather than now for nobody.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
 from fastapi.responses import HTMLResponse
@@ -27,7 +31,9 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 from .. import VERSION
 from .appConfig import Config
 from .appLogging import getLogger
+from .database import Database
 from .eventBus import EventBus
+from .scheduler import Job, Scheduler
 
 log = getLogger("web")
 
@@ -50,7 +56,9 @@ class MenuItem:
 class Bot:
     def __init__(self, config: Config) -> None:
         self.config = config
+        self.db = Database(config.dataDir / "sixgenbot.sqlite")
         self.events = EventBus()
+        self.scheduler = Scheduler()
         self.menu: list[MenuItem] = []
         self.modules: list = []
         self.currentModule: str | None = None
@@ -71,6 +79,10 @@ class Bot:
     def emit(self, event: str, **payload) -> int:
         return self.events.emit(event, **payload)
 
+    def addJob(self, name: str, when: str, run) -> None:
+        """`when` is a crontab line ("30 2 * * *") or a number of minutes."""
+        self.scheduler.add(Job(name=name, owner=self.currentModule or "core", when=when, run=run))
+
     def templates(self, folder: Path | str) -> None:
         self._templateDirs.append(Path(folder))
 
@@ -85,8 +97,21 @@ class Bot:
             for name in ordered
         ]
 
-    def buildApp(self) -> FastAPI:
-        app = FastAPI(title=self.config.title, version=VERSION, docs_url=None, redoc_url=None)
+    def buildApp(self, startScheduler: bool = False) -> FastAPI:
+        @asynccontextmanager
+        async def lifespan(_app: FastAPI):
+            if startScheduler:
+                self.scheduler.start()
+            yield
+            self.scheduler.stop()
+
+        app = FastAPI(
+            title=self.config.title,
+            version=VERSION,
+            docs_url=None,
+            redoc_url=None,
+            lifespan=lifespan,
+        )
 
         jinja = Jinja2Templates(directory=str(HERE / "templates"))
         jinja.env.loader = ChoiceLoader([FileSystemLoader(str(d)) for d in self._templateDirs])
@@ -105,6 +130,10 @@ class Bot:
         @app.get("/health", response_class=HTMLResponse, include_in_schema=False)
         def health() -> HTMLResponse:
             broken = [m.name for m in self.modules if not m.ok and m.problem != "switched off"]
+            try:
+                self.db.connection().execute("SELECT 1")
+            except Exception as error:
+                return HTMLResponse(f"database unreachable: {error}", status_code=503)
             body = "ok" if not broken else f"modules failed: {', '.join(broken)}"
             return HTMLResponse(body, status_code=200 if not broken else 503)
 

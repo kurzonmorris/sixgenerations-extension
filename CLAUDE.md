@@ -21,10 +21,12 @@ through the browser session. eBay is driven by its **API from the container**.
 | | Version | State |
 |---|---|---|
 | **The Chrome extension** (root, `source/`) | `v_0.1.0` | Reads Vinted and Shopify, compares them, writes to Shopify. **No Vinted writes** |
-| **`sixgenbot/`** — the Python server | `v_0.1.0` | **Stage 1: the skeleton.** Runs, logs, loads modules, serves two pages. **No database, no Vinted, no scheduler** |
+| **`sixgenbot/`** — the Python server | `v_0.2.0` | **Stage 2: the database.** Runs, logs, loads modules, migrated SQLite with full-text search, nightly backup and a tested restore. **No data in it yet, nothing about Vinted** |
 
-Next: **stage 2, the database** (`docs/SIXGENBOT_PLAN.md`). eBay and Shopify wait
-until Vinted works end to end.
+Next: **stage 3, import** — the Crosslist export and the five-year ledger
+(`docs/SIXGENBOT_PLAN.md`). eBay and Shopify wait until Vinted works end to end.
+
+Installing it: **`docs/INSTALL_GUIDE.md`**, copy and paste.
 
 **Where it is going:** a small Chrome extension that reads Vinted in the user's
 own signed-in session, handing everything to a **Python Docker container** on the
@@ -133,10 +135,11 @@ source/                the extension
 tests/                 npm test — 37 tests, nothing to install
 
 sixgenbot/             the SERVER (Python, Docker)
-  VERSION_v_0.1.0      its own version marker
-  core/                config, logging, events, module loader, web app
+  VERSION_v_0.2.0      its own version marker
+  core/                config, logging, events, database, backup, scheduler, web app
+  migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 23 tests
+  tests/               python -m pytest sixgenbot/tests -q — 50 tests
 
 docs/                  everything else
 ```

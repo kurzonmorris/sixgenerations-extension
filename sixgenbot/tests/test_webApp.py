@@ -9,6 +9,7 @@ from sixgenbot.core.webApp import Bot
 def buildClient(tmp_path, disabled=None):
     setupLogging(level="DEBUG")
     bot = Bot(loadConfig(tmp_path))
+    bot.db.migrate()
     bot.modules = loadModules(bot, disabled=disabled)
     return TestClient(bot.buildApp()), bot
 
@@ -22,9 +23,40 @@ def test_the_status_page_says_it_is_running(tmp_path):
     assert "systemStatus" in page.text
 
 
-def test_the_status_page_admits_there_is_no_database_yet(tmp_path):
+def test_the_status_page_says_the_database_is_ready_and_empty(tmp_path):
     client, _ = buildClient(tmp_path)
-    assert "No database yet" in client.get("/").text
+    body = client.get("/").text
+    assert "ready and empty" in body
+    assert "schema v1" in body
+
+
+def test_the_status_page_counts_what_is_actually_there(tmp_path):
+    client, bot = buildClient(tmp_path)
+    bot.db.connection().execute(
+        "INSERT INTO item (itemId, sku, status, title, dateAdded)"
+        " VALUES ('i1', '13-8 24', 'on_sale', 'Navy wool coat', date('now'))"
+    )
+    body = client.get("/").text
+    assert "ready and empty" not in body
+    assert "On sale" in body
+
+
+def test_the_nightly_backup_is_scheduled(tmp_path):
+    _, bot = buildClient(tmp_path)
+    assert [job.name for job in bot.scheduler.jobs] == ["nightlyBackup"]
+    assert bot.scheduler.jobs[0].when == "30 2 * * *"
+
+
+def test_a_backup_can_be_taken_from_the_page(tmp_path):
+    client, bot = buildClient(tmp_path)
+    assert "No backup has been taken yet" in client.get("/backups").text
+
+    reply = client.post("/backups/now", follow_redirects=False)
+    assert reply.status_code == 303
+
+    from sixgenbot.core.backup import listBackups
+    assert len(listBackups(bot.config.dataDir)) == 1
+    assert "newest backup was taken" in client.get("/backups").text
 
 
 def test_the_console_shows_what_was_logged(tmp_path):
@@ -50,9 +82,9 @@ def test_health_is_ok_when_every_module_loaded(tmp_path):
 
 def test_the_menu_is_drawn_on_every_page(tmp_path):
     client, _ = buildClient(tmp_path)
-    for path in ("/", "/console"):
+    for path in ("/", "/console", "/backups"):
         body = client.get(path).text
-        assert "Status" in body and "Console" in body
+        assert "Status" in body and "Console" in body and "Backups" in body
         assert "SYSTEM" in body
 
 
