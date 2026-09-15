@@ -77,6 +77,7 @@ sixgenerations-extension/
 │   │   ├── moduleLoader.py           finds and registers modules. Names none of them
 │   │   ├── csvExport.py              writes the inventory back out, flattened for Calc
 │   │   ├── crosslistImport.py        reads the export: weight and SKU out of the description
+│   │   ├── itemEdit.py               changing a garment, with every change recorded
 │   │   ├── photoStore.py             downloads every photo, resumable, hashes everything
 │   │   ├── readiness.py              what is missing, and what nobody has checked yet
 │   │   ├── sku.py                    the SKU: parse, format, rewrite. Twin of storageCode.js
@@ -86,10 +87,11 @@ sixgenerations-extension/
 │   │   ├── systemStatus/             "is it running", what loaded, what broke
 │   │   ├── activityLog/              the Console page
 │   │   ├── backups/                  nightly backup, and the page that proves it ran
-│   │   └── fileTransfer/             upload a spreadsheet, download the inventory
+│   │   ├── fileTransfer/             upload a spreadsheet, download the inventory
+│   │   └── itemReview/               "To review" — pick a batch, fix it, save the lot
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 119 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 138 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

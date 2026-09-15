@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block heading %}Working on {{ items | length }} items{% endblock %}
+
+{% block content %}
+  <p class="quiet">
+    Change what needs changing and leave the rest alone. Nothing is saved until
+    you press the button at the bottom, and nothing goes on Vinted, eBay or the
+    shop from this screen.
+  </p>
+
+  <form method="post" action="/review/save">
+    <input type="hidden" name="columns" value="{{ columns }}">
+    <input type="hidden" name="which" value="{{ which }}">
+
+    {% for item in items %}
+      <section class="itemCard">
+        <h2>{{ item.sku }} — {{ item.title or 'no title' }}</h2>
+        <p class="quiet">{{ item.needs }}</p>
+
+        <div class="fieldGrid">
+          {% for field in fields %}
+            <p>
+              <label for="{{ item.itemId }}-{{ field.name }}">{{ field.label }}</label>
+              {% if field.kind == 'long' %}
+                <textarea id="{{ item.itemId }}-{{ field.name }}"
+                          name="f:{{ item.itemId }}:{{ field.name }}"
+                          rows="3">{{ item.values[field.name] }}</textarea>
+              {% else %}
+                <input id="{{ item.itemId }}-{{ field.name }}"
+                       name="f:{{ item.itemId }}:{{ field.name }}"
+                       value="{{ item.values[field.name] }}"
+                       {% if field.kind == 'money' %}inputmode="decimal"{% endif %}
+                       {% if field.kind == 'number' %}inputmode="numeric"{% endif %}>
+              {% endif %}
+            </p>
+          {% endfor %}
+        </div>
+
+        <p>
+          <label>
+            <input type="checkbox" name="checked:{{ item.itemId }}" value="yes" checked>
+            I have checked this one
+          </label>
+        </p>
+      </section>
+    {% endfor %}
+
+    <p>
+      <button type="submit">Save all {{ items | length }}</button>
+      <a href="/review?which={{ which }}">Go back without saving</a>
+    </p>
+  </form>
+{% endblock %}

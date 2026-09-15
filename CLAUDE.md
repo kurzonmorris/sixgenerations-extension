@@ -24,10 +24,11 @@ through the browser session. eBay is driven by its **API from the container**.
 | **`sixgenbot/`** — the Python server | `v_0.2.0` | **Stage 2: the database.** Runs, logs, loads modules, migrated SQLite with full-text search, nightly backup and a tested restore. **No data in it yet, nothing about Vinted** |
 
 **Stage 3 is built**: `import --csv <file>` (dry run unless `--apply`) and
-`photos` (resumable). 2,125 items import cleanly from the real export. Next:
-**stage 4, the screens** — the Table, the batch review and edit (U-16), and
-drag-and-drop photo order (U-17). eBay and Shopify wait until Vinted works end to
-end.
+`photos` (resumable). 2,125 items import cleanly from the real export. **Stage 4
+has started**: the Files page, and **"To review" (U-16)** — pick a batch, choose
+which fields show, correct them, save the lot. Next: drag-and-drop photo order
+(U-17), the Table (U-13), item history (U-18). eBay and Shopify wait until Vinted
+works end to end.
 
 **The photographs are on a clock:** all 9,098 are hosted on
 `media-na.crosslist.com` and will very likely die with the subscription — for 988
@@ -156,7 +157,7 @@ sixgenbot/             the SERVER (Python, Docker)
   core/                config, logging, events, database, backup, scheduler, web app
   migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 119 tests
+  tests/               python -m pytest sixgenbot/tests -q — 138 tests
 
 docs/                  everything else
 ```

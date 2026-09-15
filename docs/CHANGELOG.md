@@ -7,6 +7,40 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (8) · "To review", the screen the backlog is cleared on
+
+138 sixgenbot tests, 37 extension tests.
+
+**U-16, the batch review and edit screen.** Pick a batch from the list, choose
+which fields you want to see, correct them, save the lot in one press. Up to 40
+at a time.
+
+Choosing what is shown is also choosing what can be changed — tick *Size UK* and
+*Price* and the next screen has two boxes per item and nothing else on it. The
+choice is remembered.
+
+Three lists, because they are three different jobs: everything not checked yet
+(2,016), **never listed** (972), and listed but unconfirmed (1,044).
+
+**972, not 988.** `CROSSLIST_EXPORT.md` counts 988 items that have never been
+listed and that is right — but 16 of them are already sold, in person or
+somewhere Crosslist never saw. 972 is the number still worth putting back up.
+
+Sizes are edited per system (UK, EU, US, letter), which is the field the whole
+backlog turns on. Every change is written down with its value before and after.
+Saving a correction is deliberately *not* the same as ticking "I have checked
+this one" — only the tick marks an item as confirmed, and nothing here ever puts
+an item on sale.
+
+**Items now sort in room order.** The SKU is stored as `13-8-24`, and sorted as
+text that put `13` before `7` and every `(no code)` item at the front of the
+queue. `sku.SQL_ORDER` sorts by column, then box, then item number, so a page of
+the queue is a box you can go and fetch.
+
+No JavaScript on either screen.
+
+---
+
 ## Unreleased — 2026-09-15 (7) · upload and download in the browser
 
 119 sixgenbot tests, 37 extension tests.
