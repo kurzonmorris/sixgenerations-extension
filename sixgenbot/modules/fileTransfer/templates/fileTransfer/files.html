@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block heading %}Files{% endblock %}
+
+{% block content %}
+  {% if message %}
+    <p><strong>{{ message }}</strong></p>
+  {% endif %}
+
+  <h2>Send a spreadsheet to the server</h2>
+  <p class="quiet">
+    A Crosslist export, or a CSV you have edited. Nothing is imported by
+    uploading — you see what it would do first.
+  </p>
+  <form method="post" action="/files/upload" enctype="multipart/form-data">
+    <p><input type="file" name="spreadsheet" accept=".csv,text/csv" required></p>
+    <p><button type="submit">Upload it</button></p>
+  </form>
+
+  <h2>Already on the server</h2>
+  <table>
+    <thead><tr><th>File</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+    <tbody>
+      {% for file in uploaded %}
+        <tr>
+          <td class="message">{{ file.name }}</td>
+          <td class="at">{{ '{:,}'.format(file.bytes) }} bytes</td>
+          <td class="at">{{ file.when.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td><a href="/files/preview/{{ file.name }}">See what it would do</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="quiet">Nothing uploaded yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Take a copy away</h2>
+  <div class="rows">
+    <div class="row">
+      <span><a href="/files/items.csv">Every item</a></span>
+      <span class="value quiet">{{ '{:,}'.format(counts['items']) }} rows</span>
+    </div>
+    <div class="row">
+      <span><a href="/files/items.csv?status=needs_info">Items still to be checked</a></span>
+      <span class="value quiet">{{ '{:,}'.format(counts['needsInfo']) }} rows</span>
+    </div>
+    <div class="row">
+      <span><a href="/files/items.csv?status=sold">Items sold</a></span>
+      <span class="value quiet">{{ '{:,}'.format(counts['sold']) }} rows</span>
+    </div>
+  </div>
+  <p class="quiet">
+    Opens in LibreOffice Calc. Sizes come out as separate columns, and anything
+    an item has several of is separated by semicolons.
+  </p>
+
+  <h2>Backups</h2>
+  <div class="rows">
+    {% for file in backups %}
+      <div class="row">
+        <span><a href="/files/backup/{{ file.name }}">{{ file.name }}</a></span>
+        <span class="value quiet">{{ file.takenAt.strftime('%d %b %Y %H:%M') }}</span>
+      </div>
+    {% else %}
+      <div class="row"><span class="quiet">None taken yet.</span></div>
+    {% endfor %}
+  </div>
+{% endblock %}

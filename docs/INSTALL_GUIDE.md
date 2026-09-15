@@ -124,6 +124,20 @@ A backup also runs by itself every morning at 2:30.
 
 ## Loading your inventory
 
+**The easy way: the Files page.** Open `http://<your-server>:8770/files`, choose
+the CSV, press **Upload it**. It shows you what importing would do — how many
+new, how many updated, how many photographs it would queue — and nothing is
+written until you press **Import it**.
+
+No shares, no `cp`, no quoting paths with spaces in them. It works from a phone
+over Tailscale too.
+
+The same page has **Take a copy away**: the whole inventory, or just the items
+still to be checked, or the sold ones, as a CSV that opens in LibreOffice Calc.
+Backups can be downloaded from there as well.
+
+### Or from the command line
+
 Put the Crosslist export where the container can see it:
 
 ```bash

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block heading %}{{ fileName }}{% endblock %}
+
+{% block content %}
+  {% if problem %}
+    <h2>It could not be read</h2>
+    <p class="state-problem">{{ problem }}</p>
+    <p><a href="/files">Back to Files</a></p>
+  {% else %}
+    <p>Nothing has been written. This is what importing it would do:</p>
+
+    <div class="rows">
+      <div class="row"><span>Rows in the file</span><span class="value">{{ '{:,}'.format(counts.read) }}</span></div>
+      <div class="row"><span>New items</span><span class="value">{{ '{:,}'.format(counts.created) }}</span></div>
+      <div class="row"><span>Items it would update</span><span class="value">{{ '{:,}'.format(counts.updated) }}</span></div>
+      <div class="row"><span>Items already up to date</span><span class="value">{{ '{:,}'.format(counts.unchanged) }}</span></div>
+      <div class="row"><span>Without a SKU</span><span class="value">{{ '{:,}'.format(counts.withoutCode) }}</span></div>
+      <div class="row"><span>Sharing a SKU with another item</span><span class="value">{{ '{:,}'.format(counts.sharedCode) }}</span></div>
+      <div class="row"><span>Photographs it would queue</span><span class="value">{{ '{:,}'.format(counts.photosQueued) }}</span></div>
+    </div>
+
+    <p class="quiet">
+      Items without a SKU and items sharing one are still imported — they are
+      marked so they can be sorted out later, never skipped and never merged.
+      Nothing is put on sale by importing.
+    </p>
+
+    <form method="post" action="/files/import/{{ fileName }}">
+      <button type="submit">Import it</button>
+    </form>
+    <p><a href="/files">Back to Files without importing</a></p>
+
+    {% if counts.photosQueued %}
+      <h2>Afterwards</h2>
+      <p class="quiet">
+        The photographs are queued but not fetched by importing. To download them:
+      </p>
+      <p class="message">docker exec sixgenbot python -m sixgenbot photos</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}
