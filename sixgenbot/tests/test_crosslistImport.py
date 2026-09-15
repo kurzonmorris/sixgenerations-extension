@@ -251,3 +251,89 @@ def test_a_missing_folder_says_how_to_make_it(tmp_path, capsys):
     assert code == 1
     assert "does not exist yet" in printed
     assert "mkdir -p" in printed
+
+
+# --- re-importing a later export --------------------------------------------
+
+def test_a_later_export_brings_the_photographs_with_it(tmp_path):
+    """The May export has no photos; September has 9,098. Importing May first
+    must not leave those items without pictures for ever."""
+    database = freshDatabase(tmp_path)
+    connection = database.connection()
+
+    early = tmp_path / "may.csv"
+    early.write_text(HEADER + "\n" + row(photos="") + "\n", encoding="utf-8")
+    importExport(connection, early, dryRun=False)
+    assert connection.execute("SELECT COUNT(*) FROM itemImage").fetchone()[0] == 0
+
+    later = tmp_path / "september.csv"
+    later.write_text(
+        HEADER + "\n" + row(title="Navy floral dress UK20 (tidied)",
+                            photos="https://example.invalid/1.jpg|https://example.invalid/2.jpg") + "\n",
+        encoding="utf-8",
+    )
+    importExport(connection, later, dryRun=False)
+
+    assert connection.execute("SELECT COUNT(*) FROM item").fetchone()[0] == 1
+    assert connection.execute("SELECT COUNT(*) FROM itemImage").fetchone()[0] == 2
+
+
+def test_a_later_export_corrects_the_size(tmp_path):
+    """The whole point of the backlog: sizes needed fixing."""
+    database = freshDatabase(tmp_path)
+    connection = database.connection()
+
+    early = tmp_path / "may.csv"
+    early.write_text(HEADER + "\n" + row(size="XL") + "\n", encoding="utf-8")
+    importExport(connection, early, dryRun=False)
+
+    later = tmp_path / "september.csv"
+    later.write_text(HEADER + "\n" + row(size="UK 20", title="Navy floral dress UK20 v2") + "\n", encoding="utf-8")
+    importExport(connection, later, dryRun=False)
+
+    sizes = [r["value"] for r in connection.execute(
+        "SELECT value FROM itemAttribute WHERE attribute = 'size'")]
+    assert sizes == ["UK 20"], "the old size must not linger beside the new one"
+
+
+def test_a_re_import_never_removes_a_photograph_already_downloaded(tmp_path):
+    database = freshDatabase(tmp_path)
+    connection = database.connection()
+
+    first = tmp_path / "first.csv"
+    first.write_text(HEADER + "\n" + row(photos="https://example.invalid/1.jpg") + "\n", encoding="utf-8")
+    importExport(connection, first, dryRun=False)
+    connection.execute("UPDATE itemImage SET filePath = '/data/images/x/001.jpg', sha256 = 'abc'")
+
+    thinner = tmp_path / "thinner.csv"
+    thinner.write_text(HEADER + "\n" + row(photos="", title="Changed title") + "\n", encoding="utf-8")
+    importExport(connection, thinner, dryRun=False)
+
+    kept = connection.execute("SELECT filePath FROM itemImage").fetchone()
+    assert kept and kept["filePath"] == "/data/images/x/001.jpg"
+
+
+def test_a_re_import_leaves_anything_added_by_hand_alone(tmp_path):
+    """A later export must never undo somebody's work."""
+    database = freshDatabase(tmp_path)
+    connection = database.connection()
+
+    first = tmp_path / "first.csv"
+    first.write_text(HEADER + "\n" + row() + "\n", encoding="utf-8")
+    importExport(connection, first, dryRun=False)
+
+    itemId = connection.execute("SELECT itemId FROM item").fetchone()["itemId"]
+    connection.execute(
+        "INSERT INTO itemAttribute (itemId, attribute, value, system, source)"
+        " VALUES (?, 'measurement', '46', 'cm', 'manual')",
+        (itemId,),
+    )
+
+    later = tmp_path / "later.csv"
+    later.write_text(HEADER + "\n" + row(title="Tidied up") + "\n", encoding="utf-8")
+    importExport(connection, later, dryRun=False)
+
+    byHand = connection.execute(
+        "SELECT value FROM itemAttribute WHERE source = 'manual'"
+    ).fetchone()
+    assert byHand and byHand["value"] == "46"

@@ -7,6 +7,31 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (6) · a re-import now brings the photographs with it
+
+108 sixgenbot tests, 37 extension tests.
+
+Importing the **May** export (930 rows, **no photo URLs at all**) and then the
+September one exposed a real defect: the importer decided "unchanged" from the
+item row alone — title, description, brand, price — and skipped every child row.
+The two exports differ in almost nothing *but* the 9,098 photo URLs, so every
+item reported unchanged and not one photograph was recorded. A corrected size
+would have been dropped the same way, which is exactly what the backlog is about.
+
+Children are now refreshed on every re-import, and "changed" is decided by the
+item row **or** its children. Two rules keep it safe:
+
+- **Only Crosslist's own rows are replaced.** Anything added by hand survives.
+- **Photos are only ever added** — never removed, never renumbered. The files may
+  already be downloaded, and the order may have been corrected by hand or read
+  from Vinted, both of which beat the export.
+
+Proved on the real file: a photo-less copy imports as 2,125 new with 0 photos,
+the real export then reports 2,125 updated and 9,098 photos, and a third run is
+still 2,125 unchanged.
+
+---
+
 ## Unreleased — 2026-09-15 (5) · a missing file is a sentence now
 
 `import --csv` on a path that did not exist produced a Python traceback ending in

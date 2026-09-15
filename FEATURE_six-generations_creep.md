@@ -160,8 +160,9 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-92 | ✅ | Every photo hashed, so identical images across items are findable | `duplicateImages()` |
 | A-93 | ✅ | A dead URL is retried twice; **a 404 is not retried at all** | `_download()` |
 | A-94 | ✅ | **Photo order recorded as a guess, not the truth** — `crosslist` / `vinted` / `manual` | migration 0003 |
+| A-97 | ✅ | **A re-import refreshes sizes, colours, categories and photos**, replacing only Crosslist's own rows and never removing a photograph | `_refreshChildren()` |
 | A-96 | ✅ | **A missing import file is a sentence**, listing what is in the folder and giving both paths | `__main__.py` |
-| A-95 | ✅ | 104 pytest tests | `sixgenbot/tests/` |
+| A-95 | ✅ | 108 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 

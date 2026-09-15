@@ -9,6 +9,18 @@ will always look like this.
 
 ---
 
+## 0. There is more than one export
+
+| File | Rows | Photos |
+|---|---|---|
+| `listings-2026-05-02.csv` | 930 | **none at all** |
+| `listings-2026-09-15.csv` | 2,125 | 9,098 |
+
+The catalogue more than doubled between May and September, and **the May export
+carries no photo URLs whatsoever**. Importing an older file first and a newer one
+after is therefore normal, and the importer has to bring the difference with it —
+see `EXPLAINED_six-generations_Extension.md` §7.10d.
+
 ## 1. The numbers
 
 | | |
