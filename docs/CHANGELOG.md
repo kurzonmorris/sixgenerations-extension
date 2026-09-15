@@ -7,6 +7,33 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 · stage 3 foundations
+
+On top of sixgenbot v_0.2.0. **No version bump — no number was given.**
+77 sixgenbot tests, 37 extension tests.
+
+Built the parts of stage 3 that do not depend on what shape Kurzon's
+spreadsheets turn out to be:
+
+- **`core/sku.py`** — the SKU parser in Python: parse, format, describe, rewrite
+  a description without losing the code, and sort a picking route.
+  **A test reads `source/core/storageCode.js` and fails if the two patterns have
+  drifted apart** — the extension and the server disagreeing about which garment
+  is which would be silent, and is the worst bug this project could have.
+- **`core/readiness.py`** — separates two things that look alike: a field being
+  **missing**, and the values being **unchecked by a person**. An item off a live
+  listing is usually complete but unchecked; an item from an old spreadsheet may
+  be neither. Missing fields come back in plain words ready for a screen
+  ("at least one photo"), recommendations never block an item (D-103), and an
+  unknown platform asks for nothing rather than inventing requirements.
+- **Migration 0002** adds `item.verifiedAt`. Null means nobody has looked, which
+  is the right default for everything that arrives by import.
+
+**The importer itself is blocked on Q47** — the two lists. Twenty real rows of
+each is enough to start.
+
+---
+
 ## sixgenbot v_0.2.0 — 2026-09-11 · stage 2, the database
 
 The database, and the backup that has actually been restored. 50 pytest tests,

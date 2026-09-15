@@ -132,6 +132,18 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-74 | ✅ | **Copy-and-paste install guide**, with and without Compose | `docs/INSTALL_GUIDE.md` |
 | A-75 | ✅ | 50 pytest tests | `sixgenbot/tests/` |
 
+## A.6c sixgenbot — stage 3 foundations *(2026-09-15)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-76 | ✅ | **The SKU parser in Python** — parse, format, describe, rewrite a description without losing the code, sort a picking route | `core/sku.py` |
+| A-77 | ✅ | **A test that fails if the Python and JavaScript SKU patterns drift apart** | `tests/test_sku.py` |
+| A-78 | ✅ | **"What is missing" in plain words**, per platform, ready to put on a screen | `core/readiness.py` |
+| A-79 | ✅ | **"Nobody has checked this" tracked separately from "a field is empty"** | `migrations/0002_verifiedAt.sql` |
+| A-80 | ✅ | Recommendations never block an item (D-103) | `core/readiness.py` |
+| A-81 | ✅ | An unknown platform asks for nothing rather than inventing requirements | `core/readiness.py` |
+| A-82 | ✅ | Nothing imported is ever put straight on sale | `suggestedStatus()` |
+
 ## A.7 Running it (the extension)
 
 | ID | Status | Feature | Where |

@@ -99,6 +99,28 @@ Real data, without touching Vinted at all.
   before anything is written (D-093, D-195).
 - An import can be run twice without doubling anything.
 
+**The stock is two lists, and they are not the same job:**
+
+| | What it is | Where it lands | What happens next |
+|---|---|---|---|
+| **Already online** | Items with a live listing | `status = on_sale`, a `listing` row per platform | Nothing. They are already earning |
+| **Not online** | The backlog — roughly 3,000 items | `status = needs_info`, `verifiedAt` null | The review queue, one at a time |
+
+**Importing does not mean verifying.** Nothing goes live from an import, and
+nothing has to be checked on the day it arrives. The second list simply sits in
+a queue, and the queue is worked through at whatever pace suits — that is the
+screen built in stage 4 (D-096, D-097).
+
+`core/readiness.py` already tells the two apart, and separates *missing a field*
+from *nobody has checked it*, which are different problems on the same item.
+
+**Foundations built 2026-09-15** (they needed no files): the SKU parser in
+Python with a drift test against the extension's copy, the readiness rules, and
+`item.verifiedAt`.
+
+**Still needed before the importer can be written: the two lists themselves.**
+See `docs/OPEN_QUESTIONS.md` Q47 — twenty rows of each is enough to start.
+
 **Done when:** the database holds your real inventory and five years of sales,
 and a second run of the same file changes nothing.
 

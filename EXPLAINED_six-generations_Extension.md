@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 | **Stage 3 foundations.** The SKU parser ported to Python with a test that fails if it drifts from the extension's copy; readiness rules that separate *missing* from *unchecked*; migration 0002 adds `item.verifiedAt`. 77 sixgenbot tests. No importer yet — that needs Kurzon's two lists (Q47) |
 | 2026-09-11 | **sixgenbot v_0.2.0, stage 2: the database.** SQLite with numbered migrations, full-text search, nightly backup and a tested restore. **Plain `sqlite3` rather than SQLAlchemy** — reasoning in §3B.9. Two bugs found by the tests: `executescript` breaks an outer transaction, and two backups in the same minute overwrote each other. `docs/INSTALL_GUIDE.md` added |
 | 2026-09-10 (2) | **sixgenbot stage 1 built** — the skeleton runs, loads modules, serves two pages. FastAPI + Jinja, 23 pytest tests. Documented in §3B. Q42–Q45 answered |
 | 2026-09-10 | **`sixgenbot` planned** — six stages, module contract, stack. `docs/SIXGENBOT_PLAN.md`. Nothing built yet; Q42–Q45 decide repo, version, framework and stage order |
@@ -571,6 +572,54 @@ is not a rule.
 
 Without those two, "modules" is just folders.
 
+## 3B.10 Stage 3 foundations — the parts that do not depend on the files
+
+Built 2026-09-15, ahead of the importer, because none of it depends on what
+shape Kurzon's spreadsheets turn out to be.
+
+### `core/sku.py` — the identity, in Python
+
+A straight port of `source/core/storageCode.js`: `parseSku`, `formatSku`,
+`describeSku`, `withSku`, plus `skuParts` for sorting a picking list into
+walking order.
+
+**The last test in `tests/test_sku.py` reads the JavaScript file and asserts the
+Python pattern appears in it verbatim.** If either side is edited alone the test
+fails. That matters more than it sounds: the extension and the server disagreeing
+about which garment is which is the worst bug this project can have, and it would
+be silent.
+
+### `core/readiness.py` — two different questions
+
+The backlog is two lists, and they fail in different ways:
+
+| | Means | Recorded as |
+|---|---|---|
+| **Missing** | a field has no value | `status = needs_info` |
+| **Unchecked** | the values are there, but nobody has confirmed them | `verifiedAt IS NULL` |
+
+An item pulled off a live Vinted listing is usually complete but unchecked. An
+item typed into a spreadsheet years ago may be neither. **They are not the same
+problem and the screens will not treat them the same.**
+
+- `missingFor(facts, platform)` — what has to be filled in, in plain words
+  ("at least one photo", not "imageCount == 0"), because the strings go on screen.
+- `recommendedFor()` — worth having, **never a reason to hold an item back**
+  (D-103).
+- `suggestedStatus()` — where an import puts something. **Never `on_sale`**:
+  that depends on a listing existing, not on the details looking tidy.
+- `summarise()` — one sentence: *"Needs at least one photo and a brand."*
+
+**Vinted's list is not confirmed** against the live form — that is Task 1 in
+`docs/CLAUDE_BROWSER_TASKS.md`. **eBay and Shopify have no list at all**,
+deliberately: eBay's required specifics vary by category and nothing is known yet
+(Q16). An unknown platform asks for nothing rather than inventing requirements.
+
+### Migration `0002_verifiedAt.sql`
+
+One column, `item.verifiedAt`. Null means nobody has looked, which is the right
+default for everything that arrives by import.
+
 ## 3B.9 Stage 2 — the database *(v_0.2.0)*
 
 ### The schema
@@ -639,7 +688,7 @@ number of minutes. **A job that throws is logged and the schedule carries on.**
 **The extension:** `npm test` — 37 tests, Node's built-in runner, nothing to
 install.
 
-**sixgenbot:** `python -m pytest sixgenbot/tests -q` — 50 tests.
+**sixgenbot:** `python -m pytest sixgenbot/tests -q` — 77 tests.
 
 | File | Covers |
 |---|---|

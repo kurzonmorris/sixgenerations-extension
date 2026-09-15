@@ -12,6 +12,41 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answer this — it is the only thing blocking the importer
+
+## Q47 — The two lists: what do they actually look like?
+
+Stage 3 cannot be written against a guess. **Twenty rows of each is enough** —
+real ones, with nothing tidied up, because the mess is the part that matters.
+
+**1. The items already online.** Wherever they live now — the Crosslist export
+is the obvious source (it is your own data and exports to CSV). What is needed:
+the file, and whether the SKU is in a column of its own or only at the end of
+the description.
+
+**2. The items not online.** The backlog, roughly 3,000. A spreadsheet? Several?
+Paper? What columns does it have, and are they the same all the way down — five
+years of a spreadsheet usually is not.
+
+**Then three questions about them:**
+
+- **Does every row have a SKU?** If some do not, they cannot be matched to
+  anything and will need one assigning. Knowing the proportion decides whether
+  that is a footnote or a feature.
+- **Do the two lists overlap?** An item in both, or listed but also in the
+  "not online" sheet, is normal after five years. The importer has to expect it
+  rather than create the garment twice.
+- **Is there a third list?** Sold-and-gone, returned, damaged, given away. It is
+  usually the one nobody mentions until it appears.
+
+**What happens once they arrive:** the importer reads both, shows what it *would*
+do before it does anything (D-093), puts the online ones on `on_sale` and the
+rest in `needs_info`, and can be run twice without doubling anything. **Nothing
+is verified on import and nothing goes live** — the backlog just becomes a queue
+you work at your own pace.
+
+---
+
 # Answer this — a decision taken without you
 
 ## Q46 — Plain `sqlite3` instead of SQLAlchemy
