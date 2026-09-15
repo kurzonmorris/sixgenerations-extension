@@ -7,6 +7,16 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (5) · a missing file is a sentence now
+
+`import --csv` on a path that did not exist produced a Python traceback ending in
+`FileNotFoundError`. It now says there is no file there, **lists what is actually
+in that folder**, and gives both the container path and the server path — the two
+differ, which is the usual cause. Two tests assert no traceback reaches the
+screen. 104 sixgenbot tests.
+
+---
+
 ## Unreleased — 2026-09-15 (4) · the update instructions were wrong
 
 `docs/INSTALL_GUIDE.md` told you to update with `git pull`, `docker build`,
