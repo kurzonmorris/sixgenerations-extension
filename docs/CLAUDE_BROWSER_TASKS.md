@@ -68,7 +68,15 @@ free. It is the single biggest fork in the road.
 > the inventory table — the screen that lists everything it holds — and describe
 > it in detail: which columns it shows, what the search box searches, what
 > filters exist, whether rows can be edited in place, and how it handles
-> thousands of items (paging, scrolling, how long it takes). Finally
+> thousands of items (paging, scrolling, how long it takes).
+>
+> Then three specific things the CSV export appears to be missing. First: the
+> export records *when* an item was listed but not *where*. On screen, where does
+> it show which marketplaces an item is currently live on, and is there any
+> export, filter or view that includes that? Try every export option and tell me
+> which columns each one produces. Second: where do the photos live — are the
+> image URLs in the export pointing at Crosslist's own servers, or at the
+> marketplace's? Third: is there any way to download the original photos in bulk? Finally
 > describe, as a user would see it, what happens when an item sells on one
 > marketplace — what it does on the others, how quickly, and whether it needs my
 > browser open. I am documenting what I would lose if I cancelled the

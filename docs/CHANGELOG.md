@@ -7,6 +7,38 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (2) · the Crosslist export, analysed
+
+**Documents only.** 77 sixgenbot tests, 37 extension tests.
+
+`listings-2026-09-15.csv` arrived — 2,125 items, 39 columns — and is written up
+in **`docs/CROSSLIST_EXPORT.md`**. What it changed:
+
+- **One row is one item.** 514 titles repeat, which looked like one row per
+  marketplace. It is not: the duplicate pairs have different creation dates and
+  **not one of 468 pairs shares a photograph**. They are separate garments that
+  happen to be the same kind of thing.
+- **The weight and the SKU both live in the description**, not in columns.
+  `W65g` on 97.4% of rows — the `ShippingWeight` column holds defaults nobody
+  set — and `B8-3 36` on 80.9%. Both get read out by the importer.
+- **988 items have never been listed anywhere**, which matches the estimated
+  backlog almost exactly.
+- **Every code carries a `B` prefix** not seen before, and 20 toy rows use
+  `C01`/`M02`/`PP01`, a different scheme entirely (Q48).
+- **639 items share a code with another item.** Only 30 are explained by a sale
+  freeing the slot; 285 are two or more unsold garments in one place (Q49).
+- **405 items have no code at all** — not misplaced, absent.
+- **All 9,098 photos are hosted on `media-na.crosslist.com`** and will very
+  likely die with the subscription. For the 988 never-listed items that is the
+  only copy (Q50 — the most time-critical thing in the project).
+- Where an item is listed is not in the file at all, and should not be: listing
+  state belongs to the platforms. `LastListedOn` is imported as "was listed once",
+  never as "is live now".
+
+Q47 answered. Q48–Q50 raised.
+
+---
+
 ## Unreleased — 2026-09-15 · stage 3 foundations
 
 On top of sixgenbot v_0.2.0. **No version bump — no number was given.**

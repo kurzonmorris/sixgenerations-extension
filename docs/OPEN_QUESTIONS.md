@@ -12,6 +12,72 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-15 · and three new ones from the export
+
+**Q47 is answered.** The file arrived: `listings-2026-09-15.csv`, 2,125 items,
+analysed in full in **`docs/CROSSLIST_EXPORT.md`**. The headlines:
+
+- **One list, one row per item.** Duplicate titles are genuinely different
+  garments — no two share a photograph.
+- **988 items have never been listed anywhere.** That is the backlog, and it
+  matches what you estimated.
+- **The weight is in the description** (`W65g`), on 97.4% of items. The
+  `ShippingWeight` column is defaults nobody set.
+- **All 9,098 photos are hosted by Crosslist** — see Q50, which is the urgent one.
+
+---
+
+## Q48 — The `B` prefix
+
+Every code in the file is `B8-3 36`, not `8-3 36` as discussed before.
+Presumably "box". Two things to confirm:
+
+- Is `B` simply decoration, or does it distinguish boxes from something else?
+- **`C01`, `M02` and `PP01` appear on 20 rows**, all toys — Chase, Marshall, Paw
+  Patrol. Is that a separate storage scheme with its own meaning, or shorthand
+  that was never finished?
+
+The parser copes with `B` today. It does **not** understand `C01`.
+
+## Q49 — 639 items sharing a code
+
+315 codes are used by more than one item. 30 are explained by a sale freeing the
+slot. **285 are two or more unsold garments claiming the same place:**
+
+```
+11-1-26   Black joggers size S          never listed
+11-1-26   Black triangle brief UK12 L   listed
+11-1-26   Black triangle brief UK12 L   SOLD
+```
+
+That contradicts a permanent, never-recycled SKU, so it is worth knowing which it
+is before 639 rows are imported:
+
+1. **Codes were reused in practice**, whatever the intention — in which case the
+   older sold one is history and the newest holder wins.
+2. **They are mistakes**, and the box really does hold one of them.
+3. Something else — a code meaning "this shelf" rather than "this slot".
+
+**Proposed either way:** import all of them, flag every clash, and put them at
+the front of the review queue. Nothing is merged and nothing is skipped.
+
+## Q50 — The photographs are on a clock ⏳
+
+**All 9,098 photos live on `media-na.crosslist.com`** — the tool being paid for.
+Not on Vinted, not on eBay. When that subscription ends those URLs will very
+likely stop resolving, taking with them the only copy of the photographs for
+**988 items that have never been listed anywhere**.
+
+**This is the most time-critical thing in the project.** It needs no decisions
+and breaks nothing. Shall I make downloading them the first piece of stage 3,
+ahead of the importer itself?
+
+---
+
+# Answered — the question that blocked the importer
+
+(Kept below for the reasoning.)
+
 # Answer this — it is the only thing blocking the importer
 
 ## Q47 — The two lists: what do they actually look like?
@@ -27,6 +93,16 @@ the description.
 **2. The items not online.** The backlog, roughly 3,000. A spreadsheet? Several?
 Paper? What columns does it have, and are they the same all the way down — five
 years of a spreadsheet usually is not.
+
+**Known already (2026-09-15):** it is **one list**, online and offline together,
+and **it does not say where an item is listed** — only when. That is survivable:
+listing state belongs to the platforms, not to a CSV (see
+`EXPLAINED_six-generations_Extension.md` §9.4b). It does mean the online/offline
+split gets settled by reading Vinted, not by the import.
+
+**Send the file exactly as downloaded** — opening and re-saving it in Calc
+rewrites dates and can change the encoding, and the original formatting is
+evidence about what the export really contains.
 
 **Then three questions about them:**
 
