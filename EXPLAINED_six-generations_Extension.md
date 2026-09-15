@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (4) | Two things found by running it on the real server: **`docker restart` silently keeps the old image** (§7.10b), and a missing import file produced a Python traceback instead of a sentence. Both fixed |
 | 2026-09-15 (3) | **Stage 3 built: the importer and the photo store.** 2,125 items imported from the real export, idempotent, dry run by default. Photo fetch is resumable and hashes everything. **Corrected an over-claim**: "duplicate pairs share no photographs" compared URLs, not images (§3B.11). Q48–Q50 answered; the 988 offline items turn out to be *withdrawn pending a Vinted size change*, not never-listed |
 | 2026-09-15 (2) | **The Crosslist export arrived and was analysed** — 2,125 items, `docs/CROSSLIST_EXPORT.md`. 988 never listed; the weight and the SKU both live in the description; 639 items share a code; **all 9,098 photos are hosted by Crosslist and die with the subscription**. Q48–Q50 raised |
 | 2026-09-15 | **Stage 3 foundations.** The SKU parser ported to Python with a test that fails if it drifts from the extension's copy; readiness rules that separate *missing* from *unchecked*; migration 0002 adds `item.verifiedAt`. 77 sixgenbot tests. No importer yet — that needs Kurzon's two lists (Q47) |
@@ -917,6 +918,21 @@ the same filesystem, so nothing changes.
 **Quickest check that new code is really running:** `python -m sixgenbot check`
 prints the schema version. If it says v2 when the repo is on v3, the container is
 stale.
+
+## 7.10c A stack trace is not an error message
+
+`import --csv` on a path that did not exist produced a nine-line Python
+traceback ending in `FileNotFoundError`. Technically accurate, useless to the
+person reading it, and against `INTERFACE_PRINCIPLES.md` §3 — *errors say what
+happened and what to do next, never a code alone.*
+
+It now says there is no file there, **lists what is actually in that folder**,
+and gives both the container path and the server path, because the two differ and
+that is exactly what confuses people. Two tests assert no traceback reaches the
+screen.
+
+**Worth applying everywhere:** any path a person types is a place to catch the
+mistake and say something useful.
 
 ## 7.11 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.

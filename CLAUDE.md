@@ -156,7 +156,7 @@ sixgenbot/             the SERVER (Python, Docker)
   core/                config, logging, events, database, backup, scheduler, web app
   migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 102 tests
+  tests/               python -m pytest sixgenbot/tests -q — 104 tests
 
 docs/                  everything else
 ```

@@ -222,3 +222,32 @@ def test_an_imported_item_can_be_found_by_searching(tmp_path):
 
     assert searchItems(connection, "velvet")
     assert searchItems(connection, "10-2")
+
+
+# --- the command line -------------------------------------------------------
+
+def test_a_missing_file_is_a_sentence_not_a_stack_trace(tmp_path, capsys):
+    """INTERFACE_PRINCIPLES: say what happened and what to do next."""
+    from sixgenbot.__main__ import main
+
+    (tmp_path / "imports").mkdir()
+    (tmp_path / "imports" / "listings-2026-01-01.csv").write_text("Id\n", encoding="utf-8")
+
+    code = main(["import", "--data", str(tmp_path), "--csv", str(tmp_path / "imports" / "wrong.csv")])
+
+    printed = capsys.readouterr().out
+    assert code == 1
+    assert "There is no file at" in printed
+    assert "listings-2026-01-01.csv" in printed, "it should say what is actually there"
+    assert "Traceback" not in printed
+
+
+def test_a_missing_folder_says_how_to_make_it(tmp_path, capsys):
+    from sixgenbot.__main__ import main
+
+    code = main(["import", "--data", str(tmp_path), "--csv", str(tmp_path / "nothing" / "here.csv")])
+
+    printed = capsys.readouterr().out
+    assert code == 1
+    assert "does not exist yet" in printed
+    assert "mkdir -p" in printed

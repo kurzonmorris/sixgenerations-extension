@@ -88,9 +88,24 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "import":
         if not args.csv:
-            print("which file? pass --csv /data/imports/listings.csv")
+            print("Which file? Pass --csv /data/imports/listings.csv")
             return 1
-        counts = importExport(bot.db.connection(), Path(args.csv), dryRun=not args.apply)
+
+        wanted = Path(args.csv)
+        if not wanted.is_file():
+            print(f"There is no file at {wanted}.")
+            folder = wanted.parent
+            if folder.is_dir():
+                found = sorted(p.name for p in folder.glob("*.csv"))
+                print(f"\n{folder} holds: " + (", ".join(found) if found else "no .csv files at all"))
+            else:
+                print(f"\nThe folder {folder} does not exist yet. Make it, and put the export in it:")
+                print(f"    mkdir -p /mnt/user/appdata/sixgenbot-data/imports")
+            print("\nInside the container that folder is /data/imports; on the server it is")
+            print("/mnt/user/appdata/sixgenbot-data/imports.")
+            return 1
+
+        counts = importExport(bot.db.connection(), wanted, dryRun=not args.apply)
         print(("WOULD IMPORT — nothing written.\n" if not args.apply else "IMPORTED.\n") + counts.asSentence())
         if not args.apply:
             print("\nRun it again with --apply to write it.")
