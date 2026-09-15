@@ -23,8 +23,14 @@ through the browser session. eBay is driven by its **API from the container**.
 | **The Chrome extension** (root, `source/`) | `v_0.1.0` | Reads Vinted and Shopify, compares them, writes to Shopify. **No Vinted writes** |
 | **`sixgenbot/`** — the Python server | `v_0.2.0` | **Stage 2: the database.** Runs, logs, loads modules, migrated SQLite with full-text search, nightly backup and a tested restore. **No data in it yet, nothing about Vinted** |
 
-Next: **stage 3, import** — the Crosslist export and the five-year ledger
-(`docs/SIXGENBOT_PLAN.md`). eBay and Shopify wait until Vinted works end to end.
+Next: **stage 3, import**. The foundations are in (SKU parser, readiness rules,
+`verifiedAt`); **the importer itself is blocked on seeing Kurzon's two lists —
+Q47**. eBay and Shopify wait until Vinted works end to end.
+
+**The stock is two lists and they are different jobs:** items already online
+(import as `on_sale`, nothing more to do) and items never listed — roughly 3,000
+— which go to `needs_info` and are checked one at a time. Importing never means
+verifying, and nothing goes live from an import.
 
 Installing it: **`docs/INSTALL_GUIDE.md`**, copy and paste.
 
@@ -139,7 +145,7 @@ sixgenbot/             the SERVER (Python, Docker)
   core/                config, logging, events, database, backup, scheduler, web app
   migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 50 tests
+  tests/               python -m pytest sixgenbot/tests -q — 77 tests
 
 docs/                  everything else
 ```

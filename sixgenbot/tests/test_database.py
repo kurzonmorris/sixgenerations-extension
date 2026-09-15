@@ -40,14 +40,19 @@ def addItem(connection, sku, title="", brand="", description="", status="on_sale
 
 
 def test_migrations_run_once_and_are_safe_to_repeat(tmp_path):
+    from sixgenbot.core.database import MIGRATIONS
+
+    everything = sorted(MIGRATIONS.glob("*.sql"))
+    latest = int(everything[-1].name[:4])
+
     database = Database(tmp_path / "db.sqlite")
     first = database.migrate()
-    assert first, "the first run must apply something"
-    assert database.version == 1
+    assert len(first) == len(everything), "the first run must apply all of them"
+    assert database.version == latest
 
     second = database.migrate()
     assert second == [], "a second run must apply nothing"
-    assert database.version == 1
+    assert database.version == latest
 
 
 def test_the_schema_matches_the_data_model(tmp_path):

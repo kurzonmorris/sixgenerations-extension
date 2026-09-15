@@ -64,7 +64,8 @@ sixgenerations-extension/
 │   ├── config.example.toml           the documented settings template
 │   ├── Dockerfile  docker-compose.yml
 │   ├── migrations/                   numbered SQL, each applied once, in order
-│   │   └── 0001_initialSchema.sql    the whole schema from docs/DATA_MODEL.md
+│   │   ├── 0001_initialSchema.sql    the whole schema from docs/DATA_MODEL.md
+│   │   └── 0002_verifiedAt.sql       records that a person has checked an item
 │   ├── core/                         everything a module may depend on. Never imports one
 │   │   ├── appConfig.py              config.toml + secrets.toml, defaults merged
 │   │   ├── appLogging.py             console, rotating file, and a ring buffer the UI reads
@@ -72,6 +73,8 @@ sixgenerations-extension/
 │   │   ├── database.py               connection per thread, migrations, full-text search
 │   │   ├── eventBus.py               named events; publishers never learn who listened
 │   │   ├── moduleLoader.py           finds and registers modules. Names none of them
+│   │   ├── readiness.py              what is missing, and what nobody has checked yet
+│   │   ├── sku.py                    the SKU: parse, format, rewrite. Twin of storageCode.js
 │   │   ├── scheduler.py              repeating jobs; one failing job cannot stop the rest
 │   │   └── webApp.py                 the Bot object modules register against, and the app
 │   ├── modules/                      ONE FOLDER PER FEATURE. Add a folder, add a feature
@@ -80,7 +83,7 @@ sixgenerations-extension/
 │   │   └── backups/                  nightly backup, and the page that proves it ran
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 50 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 77 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

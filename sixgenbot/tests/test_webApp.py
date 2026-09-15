@@ -24,10 +24,10 @@ def test_the_status_page_says_it_is_running(tmp_path):
 
 
 def test_the_status_page_says_the_database_is_ready_and_empty(tmp_path):
-    client, _ = buildClient(tmp_path)
+    client, bot = buildClient(tmp_path)
     body = client.get("/").text
     assert "ready and empty" in body
-    assert "schema v1" in body
+    assert f"schema v{bot.db.version}" in body
 
 
 def test_the_status_page_counts_what_is_actually_there(tmp_path):
