@@ -189,12 +189,24 @@ The database being replaced is always kept beside it as `.beforeRestore`.
 cd /mnt/user/appdata/sixgen
 git pull
 docker build -t sixgenbot -f sixgenbot/Dockerfile .
-docker restart sixgenbot
+docker rm -f sixgenbot
+docker run -d --name sixgenbot --restart unless-stopped \
+  -p 8770:8770 -v /mnt/user/appdata/sixgenbot-data:/data sixgenbot
 docker exec sixgenbot python -m sixgenbot check
 ```
 
-Your data is untouched — it lives in the other folder. The database upgrades
-itself on start.
+**`docker restart` is not enough, and looks like it worked.** A container is
+built from an image once, when it is created. Rebuilding the image leaves the
+running container exactly as it was, so `restart` brings back the *old* code with
+no error to say so — the giveaway is a command the new version should have being
+rejected as an invalid choice. The container has to be removed and run again.
+
+On Compose, `docker compose -f sixgenbot/docker-compose.yml up -d --build` does
+recreate the container, so it does not have this problem.
+
+**Your data is untouched** — it lives in the other folder, and the database
+upgrades itself on start. `check` prints the schema version, which is the quickest
+way to see the new code is really running.
 
 ---
 

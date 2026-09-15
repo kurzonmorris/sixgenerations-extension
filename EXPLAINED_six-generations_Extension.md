@@ -900,6 +900,24 @@ Backups were named to the minute, so pressing "Back up now" twice in the same
 minute silently overwrote the first. Now seconds, plus a counter if that still
 collides. Found by a test, not in use — which is the point of the test.
 
+## 7.10b `docker restart` does not pick up a rebuilt image
+
+Hit for real on 2026-09-15: after `git pull` and `docker build`, a `docker
+restart` brought the **old** code back with no error at all. The first sign was
+`python -m sixgenbot photos` being rejected as an invalid choice — a command that
+plainly existed in the repo.
+
+A container is created from an image once. Rebuilding the image under the same
+tag leaves every existing container on the old one. `restart` stops and starts
+the same filesystem, so nothing changes.
+
+**The update is `docker rm -f` then `docker run` again** (or `compose up -d
+--build`, which recreates). The install guide said `restart` and was wrong.
+
+**Quickest check that new code is really running:** `python -m sixgenbot check`
+prints the schema version. If it says v2 when the repo is on v3, the container is
+stale.
+
 ## 7.11 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.
 
