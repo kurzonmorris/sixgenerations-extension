@@ -112,6 +112,8 @@ Run them all the same way — `docker exec sixgenbot python -m sixgenbot <comman
 | Command | What it does |
 |---|---|
 | `check` | Everything loaded? How many items? When was the last backup? |
+| `import --csv <file>` | Read a Crosslist export. Dry run unless `--apply` |
+| `photos` | Download every photo still missing. Resumable |
 | `backup` | Take one now |
 | `restore` | Put the newest backup back |
 | `restore --file <name>` | Put a particular one back |
@@ -119,6 +121,46 @@ Run them all the same way — `docker exec sixgenbot python -m sixgenbot <comman
 | `version` | Which version is running |
 
 A backup also runs by itself every morning at 2:30.
+
+## Loading your inventory
+
+Put the Crosslist export where the container can see it:
+
+```bash
+mkdir -p /mnt/user/appdata/sixgenbot-data/imports
+# copy listings-2026-09-15.csv into that folder, then:
+docker exec sixgenbot python -m sixgenbot import --csv /data/imports/listings-2026-09-15.csv
+```
+
+That is a **dry run** — it reads the whole file, tells you what it would do, and
+writes nothing. Expect something like:
+
+```
+2125 rows read — 2125 new, 0 updated, 0 unchanged.
+405 have no SKU, 639 share one. 9098 photos to fetch.
+```
+
+Happy with it? Run the same command with `--apply` on the end. Running it twice
+is safe: the second time reports *0 new, 2125 unchanged*.
+
+## Downloading the photographs
+
+**Do this before the Crosslist subscription ends.** Every photo is hosted on
+their servers, and for items never listed anywhere it is the only copy.
+
+```bash
+docker exec sixgenbot python -m sixgenbot photos
+```
+
+9,098 photos, five at a time — expect it to take a while and a couple of GB.
+**It is safe to stop it** (`Ctrl-C`) and run it again; it only fetches what is
+still missing. Add `--limit 50` to try a few first.
+
+Check how it went:
+
+```bash
+docker exec sixgenbot python -m sixgenbot check
+```
 
 ## Backups, and the offsite copy
 

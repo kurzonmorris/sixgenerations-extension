@@ -7,6 +7,51 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (3) · stage 3: the import and the photographs
+
+102 sixgenbot tests, 37 extension tests. **No version bump — no number given.**
+
+**The importer.** `python -m sixgenbot import --csv <file>` reads the Crosslist
+export; a dry run unless `--apply`. Run against the real 2,125-row file it
+creates every item, and a second run reports *0 new, 2,125 unchanged*.
+
+- The **weight** comes out of the description (`W###g`) because the
+  `ShippingWeight` column is defaults nobody set.
+- The **SKU** likewise, with the raw form (`B8-3 36`) kept alongside the
+  normalised one. `B` just means box.
+- Only the final line is considered for a code, and only if it looks like one —
+  a description ending "fits 10-12" must never become a location.
+- **Nothing is imported as on sale.** What is live is Vinted's to say.
+- 405 items with no code and 639 sharing one are **imported and flagged**, never
+  skipped and never merged.
+- **Every import writes a dated event** — the item history Kurzon asked for.
+
+**The photographs.** `python -m sixgenbot photos` fetches everything still
+missing, five at a time, resumable. Each is hashed. A connection failure is
+retried twice; **a 404 is not retried at all** — it is an answer, and three tries
+at each of 9,098 dead URLs is a great deal of wasted time.
+
+**Photo order is recorded as a guess.** `orderSource` is `crosslist`, `vinted` or
+`manual`: Vinted keeps the seller's order, Crosslist kept its own, and without
+the column there is no way to tell which you are looking at.
+
+**A correction.** The export analysis claimed duplicate-title pairs were
+definitely separate garments because "not one of 468 pairs shares a photograph".
+**That compared URLs, not images** — Crosslist copies images when a listing is
+duplicated, so the test proved nothing. `duplicateImages()` answers it by content
+once the fetch has run.
+
+**And the finding that reframes the project:** the 988 offline items are not
+unlisted stock. Vinted changed how sizes are displayed last year, the catalogue
+was taken down to be corrected by hand, and it has not gone back up. They are
+withdrawn stock — photographed, priced, earning nothing. Getting them back online
+is what the system is for.
+
+Q48–Q50 answered. New: U-16 batch review and edit, U-17 drag-and-drop photo
+order, U-18 item history, X-12 put the 988 back online.
+
+---
+
 ## Unreleased — 2026-09-15 (2) · the Crosslist export, analysed
 
 **Documents only.** 77 sixgenbot tests, 37 extension tests.

@@ -12,6 +12,32 @@ commit.** Delete a row once it is settled and record the outcome in CHANGELOG.md
 
 ---
 
+# Answered — 2026-09-15 (2)
+
+- **Q48 the `B` prefix** → **just "box".** Technically irrelevant, kept for
+  continuity. Stored raw in `legacyCode`, ignored when matching.
+- **Q49 shared codes** → **codes were reused occasionally**, nearly always
+  because an item was **returned and relisted**. Hence the requirement for a
+  **dated history against every item**, which the `event` table now records from
+  the import onwards.
+- **Q50 the photographs** → **yes, start.** Built and run: `python -m sixgenbot
+  photos`, resumable, hashing everything.
+- **Items with no code** → not a mistake. Jackets, toys and books that do not fit
+  a normal box. Being rectified slowly.
+
+## The thing that reframes the project
+
+> *"Last year Vinted changed the way they displayed sizes and it meant we had to
+> take offline almost the entire catalogue to go through manually and make sure
+> the sizes and stuff are correct. We still haven't put them back online."*
+
+**The 988 offline items are not unlisted stock — they are withdrawn stock.**
+Photographed, described, priced, and earning nothing while they wait for someone
+to check a size. Getting them back up is the first thing the system exists to do,
+and it is worth more than any other feature on the list.
+
+---
+
 # Answered — 2026-09-15 · and three new ones from the export
 
 **Q47 is answered.** The file arrived: `listings-2026-09-15.csv`, 2,125 items,
