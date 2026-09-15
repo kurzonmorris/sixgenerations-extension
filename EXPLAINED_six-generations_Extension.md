@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (6) | **Files page: upload and download in the browser** (§3B.12). Removes the network-share-and-`cp` dance entirely. Also `core/csvExport.py`, the first export with the multi-value flattening rules. 119 tests |
 | 2026-09-15 (5) | **A re-import now refreshes sizes, colours, categories and photos**, not just the item row — found by importing the May export (930 rows, **no photos at all**) before the September one. Crosslist-owned rows are replaced, hand-added ones are left alone, photos are only ever added |
 | 2026-09-15 (4) | Two things found by running it on the real server: **`docker restart` silently keeps the old image** (§7.10b), and a missing import file produced a Python traceback instead of a sentence. Both fixed |
 | 2026-09-15 (3) | **Stage 3 built: the importer and the photo store.** 2,125 items imported from the real export, idempotent, dry run by default. Photo fetch is resumable and hashes everything. **Corrected an over-claim**: "duplicate pairs share no photographs" compared URLs, not images (§3B.11). Q48–Q50 answered; the 988 offline items turn out to be *withdrawn pending a Vinted size change*, not never-listed |
@@ -575,6 +576,38 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.12 The Files page — getting things in and out
+
+`modules/fileTransfer/`, with `core/csvExport.py` behind it.
+
+**Upload → preview → import.** A CSV chosen in the browser lands in
+`<data>/imports/`, and the reply is the **dry run**, not the result: how many new,
+how many updated, how many photographs would be queued. Nothing is written until
+**Import it** is pressed. That is D-093 and the project's dry-run rule, expressed
+as two pages rather than a flag.
+
+**Download.** The whole inventory, or one status, as a CSV; plus the backups.
+
+### The guards
+
+| Guard | Why |
+|---|---|
+| `tidyName()` strips everything but `[A-Za-z0-9._-]` and takes the basename | An upload called `../../etc/passwd` becomes `.._.._etc_passwd` in our own folder |
+| `insideFolder()` resolves and checks the parent | Nothing can be read from outside the folder it belongs to, whatever is typed |
+| Only `.csv` is accepted, 200 MB ceiling | |
+| A file that cannot be parsed says so on the page | Never a traceback — §7.10c |
+
+Tests cover all four, including one asserting the database is never served as a
+download.
+
+### `core/csvExport.py` — the flattening rules, finally implemented
+
+`docs/DATA_MODEL.md §5` in code. Known size systems become their own columns
+(`sizeUk`, `sizeEu`, `sizeUs`, `sizeLetter`), anything else lands in `sizeOther`,
+lists join with `;`, and **a comma inside a value becomes a space**. Quoting would
+survive a comma; the first person to open the file in something careless would
+not. Money comes out in pounds and stays pence inside.
 
 ## 3B.11 Stage 3 — the importer and the photographs
 

@@ -162,7 +162,20 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-94 | ✅ | **Photo order recorded as a guess, not the truth** — `crosslist` / `vinted` / `manual` | migration 0003 |
 | A-97 | ✅ | **A re-import refreshes sizes, colours, categories and photos**, replacing only Crosslist's own rows and never removing a photograph | `_refreshChildren()` |
 | A-96 | ✅ | **A missing import file is a sentence**, listing what is in the folder and giving both paths | `__main__.py` |
-| A-95 | ✅ | 108 pytest tests | `sixgenbot/tests/` |
+| A-95 | ✅ | (test count now in A-105) | `sixgenbot/tests/` |
+
+## A.6e sixgenbot — the Files page *(2026-09-15)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-98 | ✅ | **Upload a spreadsheet from the browser** — no share, no `cp`, works from a phone | `modules/fileTransfer/` |
+| A-99 | ✅ | **Upload shows the dry run first**; nothing is written until Import it is pressed | `routes.preview()` |
+| A-100 | ✅ | **Download the inventory as CSV**, whole or by status | `core/csvExport.py` |
+| A-101 | ✅ | **Download a backup** from the page | `routes.downloadBackup()` |
+| A-102 | ✅ | **The flattening rules** — `sizeUk`/`sizeEu`/`sizeUs`/`sizeLetter`, `;` for lists, no commas inside values | `core/csvExport.py` |
+| A-103 | ✅ | **A filename cannot escape its folder**, and the database is never served | `tidyName()`, `insideFolder()` |
+| A-104 | ✅ | A spreadsheet that cannot be read says so rather than showing a traceback | `routes.preview()` |
+| A-105 | ✅ | 119 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 

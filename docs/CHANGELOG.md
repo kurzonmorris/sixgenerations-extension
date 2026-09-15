@@ -7,6 +7,33 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (7) · upload and download in the browser
+
+119 sixgenbot tests, 37 extension tests.
+
+**A Files page.** Choose a CSV, press Upload it, and the reply is **what
+importing would do** — new, updated, without a SKU, sharing one, photographs
+queued. Nothing is written until **Import it** is pressed. The dry-run rule, as
+two pages instead of a flag.
+
+The same page downloads the inventory as a CSV — everything, or just the items
+still to be checked, or the sold ones — and any backup.
+
+**No more network share and `cp`.** It works from a phone over Tailscale.
+
+**`core/csvExport.py`** implements the flattening rules from `DATA_MODEL.md §5`
+at last: known size systems get their own columns, anything else goes to
+`sizeOther`, lists join with `;`, and a comma inside a value becomes a space —
+quoting would survive it, the first person to open the file in something careless
+would not. Money leaves as pounds and stays pence inside.
+
+**Guards, each with a test:** an upload named `../../etc/passwd` becomes a plain
+name in our own folder; a path cannot resolve outside the folder it belongs to;
+only `.csv` is accepted; and the database is never served as a download. A file
+that cannot be parsed says so on the page rather than showing a traceback.
+
+---
+
 ## Unreleased — 2026-09-15 (6) · a re-import now brings the photographs with it
 
 108 sixgenbot tests, 37 extension tests.

@@ -75,6 +75,7 @@ sixgenerations-extension/
 │   │   ├── database.py               connection per thread, migrations, full-text search
 │   │   ├── eventBus.py               named events; publishers never learn who listened
 │   │   ├── moduleLoader.py           finds and registers modules. Names none of them
+│   │   ├── csvExport.py              writes the inventory back out, flattened for Calc
 │   │   ├── crosslistImport.py        reads the export: weight and SKU out of the description
 │   │   ├── photoStore.py             downloads every photo, resumable, hashes everything
 │   │   ├── readiness.py              what is missing, and what nobody has checked yet
@@ -84,10 +85,11 @@ sixgenerations-extension/
 │   ├── modules/                      ONE FOLDER PER FEATURE. Add a folder, add a feature
 │   │   ├── systemStatus/             "is it running", what loaded, what broke
 │   │   ├── activityLog/              the Console page
-│   │   └── backups/                  nightly backup, and the page that proves it ran
+│   │   ├── backups/                  nightly backup, and the page that proves it ran
+│   │   └── fileTransfer/             upload a spreadsheet, download the inventory
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 108 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 119 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
