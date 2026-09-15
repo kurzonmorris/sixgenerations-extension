@@ -7,6 +7,23 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-15 (4) · the update instructions were wrong
+
+`docs/INSTALL_GUIDE.md` told you to update with `git pull`, `docker build`,
+`docker restart`. **That silently does nothing.** A container is created from an
+image once; rebuilding the image leaves the existing container on the old one,
+and `restart` just stops and starts the same filesystem. The new code never runs,
+and nothing reports an error — the first sign is a command the new version should
+have being rejected as an invalid choice.
+
+Corrected to `docker rm -f` followed by `docker run` again. Recorded as a trap in
+`EXPLAINED_six-generations_Extension.md` §7.10b, with the quickest way to tell a
+container is stale: `check` prints the schema version.
+
+Compose was never affected — `up -d --build` recreates the container.
+
+---
+
 ## Unreleased — 2026-09-15 (3) · stage 3: the import and the photographs
 
 102 sixgenbot tests, 37 extension tests. **No version bump — no number given.**
