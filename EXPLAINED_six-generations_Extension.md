@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (7) | **"To review", the batch edit screen** (§3B.13) — U-16 built. Pick a batch, choose which fields show, correct them, save the lot; every change recorded with its value before and after. Also `core/itemEdit.py` and `sku.SQL_ORDER`, which fixes item order being character order rather than room order. **972, not 988**: 16 of the never-listed items are already sold. 138 tests |
 | 2026-09-15 (6) | **Files page: upload and download in the browser** (§3B.12). Removes the network-share-and-`cp` dance entirely. Also `core/csvExport.py`, the first export with the multi-value flattening rules. 119 tests |
 | 2026-09-15 (5) | **A re-import now refreshes sizes, colours, categories and photos**, not just the item row — found by importing the May export (930 rows, **no photos at all**) before the September one. Crosslist-owned rows are replaced, hand-added ones are left alone, photos are only ever added |
 | 2026-09-15 (4) | Two things found by running it on the real server: **`docker restart` silently keeps the old image** (§7.10b), and a missing import file produced a Python traceback instead of a sentence. Both fixed |
@@ -576,6 +577,89 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.13 "To review" — the batch edit screen (U-16)
+
+`modules/itemReview/`, with `core/itemEdit.py` behind it.
+
+This is the screen the backlog is cleared on, and the first one judged the way
+`CLAUDE.md` says to judge a feature: does it put more items up in a day.
+
+**Pick a batch, choose what to see, fix it, save the lot.** The list is ticked,
+the ticked items open as cards side by side, and one press saves them all. Up to
+40 at a time, which is a batch you can still hold in your head.
+
+**Choosing what is shown is also choosing what can be changed.** There is no
+second settings screen: the columns ticked under *Choose what is shown* are the
+boxes that appear on the edit screen. Tick *Size UK* and *Price* and that is a
+screen with two boxes per item and nothing else on it — which is exactly the
+request ("*then i can choose what information appears like size, brand, sku,
+photo order*").
+
+### Three lists, because they are three different jobs
+
+| List | What it is | On the real export |
+|---|---|---|
+| Not checked yet | Everything nobody has confirmed, minus anything sold or archived | 2,016 |
+| **Never listed** | Also has no `dateListed` — the withdrawn stock | **972** |
+| Listed, not checked | Already online, details unconfirmed | 1,044 |
+
+### Why 972 and not 988
+
+`docs/CROSSLIST_EXPORT.md` says 988 items have never been listed, and that is
+right: 988 rows have no `LastListedOn`. **16 of them are already sold** — sold in
+person, or somewhere Crosslist never tracked. So the number worth acting on is
+**972**, and that is what the screen shows. Both numbers are correct; they answer
+different questions.
+
+### `core/itemEdit.py`
+
+- **Sizes are not columns.** They are `itemAttribute` rows, one per system, so
+  `sizeUk`/`sizeEu`/`sizeUs`/`sizeLetter` are each written separately and
+  clearing one deletes the row. This is the field the whole backlog turns on —
+  Vinted changed how sizes are displayed and the catalogue came down to be
+  corrected by hand.
+- **Only fields that actually differ are written.** Re-saving a card that was not
+  touched writes nothing and records nothing.
+- **Every change goes into `event`** with its value before and after. That is
+  what makes a forty-item save explainable afterwards, and it is already the raw
+  material for U-18 (item history) and D-198 (undo).
+- **Saving a correction is not the same as saying it has been checked.** The
+  "I have checked this one" tick is separate, and it is the only thing that sets
+  `verifiedAt`. Confirming is also when the status is worked out again — and
+  `readiness.suggestedStatus()` never returns `on_sale`, because being ready is
+  not being listed. An item already sold, posted or archived is never moved.
+- **A batch save is one transaction.** `BEGIN IMMEDIATE`, and any failure rolls
+  the whole thing back and says *"Nothing was saved. Please try again."* — a
+  half-saved batch of forty would be worse than none.
+
+### Room order — `core/sku.py SQL_ORDER`
+
+The SKU is stored normalised as `13-8-24`, and **text order is not room order**.
+Sorted as text, `13-8-24` comes before `7-4-21`, and every `(no code) …` item
+comes before all of them — so page one of a 41-page queue would have been the
+items that are not in boxes at all.
+
+`SQL_ORDER` sorts by column, then box, then item number, with no-code items last:
+
+```
+2-1 9   ·   5-6 17735   ·   7-4 3   ·   7-4 21   ·   13-8 24   ·   (no code) abc12345
+```
+
+That is the order the room is walked in, so a page of the queue is a box you can
+go and fetch. The Table (U-13) should use the same constant.
+
+**Shown as `13-8 24`, stored as `13-8-24`.** `formatSku()` does that on the way
+to the screen. The stored form is the key; the spaced form is what the business
+writes and what is at the end of every listing description.
+
+### Still, per INTERFACE_PRINCIPLES
+
+No JavaScript at all on either screen. No select-all, no live filtering, no
+auto-save on blur. Results appear when Search is pressed; the column chooser is a
+`<details>` that stays shut until it is opened, and the choice is remembered in a
+cookie. Nothing on this screen writes to Vinted, eBay or the shop, and the edit
+screen says so.
 
 ## 3B.12 The Files page — getting things in and out
 

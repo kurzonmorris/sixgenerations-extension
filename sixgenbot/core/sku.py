@@ -75,3 +75,17 @@ def skuParts(sku: str) -> tuple[int, int, int] | None:
     if len(parts) != 3 or not all(part.isdigit() for part in parts):
         return None
     return int(parts[0]), int(parts[1]), int(parts[2])
+
+
+# "13-8-24" is stored as text, and text order is not room order: it would put
+# 13 before 7, and the items with no code at the front of every queue. Walking
+# the room means column, then box, then item number, so any screen that lists
+# items by SKU orders by this.
+SQL_ORDER = (
+    "CASE WHEN sku LIKE '(no code)%' THEN 1 ELSE 0 END,"
+    " CAST(sku AS INTEGER),"
+    " CAST(substr(sku, instr(sku, '-') + 1) AS INTEGER),"
+    " CAST(substr(substr(sku, instr(sku, '-') + 1),"
+    " instr(substr(sku, instr(sku, '-') + 1), '-') + 1) AS INTEGER),"
+    " sku"
+)

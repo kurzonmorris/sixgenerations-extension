@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block heading %}To review{% endblock %}
+
+{% block content %}
+  {% if message %}
+    <p><strong>{{ message }}</strong></p>
+  {% endif %}
+
+  <form method="get" action="/review">
+    <p>
+      <label for="q">Search</label>
+      <input type="search" id="q" name="q" value="{{ q }}" size="30">
+      <input type="hidden" name="which" value="{{ which }}">
+      <button type="submit">Search</button>
+      {% if q %}<a href="/review?which={{ which }}">Clear</a>{% endif %}
+    </p>
+  </form>
+
+  <p>
+    {% for name, label in lists.items() %}
+      {% if name == which %}<strong>{{ label }}</strong>{% else %}<a href="/review?which={{ name }}&q={{ q }}">{{ label }}</a>{% endif %}{% if not loop.last %} · {% endif %}
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ '{:,}'.format(total) }} items{% if q %} matching “{{ q }}”{% endif %}.
+    {% if pages > 1 %}Page {{ page }} of {{ '{:,}'.format(pages) }}.{% endif %}
+  </p>
+
+  <details>
+    <summary>Choose what is shown</summary>
+    <form method="get" action="/review">
+      <input type="hidden" name="which" value="{{ which }}">
+      <input type="hidden" name="q" value="{{ q }}">
+      <ul class="pickList">
+        {% for name, label in allColumns %}
+          <li>
+            <label>
+              <input type="checkbox" name="show" value="{{ name }}"
+                     {% if name in columns %}checked{% endif %}> {{ label }}
+            </label>
+          </li>
+        {% endfor %}
+      </ul>
+      <p>
+        <button type="submit">Show these</button>
+        <span class="quiet">The ones you can change become boxes on the next screen.</span>
+      </p>
+    </form>
+  </details>
+
+  <form method="post" action="/review/edit">
+    <input type="hidden" name="columns" value="{{ columns | join(',') }}">
+    <input type="hidden" name="which" value="{{ which }}">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Work on</th>
+          {% for name, label in allColumns if name in columns %}<th>{{ label }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td><input type="checkbox" name="pick" value="{{ item.itemId }}"></td>
+            {% for name, label in allColumns if name in columns %}
+              <td>{{ item.cells.get(name, '') }}</td>
+            {% endfor %}
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="{{ columns | length + 1 }}" class="quiet">
+              Nothing here. Either everything on this list has been checked, or
+              no items have been imported yet.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p>
+      <button type="submit">Work on the ticked items</button>
+      <span class="quiet">Up to {{ mostAtOnce }} at a time.</span>
+    </p>
+  </form>
+
+  {% if pages > 1 %}
+    <p>
+      {% if page > 1 %}
+        <a href="/review?which={{ which }}&q={{ q }}&page={{ page - 1 }}">Back a page</a>
+      {% endif %}
+      {% if page > 1 and page < pages %} · {% endif %}
+      {% if page < pages %}
+        <a href="/review?which={{ which }}&q={{ q }}&page={{ page + 1 }}">On a page</a>
+      {% endif %}
+    </p>
+  {% endif %}
+{% endblock %}

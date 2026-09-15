@@ -175,7 +175,31 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-102 | ✅ | **The flattening rules** — `sizeUk`/`sizeEu`/`sizeUs`/`sizeLetter`, `;` for lists, no commas inside values | `core/csvExport.py` |
 | A-103 | ✅ | **A filename cannot escape its folder**, and the database is never served | `tidyName()`, `insideFolder()` |
 | A-104 | ✅ | A spreadsheet that cannot be read says so rather than showing a traceback | `routes.preview()` |
-| A-105 | ✅ | 119 pytest tests | `sixgenbot/tests/` |
+| A-105 | ✅ | (test count now in A-121) | `sixgenbot/tests/` |
+
+## A.6f sixgenbot — To review, the batch edit screen (U-16) *(2026-09-15)*
+
+The screen the backlog is cleared on. Judged the way `CLAUDE.md` says to
+judge a feature — does it put more items up in a day.
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-106 | ✅ | **Three lists**: not checked yet, **never listed** (the 972 still worth putting up), listed but not checked | `routes._where()` |
+| A-107 | ✅ | **Choose what is shown**, and the choice is remembered in a cookie | `routes.chosenColumns()` |
+| A-108 | ✅ | **The chosen columns decide what can be changed** on the next screen — no separate settings | `routes.edit()` |
+| A-109 | ✅ | **Tick items, work on up to 40, save the lot in one press** | `routes.save()` |
+| A-110 | ✅ | **Sizes edited per system** — UK, EU, US, letter — as attributes, not columns. The field the whole backlog turns on | `core/itemEdit.py` |
+| A-111 | ✅ | **Every change recorded** with its value before and after, so a batch save can be explained afterwards | `itemEdit._record()` |
+| A-112 | ✅ | **"I have checked this one"** is separate from saving a correction — and is what sets `verifiedAt` | `itemEdit.markChecked()` |
+| A-113 | ✅ | **Checking recomputes the status**, and never to `on_sale` — ready is not listed | `itemEdit.markChecked()` |
+| A-114 | ✅ | **An item already sold or archived is never disturbed** by a status recompute | `itemEdit.SETTLED` |
+| A-115 | ✅ | **Room order** — column, then box, then item. `7-4 3` before `7-4 21` before `13-8 24`; no-code items last | `core/sku.py SQL_ORDER` |
+| A-116 | ✅ | **The SKU shown the way the business writes it** — `13-8 24`, not the stored `13-8-24` | `sku.formatSku()` |
+| A-117 | ✅ | **Search across every field** from the same screen, submitted not live | `database.searchItems()` |
+| A-118 | ✅ | **Server-side paging**, 50 a page, plain Back/On links. Nothing loads the whole table | `routes.findItems()` |
+| A-119 | ✅ | **A batch save is all or nothing** — one failure rolls the whole thing back and says so in a sentence | `routes.save()` |
+| A-120 | ✅ | **An edit reaches the search index**, because it is spread over three tables | `database.reindexItem()` |
+| A-121 | ✅ | 138 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -280,6 +304,10 @@ together, however interesting the analytics are.
 | **X-10** | ✅ | **Five-digit item numbers in the SKU.** The parser accepted only four, so `5-6 17735` would have silently failed to match. Fixed in `source/core/storageCode.js:31` and the content-script copy, with a test |
 | **X-11** | 📋 | **Returns keep their SKU** — the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping |
 | **U-15** | 📋 | **"Needs fixing" at the top of the dashboard** — failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half |
+| **U-16** | ✅ | **Batch review and edit** — pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f |
+| **U-17** | 📋 | **Drag and drop the photo order**, in a batch. The numbering is the listing order on every platform |
+| **U-18** | 📋 | **Item history** — every change to a garment, with what it was before. The rows are already being written by `itemEdit` (A-111); this is the screen that reads them |
+| **X-12** | 📋 | **Put the 972 withdrawn items back online.** Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project |
 
 
 Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.

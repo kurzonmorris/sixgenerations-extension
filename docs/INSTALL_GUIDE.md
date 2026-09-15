@@ -176,6 +176,33 @@ Check how it went:
 docker exec sixgenbot python -m sixgenbot check
 ```
 
+## Working through the backlog
+
+**To review** in the left menu, or `http://<server>:8770/review`.
+
+Three lists across the top:
+
+| List | What it is |
+|---|---|
+| Not checked yet | Everything nobody has confirmed |
+| **Never listed** | The withdrawn stock — photographed, priced, not online |
+| Listed, not checked | Already up, details unconfirmed |
+
+Open **Choose what is shown** and tick only the things you want to work on — if
+today's job is sizes, tick *SKU*, *Title* and *Size UK* and nothing else. That
+choice does two things: it sets the columns in the list, and it sets which boxes
+appear on the next screen. It is remembered.
+
+Then tick the items, press **Work on the ticked items**, correct them, and press
+**Save all**. Up to 40 at a time.
+
+**"I have checked this one"** is what takes an item off the list. Saving a
+correction on its own does not — so you can fix a size now and confirm the rest
+later. Nothing on this screen goes to Vinted, eBay or the shop.
+
+Items are listed in the order you walk the room: column, then box, then item
+number.
+
 ## Backups, and the offsite copy
 
 Backups land in:
