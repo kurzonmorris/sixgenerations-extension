@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (3) | **Stage 3 built: the importer and the photo store.** 2,125 items imported from the real export, idempotent, dry run by default. Photo fetch is resumable and hashes everything. **Corrected an over-claim**: "duplicate pairs share no photographs" compared URLs, not images (§3B.11). Q48–Q50 answered; the 988 offline items turn out to be *withdrawn pending a Vinted size change*, not never-listed |
 | 2026-09-15 (2) | **The Crosslist export arrived and was analysed** — 2,125 items, `docs/CROSSLIST_EXPORT.md`. 988 never listed; the weight and the SKU both live in the description; 639 items share a code; **all 9,098 photos are hosted by Crosslist and die with the subscription**. Q48–Q50 raised |
 | 2026-09-15 | **Stage 3 foundations.** The SKU parser ported to Python with a test that fails if it drifts from the extension's copy; readiness rules that separate *missing* from *unchecked*; migration 0002 adds `item.verifiedAt`. 77 sixgenbot tests. No importer yet — that needs Kurzon's two lists (Q47) |
 | 2026-09-11 | **sixgenbot v_0.2.0, stage 2: the database.** SQLite with numbered migrations, full-text search, nightly backup and a tested restore. **Plain `sqlite3` rather than SQLAlchemy** — reasoning in §3B.9. Two bugs found by the tests: `executescript` breaks an outer transaction, and two backups in the same minute overwrote each other. `docs/INSTALL_GUIDE.md` added |
@@ -572,6 +573,64 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.11 Stage 3 — the importer and the photographs
+
+### `core/crosslistImport.py`
+
+Reads the export into the database. `python -m sixgenbot import --csv <file>`
+is a **dry run**; `--apply` writes it. Run against the real 2,125-row file:
+
+```
+2125 rows read — 2125 new, 0 updated, 0 unchanged.
+405 have no SKU, 639 share one. 9098 photos to fetch.
+```
+
+A second `--apply` reports *0 new, 2125 unchanged* — `crosslistId` makes it
+idempotent.
+
+| Decision | Why |
+|---|---|
+| The weight comes from `W###g` in the description | The `ShippingWeight` column is defaults nobody set — 16.00 grams on 847 rows |
+| The raw code is kept in `legacyCode` (`B8-3 36`) and normalised into `sku` (`8-3-36`) | `B` just means box. Keeping both means nothing is lost and matching still works |
+| Only the **final line** is considered for a code, and only if it looks like one | A description ending "fits 10-12" must never become a location |
+| **Nothing is imported as `on_sale`** | What is live is Vinted's to say. A CSV is stale the moment it is written |
+| Items with no code import and are flagged | 405 of them, and they are **legitimate** — jackets, toys and books that do not fit a box |
+| Items sharing a code both import; neither is merged | Usually a returned-and-relisted garment. The second gets a suffixed SKU so the unique index holds, and `importNote` records the clash |
+| Every import writes an `event` row | Kurzon asked for a dated history against every item. This is where it starts |
+
+### `core/photoStore.py`
+
+`python -m sixgenbot photos` fetches everything still missing, five at a time,
+politely. **Resumable** — only rows with no file are fetched, so it can be
+stopped and restarted freely.
+
+- Each photo lands at `<data>/images/<itemId>/001.jpg`, numbered as it arrived.
+- **Everything is hashed.** That is what makes §3B.11's correction answerable.
+- A connection failure is retried twice; **a 404 is not** — it is an answer, and
+  across 9,098 photos three tries at each dead URL is a great deal of wasted time.
+- One dead URL never stops the others, and a failure stays on the list for a
+  later retry rather than being given up on.
+
+### The photo order is a guess, and the column says so
+
+`itemImage.orderSource` is `crosslist`, `vinted` or `manual`.
+
+**Vinted keeps photos in the order the seller chose. Crosslist downloaded them
+and kept its own.** So the order arriving with the import is not the seller's
+intention, reading Vinted later replaces it with the truth, and a person dragging
+them into place beats both. Without this column there is no way to tell which of
+the three you are looking at.
+
+### A correction worth remembering
+
+The analysis first claimed duplicate-title pairs were definitely separate
+garments because "not one of 468 pairs shares a photograph". **That compared
+URLs.** Crosslist copies images when a listing is duplicated, so identical
+photographs get different URLs and the test proved nothing.
+`duplicateImages()` answers it properly, by content, once the fetch has run.
+
+**The lesson:** comparing identifiers is not comparing things.
 
 ## 3B.10 Stage 3 foundations — the parts that do not depend on the files
 

@@ -144,6 +144,24 @@ Everything here is a Chrome extension feature. There is no server yet.
 | A-81 | ✅ | An unknown platform asks for nothing rather than inventing requirements | `core/readiness.py` |
 | A-82 | ✅ | Nothing imported is ever put straight on sale | `suggestedStatus()` |
 
+## A.6d sixgenbot — stage 3, the import *(2026-09-15)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-83 | ✅ | **Import the Crosslist export** — 2,125 items, dry run by default | `core/crosslistImport.py` |
+| A-84 | ✅ | **Idempotent** — a second run changes nothing | `crosslistId` |
+| A-85 | ✅ | **The weight read out of the description** (`W###g`), because the column is junk | `readWeight()` |
+| A-86 | ✅ | **The SKU read out of the description**, raw form kept as well | `readRawCode()` |
+| A-87 | ✅ | Items with no code import and are flagged, never skipped | `importNote` |
+| A-88 | ✅ | Items sharing a code both survive, neither merged | `_uniqueSku()` |
+| A-89 | ✅ | **Nothing is ever imported as on sale** | `statusFor()` |
+| A-90 | ✅ | **Every import writes a dated history entry** | `event` table |
+| A-91 | ✅ | **Download every photo**, resumable, five at a time | `core/photoStore.py` |
+| A-92 | ✅ | Every photo hashed, so identical images across items are findable | `duplicateImages()` |
+| A-93 | ✅ | A dead URL is retried twice; **a 404 is not retried at all** | `_download()` |
+| A-94 | ✅ | **Photo order recorded as a guess, not the truth** — `crosslist` / `vinted` / `manual` | migration 0003 |
+| A-95 | ✅ | 102 pytest tests | `sixgenbot/tests/` |
+
 ## A.7 Running it (the extension)
 
 | ID | Status | Feature | Where |

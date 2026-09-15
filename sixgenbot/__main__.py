@@ -1,4 +1,4 @@
-"""python -m sixgenbot serve | check | migrate | backup | restore | version
+"""python -m sixgenbot serve | check | migrate | backup | restore | import | photos | version
 
 `serve` runs it. `check` loads everything and reports without opening a port,
 which is what to run after changing a module. `backup` and `restore` are the
@@ -15,6 +15,8 @@ from . import VERSION
 from .core.appConfig import loadConfig
 from .core.appLogging import getLogger, setupLogging
 from .core.backup import listBackups, makeBackup, restore
+from .core.crosslistImport import importExport
+from .core.photoStore import fetchAll
 from .core.moduleLoader import loadModules
 from .core.webApp import Bot
 
@@ -42,12 +44,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="sixgenbot")
     parser.add_argument(
         "command",
-        choices=["serve", "check", "migrate", "backup", "restore", "version"],
+        choices=["serve", "check", "migrate", "backup", "restore", "import", "photos", "version"],
         nargs="?",
         default="serve",
     )
     parser.add_argument("--data", help="data directory (default: $SIXGENBOT_DATA or /data)")
     parser.add_argument("--file", help="restore: which backup to put back (default: the newest)")
+    parser.add_argument("--csv", help="import: the Crosslist export to read")
+    parser.add_argument("--apply", action="store_true",
+                        help="import: actually write it. Without this it is a dry run")
+    parser.add_argument("--limit", type=int, help="photos: stop after this many")
     args = parser.parse_args(argv)
 
     if args.command == "version":
@@ -78,6 +84,21 @@ def main(argv: list[str] | None = None) -> int:
         bot.db.close()
         counts = restore(chosen, bot.db.path)
         print(f"restored {chosen.name}: {counts['items']} items, {counts['orders']} orders")
+        return 0
+
+    if args.command == "import":
+        if not args.csv:
+            print("which file? pass --csv /data/imports/listings.csv")
+            return 1
+        counts = importExport(bot.db.connection(), Path(args.csv), dryRun=not args.apply)
+        print(("WOULD IMPORT — nothing written.\n" if not args.apply else "IMPORTED.\n") + counts.asSentence())
+        if not args.apply:
+            print("\nRun it again with --apply to write it.")
+        return 0
+
+    if args.command == "photos":
+        counts = fetchAll(bot.db.connection(), bot.config.dataDir, limit=args.limit)
+        print(f"{counts.wanted} were missing. " + counts.asSentence())
         return 0
 
     if args.command == "check":

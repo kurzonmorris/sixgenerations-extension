@@ -50,7 +50,38 @@ The importer reads it from there.
 code in this file is `B13-8 24`. Presumably "box". The parser already tolerates
 it, but it is worth knowing it is there — see Q48.
 
-## 3. Duplicate titles are not duplicates
+## 2A. Answered 2026-09-15
+
+| Question | Answer |
+|---|---|
+| The `B` prefix | **Just "box".** Technically irrelevant, kept for continuity. The raw code is stored verbatim in `legacyCode`; the normalised one ignores it |
+| Shared codes | **Codes were reused occasionally**, almost always because an item was **returned and relisted**. Hence the requirement for a dated history against every item |
+| Items with no code | **Not a mistake.** Jackets, toys and books that do not fit a normal box. Being rectified slowly. A real state, so they import and are flagged |
+| **Why 988 items are offline** | **Vinted changed how sizes are displayed last year**, so almost the whole catalogue was taken down to be corrected by hand. It has not gone back up. **That is the backlog** — not items never listed, but items *delisted pending a size fix* |
+
+**The last one changes what this project is for.** The 988 are not unlisted
+stock, they are *withdrawn* stock: photographed, described, priced, and earning
+nothing while they wait for someone to check a size. Getting them back up is the
+first thing the system exists to do.
+
+## 3. Duplicate titles — a correction
+
+**What was written here on 2026-09-15 was too confident.** The claim was that
+duplicate-title pairs are separate garments because "not one of 468 pairs shares
+a photograph". That compared **URLs, not images**. Crosslist copies images when a
+listing is duplicated, which produces different URLs for identical photographs —
+so the test proved nothing.
+
+The worked example still stands on its own (creation dates six months apart, one
+sold and one not), and the returned-and-relisted explanation fits it exactly. But
+**some of those pairs are very probably the same physical garment listed twice.**
+
+**This is now answerable rather than arguable.** Every photo is hashed as it is
+downloaded, and `duplicateImages()` in `core/photoStore.py` lists the photographs
+held against more than one item. Run it once the fetch has finished and the
+question is settled by content.
+
+## 3B. The original note, kept
 
 514 titles appear more than once, covering 1,127 rows. That looked like the
 export listing an item once per marketplace. **It is not.** A worked example:
