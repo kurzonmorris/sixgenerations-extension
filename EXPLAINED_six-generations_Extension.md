@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (5) | **A re-import now refreshes sizes, colours, categories and photos**, not just the item row — found by importing the May export (930 rows, **no photos at all**) before the September one. Crosslist-owned rows are replaced, hand-added ones are left alone, photos are only ever added |
 | 2026-09-15 (4) | Two things found by running it on the real server: **`docker restart` silently keeps the old image** (§7.10b), and a missing import file produced a Python traceback instead of a sentence. Both fixed |
 | 2026-09-15 (3) | **Stage 3 built: the importer and the photo store.** 2,125 items imported from the real export, idempotent, dry run by default. Photo fetch is resumable and hashes everything. **Corrected an over-claim**: "duplicate pairs share no photographs" compared URLs, not images (§3B.11). Q48–Q50 answered; the 988 offline items turn out to be *withdrawn pending a Vinted size change*, not never-listed |
 | 2026-09-15 (2) | **The Crosslist export arrived and was analysed** — 2,125 items, `docs/CROSSLIST_EXPORT.md`. 988 never listed; the weight and the SKU both live in the description; 639 items share a code; **all 9,098 photos are hosted by Crosslist and die with the subscription**. Q48–Q50 raised |
@@ -933,6 +934,29 @@ screen.
 
 **Worth applying everywhere:** any path a person types is a place to catch the
 mistake and say something useful.
+
+## 7.10d "Nothing changed" is not the same as "nothing needs doing"
+
+The importer skipped child rows when the item row matched on title, description,
+brand and price. **The September export differs from May in almost nothing but
+its 9,098 photo URLs** — so every item reported "unchanged" and not one
+photograph was recorded. A corrected size would have been ignored the same way,
+which is precisely the thing the whole backlog is about.
+
+Children are now refreshed on every re-import, and "changed" is decided by the
+item row **or** its children. Two rules keep it safe:
+
+- **Only Crosslist's own rows are replaced** (`source = 'crosslist'`). Anything
+  added by hand carries a different source and survives.
+- **Photos are only ever added** — never removed, never renumbered. The files may
+  already be downloaded, and the order may have been corrected by hand or read
+  back from Vinted, both of which beat the export.
+
+Proved on the real file: import a photo-less copy (2,125 new, 0 photos), then the
+real one (**2,125 updated, 9,098 photos**), then again (2,125 unchanged).
+
+**The lesson:** an idempotence check has to cover everything the operation
+writes, not just the row it started from.
 
 ## 7.11 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.

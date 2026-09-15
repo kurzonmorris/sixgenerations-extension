@@ -274,25 +274,31 @@ def _writeUpdate(connection, itemId: str, item: PlannedItem) -> bool:
     before = connection.execute(
         "SELECT title, description, brand, price, status FROM item WHERE itemId = ?", (itemId,)
     ).fetchone()
-    same = (
-        before["title"] == item.title
-        and before["description"] == item.description
-        and before["brand"] == item.brand
-        and before["price"] == item.price
+    rowChanged = (
+        before["title"] != item.title
+        or before["description"] != item.description
+        or before["brand"] != item.brand
+        or before["price"] != item.price
     )
-    if same:
-        return False
 
-    connection.execute(
-        "UPDATE item SET title = ?, description = ?, brand = ?, conditionNote = ?,"
-        " price = ?, weightGrams = ?, dateListed = ?, dateSold = ?, legacyCode = ?,"
-        " importNote = ? WHERE itemId = ?",
-        (
-            item.title, item.description, item.brand, item.conditionNote, item.price,
-            item.weightGrams, item.dateListed, item.dateSold, item.legacyCode,
-            item.note, itemId,
-        ),
-    )
+    if rowChanged:
+        connection.execute(
+            "UPDATE item SET title = ?, description = ?, brand = ?, conditionNote = ?,"
+            " price = ?, weightGrams = ?, dateListed = ?, dateSold = ?, legacyCode = ?,"
+            " importNote = ? WHERE itemId = ?",
+            (
+                item.title, item.description, item.brand, item.conditionNote, item.price,
+                item.weightGrams, item.dateListed, item.dateSold, item.legacyCode,
+                item.note, itemId,
+            ),
+        )
+
+    # Always, even when the item row is identical. A later export very often
+    # changes only a size or brings photographs the earlier one lacked — the
+    # September export differs from May in nothing but its 9,098 photo URLs.
+    childrenChanged = _refreshChildren(connection, itemId, item)
+    if not rowChanged and not childrenChanged:
+        return False
     _recordEvent(
         connection, itemId, "updated by import",
         f"title {before['title']!r} -> {item.title!r}" if before["title"] != item.title else "details changed",
@@ -301,7 +307,86 @@ def _writeUpdate(connection, itemId: str, item: PlannedItem) -> bool:
     return True
 
 
+def _refreshChildren(connection, itemId: str, item: PlannedItem) -> bool:
+    """Brings sizes, colours, categories and photos back into step on a re-import.
+
+    Two rules, because a later export must never destroy work already done:
+
+    * **Only Crosslist's own rows are replaced.** An attribute or category added
+      by hand carries a different `source` and is left alone.
+    * **Photos are only ever added.** Never removed, never renumbered — the files
+      may already be downloaded, and the order may have been corrected by hand or
+      read back from Vinted, both of which beat the export.
+
+    Without this, importing a corrected export would fix the title and silently
+    leave the old size and the missing photographs in place.
+    """
+    wasThere = _crosslistChildren(connection, itemId)
+
+    connection.execute(
+        "DELETE FROM itemAttribute WHERE itemId = ? AND source = 'crosslist'", (itemId,)
+    )
+    connection.execute(
+        "DELETE FROM itemCategory WHERE itemId = ? AND platform = 'crosslist'", (itemId,)
+    )
+    _writeAttributes(connection, itemId, item)
+    changed = _crosslistChildren(connection, itemId) != wasThere
+
+    have = {
+        row["sourceUrl"]
+        for row in connection.execute("SELECT sourceUrl FROM itemImage WHERE itemId = ?", (itemId,))
+    }
+    nextPosition = (
+        connection.execute(
+            "SELECT COALESCE(MAX(position), 0) AS highest FROM itemImage WHERE itemId = ?", (itemId,)
+        ).fetchone()["highest"]
+        + 1
+    )
+    for url in item.photos:
+        if url.strip() in have:
+            continue
+        connection.execute(
+            "INSERT INTO itemImage (itemId, position, role, filePath, sourceUrl, orderSource)"
+            " VALUES (?, ?, 'photo', '', ?, 'crosslist')",
+            (itemId, nextPosition, url.strip()),
+        )
+        nextPosition += 1
+        changed = True
+
+    return changed
+
+
+def _crosslistChildren(connection, itemId: str) -> set:
+    """What the import owns on this item, as a comparable set."""
+    attributes = {
+        (r["attribute"], r["value"], r["system"])
+        for r in connection.execute(
+            "SELECT attribute, value, system FROM itemAttribute"
+            " WHERE itemId = ? AND source = 'crosslist'",
+            (itemId,),
+        )
+    }
+    categories = {
+        ("category", r["categoryPath"], "")
+        for r in connection.execute(
+            "SELECT categoryPath FROM itemCategory WHERE itemId = ? AND platform = 'crosslist'",
+            (itemId,),
+        )
+    }
+    return attributes | categories
+
+
 def _writeChildren(connection, itemId: str, item: PlannedItem) -> None:
+    _writeAttributes(connection, itemId, item)
+    for position, url in enumerate(item.photos, start=1):
+        connection.execute(
+            "INSERT INTO itemImage (itemId, position, role, filePath, sourceUrl, orderSource)"
+            " VALUES (?, ?, 'photo', '', ?, 'crosslist')",
+            (itemId, position, url.strip()),
+        )
+
+
+def _writeAttributes(connection, itemId: str, item: PlannedItem) -> None:
     if item.size:
         connection.execute(
             "INSERT INTO itemAttribute (itemId, attribute, value, system, source, isPrimary)"
@@ -319,10 +404,4 @@ def _writeChildren(connection, itemId: str, item: PlannedItem) -> None:
             "INSERT INTO itemCategory (itemId, platform, categoryPath, isPrimary)"
             " VALUES (?, 'crosslist', ?, 1)",
             (itemId, item.categoryPath),
-        )
-    for position, url in enumerate(item.photos, start=1):
-        connection.execute(
-            "INSERT INTO itemImage (itemId, position, role, filePath, sourceUrl, orderSource)"
-            " VALUES (?, ?, 'photo', '', ?, 'crosslist')",
-            (itemId, position, url.strip()),
         )
