@@ -112,6 +112,9 @@ sixgenerations-extension/
     ├── PROJECT_INFO.md               ★ API and web-code reference. Researched once, kept here
     ├── INTERFACE_PRINCIPLES.md       ★ The rules the screens must follow. Not decoration —
     │                                 the daily user has autism, ADHD and sensory needs
+    ├── CROSSLIST_EXPORT.md          ★ The inventory export analysed: 2,125 items, what is in
+    │                                 the columns, what hides in the descriptions, and the
+    │                                 two problems that need deciding
     ├── EXISTING_LEDGER.md           ★ The real books, analysed: six_generations_2.xlsx, 63
     │                                 monthly sheets, 2,864 sales since Oct 2021, job lots,
     │                                 petrol in the profit formula, and no SKU anywhere

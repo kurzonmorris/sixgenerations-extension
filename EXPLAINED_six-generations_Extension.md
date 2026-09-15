@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-15 (2) | **The Crosslist export arrived and was analysed** — 2,125 items, `docs/CROSSLIST_EXPORT.md`. 988 never listed; the weight and the SKU both live in the description; 639 items share a code; **all 9,098 photos are hosted by Crosslist and die with the subscription**. Q48–Q50 raised |
 | 2026-09-15 | **Stage 3 foundations.** The SKU parser ported to Python with a test that fails if it drifts from the extension's copy; readiness rules that separate *missing* from *unchecked*; migration 0002 adds `item.verifiedAt`. 77 sixgenbot tests. No importer yet — that needs Kurzon's two lists (Q47) |
 | 2026-09-11 | **sixgenbot v_0.2.0, stage 2: the database.** SQLite with numbered migrations, full-text search, nightly backup and a tested restore. **Plain `sqlite3` rather than SQLAlchemy** — reasoning in §3B.9. Two bugs found by the tests: `executescript` breaks an outer transaction, and two backups in the same minute overwrote each other. `docs/INSTALL_GUIDE.md` added |
 | 2026-09-10 (2) | **sixgenbot stage 1 built** — the skeleton runs, loads modules, serves two pages. FastAPI + Jinja, 23 pytest tests. Documented in §3B. Q42–Q45 answered |
@@ -911,6 +912,40 @@ seller the REST limits are effectively unlimited; the legacy one is not.
 In eBay's Inventory API the SKU is **mandatory and unique per seller** — an
 exact-match indexed field. If the eBay listings can carry the storage code there,
 eBay becomes the most reliable of the three to match on. (Q16.)
+
+## 9.4a The export, in one paragraph
+
+`listings-2026-09-15.csv`: 2,125 items, one row each. **Duplicate titles are not
+duplicates** — 468 duplicate pairs, not one sharing a photograph, so they are
+separate physical garments. The description carries two structured lines no
+column holds: `W65g` (the weight, 97.4% of rows — the `ShippingWeight` column is
+junk defaults) and `B8-3 36` (the SKU, 80.9%). 988 items have never been listed.
+639 share a code with another item. Full analysis in `docs/CROSSLIST_EXPORT.md`.
+
+## 9.4b The Crosslist export leaves out where an item is listed
+
+Reported 2026-09-15: the CSV records **when** an item was listed but not **on
+which marketplaces**. The website shows it; the export apparently does not.
+
+**Why it is not fatal.** Listing state should never have come from a five-year-old
+CSV: it changes every day, and a file is out of date the moment it is written.
+**The platforms are the source of truth for where something is listed** — the
+CSV is the source of truth for what the garment *is*. So:
+
+- The export supplies the details: title, description, brand, size, price, dates.
+- Reading Vinted supplies the state: matched on SKU, anything in the wardrobe is
+  live on Vinted, today, authoritatively.
+- eBay and Shopify do the same for themselves later.
+
+Until the server can read Vinted (stage 5), **the existing extension already
+does** — v_0.1.0 reads the whole wardrobe. Matching its output against the
+imported CSV on SKU answers "what is live on Vinted" without Crosslist at all.
+
+**Confirmed 2026-09-15: every one of the 9,098 photo URLs points at
+`media-na.crosslist.com`.** Not one is hosted by a marketplace. When the
+subscription ends they will very likely stop resolving, and for the 988 items
+never listed anywhere that is the only copy of the photographs. Downloading them
+is the most time-critical work in the project — Q50.
 
 ## 9.5 Crosslist — the tool currently being paid for
 

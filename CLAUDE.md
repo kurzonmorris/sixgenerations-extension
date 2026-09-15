@@ -27,6 +27,10 @@ Next: **stage 3, import**. The foundations are in (SKU parser, readiness rules,
 `verifiedAt`); **the importer itself is blocked on seeing Kurzon's two lists —
 Q47**. eBay and Shopify wait until Vinted works end to end.
 
+**The photographs are on a clock:** all 9,098 are hosted on
+`media-na.crosslist.com` and will very likely die with the subscription — for 988
+items that have never been listed, that is the only copy. Q50.
+
 **The stock is two lists and they are different jobs:** items already online
 (import as `on_sale`, nothing more to do) and items never listed — roughly 3,000
 — which go to `needs_info` and are checked one at a time. Importing never means
@@ -89,6 +93,7 @@ idea does not come round again.
 | `docs/PROJECT_INFO.md` | **Before any API work.** Endpoints, headers, mutations, rate limits, bot protection, field names. Researched already — do not go looking again. §3 (eBay) is unverified — read it before believing it |
 | `docs/INTERFACE_PRINCIPLES.md` | **Before touching any screen.** Non-negotiable |
 | `docs/LEDGER_DESIGN.md` | Before any purchases/sales work |
+| `docs/CROSSLIST_EXPORT.md` | **Before any import work.** The 2,125-item export analysed — the weight and SKU hide in the description, 988 items never listed, 639 share a code, and every photo is hosted by Crosslist |
 | `docs/EXISTING_LEDGER.md` | **Before any money work.** Five years of real books: 2,864 sales, job lots, petrol in the profit formula, and no SKU anywhere |
 | `docs/CROSS_LISTING_TOOLS_RESEARCH.md` | Prior art. Worth ten minutes before designing a feature from scratch |
 | `docs/OPEN_QUESTIONS.md` | **At the start of a session.** Decisions taken without an answer. Check whether any have been settled |
