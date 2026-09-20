@@ -95,7 +95,7 @@ sixgenerations-extension/
 │   │   └── itemTable/                The Table — every item, one search box
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 181 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 212 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

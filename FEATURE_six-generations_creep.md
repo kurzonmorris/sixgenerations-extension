@@ -250,7 +250,28 @@ once Crosslist is cancelled. This takes the fetch off the command line.
 | A-151 | ✅ | **Pillow is optional** — if it is missing the full photograph is served, and the screen still works | `thumbnails.canResize` |
 | A-152 | ✅ | **The stylesheet address carries a stamp of its own contents** — a screen change now reaches the browser at once | `webApp.styleVersion()` |
 | A-153 | ✅ | **The small copies can be thrown away** and are made again on demand | `thumbnails.removeAll()` |
-| A-154 | ✅ | 181 pytest tests | `sixgenbot/tests/` |
+| A-154 | ✅ | (test count now in A-170) | `sixgenbot/tests/` |
+
+## A.6j sixgenbot — choosing items, and editing down a column *(2026-09-20)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-155 | ✅ | **Tick the rows you want**, on any filtered list | `table.html` |
+| A-156 | ✅ | **Or take everything that matches** — not just the page | `routes.edit()` |
+| A-157 | ✅ | **Choose by what is missing** — brand, size, colour, price, weight, title, description, photographs, category | `itemQuery.MISSING` |
+| A-158 | ✅ | **Choose by a word in the title, the description or the private notes** | `itemQuery.buildWhere()` |
+| A-159 | ✅ | **Choose by when an item arrived** — between two dates and times, or in the last N days | `itemQuery.buildWhere()` |
+| A-160 | ✅ | **An inclusive end date** — `dateAdded` holds a time, so a date-only end would drop that whole day | `itemQuery._endOfDay()` |
+| A-161 | ✅ | **Choose by checked or not checked** | `itemQuery.buildWhere()` |
+| A-162 | ✅ | **Choose the items that share a code** with another item | `itemQuery.buildWhere()` |
+| A-163 | ✅ | **Every choice combines with every other**, and the sentence names them all | `itemQuery.describe()` |
+| A-164 | ✅ | **One field becomes one column**, one item to a line | `reviewEdit.html` |
+| A-165 | ✅ | **Tab walks down the column**, Shift and Tab walk back up. No JavaScript | the page order itself |
+| A-166 | ✅ | **Nothing focusable sits between two boxes** — a per-row tick box made it two presses an item | `reviewEdit.html` |
+| A-167 | ✅ | **A column holds 200**, a page of cards holds 40 | `routes.MOST_IN_A_COLUMN` |
+| A-168 | ✅ | **"The first 200 of 385"**, said plainly, and the batch shrinks as it is worked | `reviewEdit.html` |
+| A-169 | ✅ | **Saving returns you to the list you came from**, filters intact | `routes.save()` |
+| A-170 | ✅ | 212 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -355,7 +376,7 @@ together, however interesting the analytics are.
 | **X-10** | ✅ | **Five-digit item numbers in the SKU.** The parser accepted only four, so `5-6 17735` would have silently failed to match. Fixed in `source/core/storageCode.js:31` and the content-script copy, with a test |
 | **X-11** | 📋 | **Returns keep their SKU** — the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping |
 | **U-15** | 📋 | **"Needs fixing" at the top of the dashboard** — failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half |
-| **U-16** | ✅ | **Batch review and edit** — pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f |
+| **U-16** | ✅ | **Batch review and edit** — pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f. Extended 2026-09-20 with choosing by what items have in common, and editing down one column — A.6j |
 | **U-17** | 📋 | **Drag and drop the photo order**, in a batch. The numbering is the listing order on every platform |
 | **U-18** | 📋 | **Item history** — every change to a garment, with what it was before. The rows are already being written by `itemEdit` (A-111); this is the screen that reads them |
 | **X-12** | 📋 | **Put the 972 withdrawn items back online.** Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project |

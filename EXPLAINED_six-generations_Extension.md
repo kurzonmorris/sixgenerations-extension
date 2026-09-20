@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 (4) | **Choosing items many ways, and editing down one column** (§3B.17). Pick by what items have in common — no brand (385), no size (424), a word in a field, added between two dates — and combine them. Then one field becomes a single column and **Tab walks down it**, with no JavaScript. A tick box on each row had made that two presses an item; it is gone. 212 tests |
 | 2026-09-20 (3) | **Small copies of the photographs** (§3B.16). A page of the Table was sending **76 MB** of full-size photographs; it now sends 0.6 MB. Also the trap that hid it: the stylesheet had no version on its address, so **every screen change was invisible** until a browser cache was cleared. 181 tests |
 | 2026-09-20 (2) | **The Table** (§3B.15) — every item, one search box across every field, filters that say what they are doing in words, thumbnails, and server-side paging. `core/itemQuery.py`. Two findings from the real data: a box code is not a search term, and `13-8` is not a real box. 169 tests |
 | 2026-09-20 | **The Photos page** (§3B.14) — the photo fetch moved off the command line: a button, a count you can come back to, a Stop that works in seconds rather than an hour, and the failures named. Also `/photos/duplicates`, which answers the §3B.11 correction by content. 149 tests |
@@ -580,6 +581,80 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.17 Choosing items many ways, and editing down one column
+
+Asked for on 2026-09-20: choose items by ticking them **or** by what they have
+in common, combine those choices, then change one thing on all of them with as
+few presses as possible.
+
+### Choosing
+
+Every filter is one clause, and they are joined with AND, so any of them
+combine. `core/itemQuery.py`. On the real catalogue:
+
+| Choice | Items |
+|---|---|
+| No brand | **385** |
+| No size | **424** |
+| No colour | 173 |
+| No weight | 56 |
+| Shares a code with another item | 324 |
+| Not checked yet | 2,122 |
+| Never listed | 988 |
+| Added on 2026-04-21 | 98 |
+
+Also: no title, no description, no price, no photographs, no category; a word in
+the title, the description or the private notes; added between two dates, or in
+the last N days; a box, a column, a status, a size, a brand, a colour, a price
+range. **Never listed, with no brand** is 142 — that is a real morning's work,
+named in one line.
+
+### Two traps in the dates
+
+`dateAdded` holds `2026-04-21 13:11:32`, not just the date. So
+`dateAdded <= '2026-04-21'` **drops everything added that day**, because the
+stored text is longer than the text it is compared with. `_endOfDay()` appends
+`23:59:59` to a date-only value. A test adds an item at 13:11 and asks for one
+day.
+
+A number box can have words typed into it. `addedDays` is only used when it
+`isdigit()`; anything else is ignored rather than throwing.
+
+### Editing down one column — and why it needs no JavaScript
+
+Pick one field and the page becomes **a single column of boxes, one item to a
+line**. Tab already walks down a page in the order it is written, so Tab moves
+from one item's brand to the next item's brand. Shift and Tab go back up.
+**Nothing was added to make this work** — the layout is the feature.
+
+⚠ **A tick box on each row broke it**, and it was not obvious: Tab went
+brand → Done → brand → Done, two presses an item instead of one. Anything
+focusable between two boxes is a stop. The column has no per-row box; the whole
+batch is marked at the bottom instead, and that is more honest anyway — fixing
+one field is not checking the whole item, so it is off by default. A test reads
+the page's focusable elements in order and asserts there is nothing between
+them.
+
+### What was asked for and not built
+
+**"The mouse hovers over a Next button and the box being edited moves on."**
+This is the one part not built. It breaks `INTERFACE_PRINCIPLES.md` U-04 —
+*nothing happens on hover* — which is a hard rule, so it was not built without
+asking. Tab does the same job in one press, and a Next button that had to be
+**pressed** would be two presses, which is worse than Tab. → Q52.
+
+### How much fits
+
+| Layout | Items at once | Why |
+|---|---|---|
+| One card an item | 40 | Twelve boxes an item is a wall much sooner |
+| One column | 200 | One box an item |
+
+A bigger batch is not refused: the page says *"These are the first 200 of 385"*,
+and the saved items **fall out of the filter by themselves** — 385 with no brand
+became 382 after three were filled in. The batch shrinks as it is worked, which
+is what makes a backlog of 385 finishable.
 
 ## 3B.16 Small copies of the photographs, and a trap that hid a fix
 
