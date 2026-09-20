@@ -199,7 +199,27 @@ judge a feature — does it put more items up in a day.
 | A-118 | ✅ | **Server-side paging**, 50 a page, plain Back/On links. Nothing loads the whole table | `routes.findItems()` |
 | A-119 | ✅ | **A batch save is all or nothing** — one failure rolls the whole thing back and says so in a sentence | `routes.save()` |
 | A-120 | ✅ | **An edit reaches the search index**, because it is spread over three tables | `database.reindexItem()` |
-| A-121 | ✅ | 138 pytest tests | `sixgenbot/tests/` |
+| A-121 | ✅ | (test count now in A-133) | `sixgenbot/tests/` |
+
+## A.6g sixgenbot — the Photos page *(2026-09-20)*
+
+The photographs are the one thing in this project that cannot be recovered
+once Crosslist is cancelled. This takes the fetch off the command line.
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-122 | ✅ | **Fetch the photographs from a button**, in the background — the page comes straight back | `modules/photoLibrary/` |
+| A-123 | ✅ | **How many are safely here** versus still only on Crosslist, plus space used | `photoStore.storedCounts()` |
+| A-124 | ✅ | **Fetch a few first** — a count box, empty means all | `routes.startFetch()` |
+| A-125 | ✅ | **Stop, and it stops in seconds** — chunked 200 at a time rather than one pool over 9,098 | `photoStore.fetchAll(shouldStop=)` |
+| A-126 | ✅ | **The job list is taken once**, so a failed photo cannot loop forever | `photoStore.fetchAll()` |
+| A-127 | ✅ | **One run at a time**, under a lock | `routes.lock` |
+| A-128 | ✅ | **No auto-refresh** — a *Check again* link, and the page says so | `photos.html` |
+| A-129 | ✅ | **Failures grouped by what the server said**, with counts, retried next run | `photoStore.failureReasons()` |
+| A-130 | ✅ | **Stored photographs served** to the browser | `routes.image()` |
+| A-131 | ✅ | **A path in the database is not permission to read it** — nothing outside the images folder is ever served | `routes.image()` |
+| A-132 | ✅ | **Duplicates by content, not address** — answers the §3B.11 correction | `/photos/duplicates` |
+| A-133 | ✅ | 149 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 

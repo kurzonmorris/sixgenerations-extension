@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block heading %}Photographs held against more than one item{% endblock %}
+
+{% block content %}
+  <p>
+    Compared by their contents, not their addresses. Crosslist gives a copied
+    listing new addresses for the same photographs, so the address never answers
+    this question and the contents always do.
+  </p>
+
+  {% if not ready %}
+    <p>
+      Nothing can be compared yet — no photographs have been brought here.
+      <a href="/photos">Fetch them first</a>.
+    </p>
+  {% elif not total %}
+    <p>
+      Of the {{ '{:,}'.format(ready) }} photographs here, none is held against
+      more than one item.
+    </p>
+  {% else %}
+    <p>
+      {{ '{:,}'.format(total) }} photographs are each held against more than one
+      item{% if total > shared | length %}, showing the first
+      {{ shared | length }}{% endif %}.
+    </p>
+    <table>
+      <thead><tr><th>Photograph</th><th>Items sharing it</th></tr></thead>
+      <tbody>
+        {% for digest, items in shared %}
+          <tr>
+            <td class="message">{{ digest[:16] }}</td>
+            <td class="at">{{ items }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}
