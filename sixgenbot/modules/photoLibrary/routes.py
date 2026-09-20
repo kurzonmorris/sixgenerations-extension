@@ -14,6 +14,7 @@ from ...core.photoStore import (
     imagesFolder,
     storedCounts,
 )
+from ...core.thumbnails import thumbnailFor
 from ...core.webApp import render
 
 router = APIRouter()
@@ -124,7 +125,8 @@ def duplicates(request: Request):
 
 
 @router.get("/photos/image/{imageId}", include_in_schema=False)
-def image(request: Request, imageId: int):
+def image(request: Request, imageId: int, small: str = ""):
+    """The photograph. `small=yes` serves the small copy, made on first asking."""
     bot = request.app.state.bot
     row = bot.db.connection().execute(
         "SELECT filePath FROM itemImage WHERE imageId = ?", (imageId,)
@@ -136,4 +138,9 @@ def image(request: Request, imageId: int):
     path = Path(row["filePath"]).resolve()
     if folder not in path.parents or not path.is_file():
         return RedirectResponse("/photos?message=That+photo+is+not+here+yet.", status_code=303)
+
+    if small == "yes":
+        smaller = thumbnailFor(bot.config.dataDir, imageId, path)
+        if smaller is not None:
+            return FileResponse(smaller, media_type="image/jpeg")
     return FileResponse(path)

@@ -151,7 +151,7 @@
                 {% if name == 'photo' %}
                   <td>
                     {% if item.cells.photo %}
-                      <img class="thumb" src="/photos/image/{{ item.cells.photo }}"
+                      <img class="thumb" src="/photos/image/{{ item.cells.photo }}?small=yes"
                            alt="Photograph of {{ item.cells.sku }}">
                     {% else %}
                       <span class="quiet">none</span>

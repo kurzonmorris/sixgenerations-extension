@@ -82,6 +82,7 @@ sixgenerations-extension/
 │   │   ├── photoStore.py             downloads every photo, resumable, hashes everything
 │   │   ├── readiness.py              what is missing, and what nobody has checked yet
 │   │   ├── sku.py                    the SKU: parse, format, rewrite. Twin of storageCode.js
+│   │   ├── thumbnails.py             small copies of the photographs, made once and kept
 │   │   ├── scheduler.py              repeating jobs; one failing job cannot stop the rest
 │   │   └── webApp.py                 the Bot object modules register against, and the app
 │   ├── modules/                      ONE FOLDER PER FEATURE. Add a folder, add a feature
@@ -94,7 +95,7 @@ sixgenerations-extension/
 │   │   └── itemTable/                The Table — every item, one search box
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 169 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 181 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

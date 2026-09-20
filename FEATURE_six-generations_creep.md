@@ -238,7 +238,19 @@ once Crosslist is cancelled. This takes the fetch off the command line.
 | A-144 | ✅ | **The Box filter accepts `11-1` or `11 1`** — and the page says why the search box cannot do it | `itemQuery.buildWhere()` |
 | A-145 | ✅ | **A photo row with no file does not count** as having a photograph | `itemQuery.buildWhere()` |
 | A-146 | ✅ | **Nothing matching is a sentence**, not a blank table | `table.html` |
-| A-147 | ✅ | 169 pytest tests | `sixgenbot/tests/` |
+| A-147 | ✅ | (test count now in A-154) | `sixgenbot/tests/` |
+
+## A.6i sixgenbot — small copies of the photographs *(2026-09-20)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-148 | ✅ | **Small copies of the photographs**, made once and kept — a page of the Table went from 76 MB to 0.6 MB | `core/thumbnails.py` |
+| A-149 | ✅ | **The size is in the filename**, so raising it later cannot serve an old copy at the wrong size | `thumbnails.thumbnailFor()` |
+| A-150 | ✅ | **The full photograph is still served** without `small=yes` | `routes.image()` |
+| A-151 | ✅ | **Pillow is optional** — if it is missing the full photograph is served, and the screen still works | `thumbnails.canResize` |
+| A-152 | ✅ | **The stylesheet address carries a stamp of its own contents** — a screen change now reaches the browser at once | `webApp.styleVersion()` |
+| A-153 | ✅ | **The small copies can be thrown away** and are made again on demand | `thumbnails.removeAll()` |
+| A-154 | ✅ | 181 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
