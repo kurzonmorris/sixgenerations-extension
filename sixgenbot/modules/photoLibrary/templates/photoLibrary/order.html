@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block heading %}Photographs for {{ sku }}{% endblock %}
+
+{% block content %}
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+  <p>{{ title or 'no title' }}</p>
+
+  <p class="quiet">
+    Number 1 is the photograph a buyer sees first on Vinted, eBay and the shop.
+    It decides whether they open the listing at all. Every change is saved as
+    soon as you press a button.
+  </p>
+
+  {% if photos | length < 2 %}
+    <p>
+      {% if photos %}
+        There is one photograph, so there is no order to change.
+      {% else %}
+        There are no photographs for this item yet.
+      {% endif %}
+    </p>
+  {% else %}
+    <div class="photoRows">
+      {% for photo in photos %}
+        <div class="photoRow">
+          <span class="photoNumber">{{ photo.position }}</span>
+          {% if photo.filePath %}
+            <img class="bigThumb" src="/photos/image/{{ photo.imageId }}?small=yes"
+                 alt="Photograph {{ photo.position }} of {{ sku }}">
+          {% else %}
+            <span class="quiet">not here yet</span>
+          {% endif %}
+
+          <form method="post" action="/photos/order/{{ itemId }}">
+            <input type="hidden" name="back" value="{{ back }}">
+            <input type="hidden" name="imageId" value="{{ photo.imageId }}">
+            <p>
+              <button type="submit" name="where" value="first"
+                      {% if loop.first %}disabled{% endif %}>Make it first</button>
+              <button type="submit" name="where" value="up"
+                      {% if loop.first %}disabled{% endif %}>Move up</button>
+              <button type="submit" name="where" value="down"
+                      {% if loop.last %}disabled{% endif %}>Move down</button>
+            </p>
+            <p class="quiet">
+              {% if photo.orderSource == 'manual' %}
+                You put this one here.
+              {% elif photo.orderSource == 'crosslist' %}
+                This order came from Crosslist. It is a guess.
+              {% else %}
+                From {{ photo.orderSource }}.
+              {% endif %}
+            </p>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <p><a href="{{ back }}">Go back</a></p>
+{% endblock %}

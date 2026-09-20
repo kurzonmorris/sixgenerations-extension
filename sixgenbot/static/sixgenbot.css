@@ -264,3 +264,44 @@ img.thumb {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Putting photographs in order. One to a line, big enough to tell apart. */
+.photoRows { border-top: 1px solid var(--line); max-width: 46rem; }
+
+.photoRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.photoRow form { margin: 0; }
+.photoRow p { margin: 0 0 0.3rem; }
+
+.photoNumber {
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-width: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+img.bigThumb {
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+}
+
+button[disabled] { color: var(--quiet); border-style: dashed; cursor: default; }
+
+/* The photographs shown beside what you are editing. */
+.photoStrip { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+.photoStrip img { width: 3rem; height: 3rem; object-fit: cover; border-radius: 3px;
+                  border: 1px solid var(--line); }
+
+.wasBefore { font-variant-numeric: tabular-nums; }
+
+.everything { font-size: 0.9rem; }
+.everything .row { padding: 0.3rem 0; }

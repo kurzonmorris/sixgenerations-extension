@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 (5) | **Photographs while editing, and the old value beside every box** (§3B.18). Also §7.10f: **every edit box had been empty**, because `item.values` in Jinja is the dict's own method — saving an untouched item would have wiped it. Found in a real browser. Tab already picks out the text, checked in Chromium. 218 tests |
 | 2026-09-20 (4) | **Choosing items many ways, and editing down one column** (§3B.17). Pick by what items have in common — no brand (385), no size (424), a word in a field, added between two dates — and combine them. Then one field becomes a single column and **Tab walks down it**, with no JavaScript. A tick box on each row had made that two presses an item; it is gone. 212 tests |
 | 2026-09-20 (3) | **Small copies of the photographs** (§3B.16). A page of the Table was sending **76 MB** of full-size photographs; it now sends 0.6 MB. Also the trap that hid it: the stylesheet had no version on its address, so **every screen change was invisible** until a browser cache was cleared. 181 tests |
 | 2026-09-20 (2) | **The Table** (§3B.15) — every item, one search box across every field, filters that say what they are doing in words, thumbnails, and server-side paging. `core/itemQuery.py`. Two findings from the real data: a box code is not a search term, and `13-8` is not a real box. 169 tests |
@@ -581,6 +582,53 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.18 Photographs while editing, the old value, and what Tab already does
+
+Asked for on 2026-09-20: see the photographs while editing and re-arrange them,
+see the original information, and have Tab pick out the text so typing replaces
+it.
+
+### Tab already does the third one
+
+**Checked in a real Chromium, not assumed.** Tab into a text box and the browser
+selects the whole contents; type and it replaces them. `"Whistles"` became
+`"Hobbs"` in one keystroke. Clicking does **not** select — it places a cursor.
+
+So nothing was built for it. Making a *click* select as well would need
+JavaScript, and has not been asked for.
+
+### Photographs, and putting them in order
+
+`core/photoOrder.py` and `/photos/order/{itemId}`. **Move up**, **Move down**,
+**Make it first** — no dragging, so no JavaScript. Number 1 is the photograph a
+buyer sees in a list on every platform, which is the only reason the order
+matters.
+
+`UNIQUE (itemId, position)` means a move cannot swap two rows one write at a
+time — the first write lands on a position the other row still holds. Every move
+**renumbers the whole item in two passes**: park every row on a negative number,
+then write 1..N. Moving marks the photographs `orderSource = 'manual'`, which is
+the one order a later platform read must never overwrite.
+
+The edit screen shows every photograph, in order, and a button: **Save and put
+these N in order**. It is a submit button with its own `formaction`, so it
+**saves what has been typed first**. Leaving the page to look at photographs can
+never lose work.
+
+### The old value, and what else the item says
+
+Under every box: *was Marks & Spencer*, or *was empty*. On a card, a fold —
+*What this item says now* — lists every field.
+
+⚠ **In one column at a time that fold had to go.** A browser showed Tab going
+box → **summary** → box: two presses an item, the very thing the column layout
+exists to avoid. `<details>`, links and buttons are all keyboard stops. The
+column now says the same information in **plain text**, so nothing is hidden
+from a keyboard user and nothing sits between the boxes.
+
+The test that missed it only looked for `input|textarea|select|button`. It now
+reads **everything focusable**, `summary` and `a` included.
 
 ## 3B.17 Choosing items many ways, and editing down one column
 
@@ -1340,6 +1388,46 @@ is the only one.
 
 **The wider lesson:** when a screen does not change after a deploy, check that
 the browser actually has the new file before you go looking at the code.
+
+---
+
+## 7.10f Every edit box was empty, and a save would have wiped the item
+
+**Found 2026-09-20, in a real browser. The worst fault in the project so far.**
+
+The edit screen handed each item to the template as a dict with a key called
+`values`. The template read `item.values[field.name]`.
+
+**In Jinja, `item.values` is the dict's own `.values` method**, not the key
+called "values". So the lookup gave Undefined, every box rendered
+`value=""`, and:
+
+> **Opening an item and pressing Save would have written an empty string over
+> its brand, title, price and description.**
+
+Proved against the real catalogue: item `8-3 36` held `Marks & Spencer`; the box
+on screen held `''`.
+
+This is the same trap as §7.2 and as the `counts.items` fix in the status page,
+in its third outfit. **The key is now called `current`,** which collides with
+nothing.
+
+### Why no test caught it
+
+Every test posted a form **it had built itself**, so it never read the boxes the
+page actually renders. The fault lived entirely in the gap between the template
+and the test.
+
+Three tests now close it, and all three read the rendered HTML:
+
+- a box holds the value the item already has
+- every box on a card holds its value
+- **opening the editor and saving without touching anything changes nothing** —
+  and writes no history either
+
+⚠ **The rule this leaves behind: never name a template variable after a dict
+method.** `values`, `items`, `keys`, `get`, `update`, `copy`, `pop`. A grep for
+`.values[` or `.items[` across `templates/` costs nothing and catches all of it.
 
 ---
 

@@ -2,6 +2,7 @@ import threading
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote_plus
 
 from fastapi import APIRouter, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
@@ -14,6 +15,8 @@ from ...core.photoStore import (
     imagesFolder,
     storedCounts,
 )
+from ...core.photoOrder import move, photosFor
+from ...core.sku import formatSku
 from ...core.thumbnails import thumbnailFor
 from ...core.webApp import render
 
@@ -144,3 +147,45 @@ def image(request: Request, imageId: int, small: str = ""):
         if smaller is not None:
             return FileResponse(smaller, media_type="image/jpeg")
     return FileResponse(path)
+
+
+@router.get("/photos/order/{itemId}", response_class=HTMLResponse, include_in_schema=False)
+def order(request: Request, itemId: str, back: str = "/table", message: str = ""):
+    """One item's photographs, biggest first, with buttons to move them."""
+    bot = request.app.state.bot
+    connection = bot.db.connection()
+    row = connection.execute(
+        "SELECT sku, title FROM item WHERE itemId = ?", (itemId,)
+    ).fetchone()
+    if row is None:
+        return RedirectResponse("/table?message=There+is+no+such+item.", status_code=303)
+
+    return render(
+        request,
+        "photoLibrary/order.html",
+        itemId=itemId,
+        sku=formatSku(row["sku"]) or row["sku"],
+        title=row["title"],
+        photos=photosFor(connection, itemId),
+        back=back,
+        message=message,
+    )
+
+
+@router.post("/photos/order/{itemId}", include_in_schema=False)
+async def reorder(request: Request, itemId: str):
+    bot = request.app.state.bot
+    form = await request.form()
+    back = form.get("back", "/table")
+
+    imageId = form.get("imageId", "")
+    where = form.get("where", "")
+    if imageId.isdigit() and where in ("up", "down", "first"):
+        moved = move(bot.db.connection(), itemId, int(imageId), where)
+        if moved:
+            bot.emit("photos.reordered", item=itemId)
+            log.info(f"photographs reordered for {itemId}")
+
+    return RedirectResponse(
+        f"/photos/order/{itemId}?back={quote_plus(back)}", status_code=303
+    )
