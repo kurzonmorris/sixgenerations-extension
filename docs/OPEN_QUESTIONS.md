@@ -87,7 +87,34 @@ is before 639 rows are imported:
 **Proposed either way:** import all of them, flag every clash, and put them at
 the front of the review queue. Nothing is merged and nothing is skipped.
 
-## Q50 — The photographs are on a clock ⏳
+## Q51 — Editing a cell on the Table needs JavaScript ⏳
+
+`docs/INTERFACE_LAYOUT.md §4.4` asks for editing in place on the Table: *"Click a
+cell, change it, press enter. No modal, no separate edit page."*
+
+**Every screen so far has no JavaScript at all.** That was not an accident — it
+is the cheapest way to be sure nothing moves, nothing happens on hover, and
+nothing saves itself. §4.4 cannot be done without it.
+
+So the Table was built to **find** items, and it links to "To review" to change
+them. That is the cheapest reversible option, per repo rule 1.
+
+**The question: shall I add a small amount of JavaScript to the Table so a cell
+can be edited in place?**
+
+It would be a few lines, and it would follow the same rules the rest does:
+
+- Nothing happens on hover or on selection.
+- A change saves when Enter is pressed, never when the box loses focus.
+- The screen would still work with JavaScript switched off.
+
+**If the answer is no**, that is a complete answer: editing stays on the "To
+review" screen, and `INTERFACE_LAYOUT §4.4` should be struck out the way U-01 and
+U-02 were.
+
+---
+
+## Q50 — The photographs are on a clock ✅ ANSWERED 2026-09-20
 
 **All 9,098 photos live on `media-na.crosslist.com`** — the tool being paid for.
 Not on Vinted, not on eBay. When that subscription ends those URLs will very
@@ -97,6 +124,11 @@ likely stop resolving, taking with them the only copy of the photographs for
 **This is the most time-critical thing in the project.** It needs no decisions
 and breaks nothing. Shall I make downloading them the first piece of stage 3,
 ahead of the importer itself?
+
+**Answered on 2026-09-20: done.** The photo store was built, then the Photos
+page (§3B.14) put it behind a button. Kurzon confirmed every photograph is now
+on the server. Crosslist can be cancelled without losing any of them. Check the
+Photos page reads 0 in *Still only on Crosslist* before cancelling.
 
 ---
 

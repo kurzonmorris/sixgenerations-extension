@@ -219,7 +219,26 @@ once Crosslist is cancelled. This takes the fetch off the command line.
 | A-130 | ✅ | **Stored photographs served** to the browser | `routes.image()` |
 | A-131 | ✅ | **A path in the database is not permission to read it** — nothing outside the images folder is ever served | `routes.image()` |
 | A-132 | ✅ | **Duplicates by content, not address** — answers the §3B.11 correction | `/photos/duplicates` |
-| A-133 | ✅ | 149 pytest tests | `sixgenbot/tests/` |
+| A-133 | ✅ | (test count now in A-147) | `sixgenbot/tests/` |
+
+## A.6h sixgenbot — The Table *(2026-09-20)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-134 | ✅ | **One search box across every field** — title, description, brand, colour, material, notes | `database.searchItems()` |
+| A-135 | ✅ | **Filters**: status, size, brand, colour, box, price range, has photographs, ever listed | `core/itemQuery.py` |
+| A-136 | ✅ | **The filters say what they are doing in words** above the results | `itemQuery.describe()` |
+| A-137 | ✅ | **Thumbnails**, now the photographs are on the server | `table.html` |
+| A-138 | ✅ | **Columns can be chosen**, and the choice is remembered | `routes.chosenColumns()` |
+| A-139 | ✅ | **Sorting is a choice** — storage order, newest, cheapest, dearest, title | `itemQuery.SORTS` |
+| A-140 | ✅ | **Server-side paging**, 50 a page, plain links. Nothing loads the whole table | `itemQuery.findPage()` |
+| A-141 | ✅ | **One query per kind of thing, not one per row** — what makes it work at 100,000 | `routes._decorate()` |
+| A-142 | ✅ | **Paging keeps the search and the filters** | `routes._withoutPage()` |
+| A-143 | ✅ | **A search ceiling of 1,000**, and the page says when it is reached | `itemQuery.SEARCH_CEILING` |
+| A-144 | ✅ | **The Box filter accepts `11-1` or `11 1`** — and the page says why the search box cannot do it | `itemQuery.buildWhere()` |
+| A-145 | ✅ | **A photo row with no file does not count** as having a photograph | `itemQuery.buildWhere()` |
+| A-146 | ✅ | **Nothing matching is a sentence**, not a blank table | `table.html` |
+| A-147 | ✅ | 169 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -300,7 +319,7 @@ New features that came out of those answers:
 | **L-12** | 📋 | **Petrol and posting trips in the profit calculation**, exactly as the sheet already does it: `trips × 0.959 × price per litre`, and profit = sold − (stock + petrol). This is existing behaviour, not a new feature |
 | **L-13** | 📋 | **Recreate the monthly sheet as an export**, with the same totals, so nothing is lost by moving off it |
 | **L-14** | 📋 | **The SKU on every sale record** — the missing link that makes profit-per-item, time-to-sell and per-platform comparison possible at all |
-| **U-13** | 📋 | **The Table** — every item, one search box across every field, filters, in-place editing, at 100,000 rows. `docs/INTERFACE_LAYOUT.md §4`. The most-used screen in the system |
+| **U-13** | 🟡 | **The Table** — every item, one search box across every field, filters, thumbnails, server-side paging at 100,000 rows. Built 2026-09-20, see A.6h. **In-place cell editing (`INTERFACE_LAYOUT §4.4`) is not built** — it needs a decision on JavaScript, Q51 |
 | **X-08** | 📋 | **Clear the unlisted backlog** — roughly 3,000 items bought and never listed. Stock already paid for |
 
 ### The constraint that should drive the build order
