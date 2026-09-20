@@ -62,6 +62,11 @@ muted colour with a word beside it, no jargon on the first screen.
 `docs/INTERFACE_LAYOUT.md` is the layout; `docs/INTERFACE_PRINCIPLES.md` is the
 behaviour (U-01 and U-02 are retired — a dashboard and tables were asked for).
 
+**The same rule applies to your replies.** Write every reply in **Simplified
+Technical English (ASD-STE100)**: short sentences, one instruction per sentence,
+the active voice, numbered steps, one word for one meaning. Asked for on
+2026-09-20. The rules are in `docs/Explained-user_kurzon.md §1`.
+
 **The constraint that should shape everything: 3–6 items can be listed a day**,
 against a backlog of ~3,000 bought-but-unlisted items and a buying rate of ~4.6 a
 day. Judge every feature on whether it puts more items up in a day.
@@ -109,7 +114,7 @@ idea does not come round again.
 | `docs/FILE_STRUCTURE.md` | Before adding a file, or when looking for where something lives |
 | `docs/FUTURE_FEATURES.md` | Before starting a feature — it may already have an ID (F- Vinted/Shopify, E- eBay, L- ledger, U- interface, X- cross-platform) |
 | `docs/VERSIONING.md` | Before touching a version number |
-| `docs/Explained-user_kurzon.md` | How Kurzon works: communication style, conventions, expectations |
+| `docs/Explained-user_kurzon.md` | **Before your first reply.** §1 sets the language every reply must use |
 
 ## Rules for this repo
 

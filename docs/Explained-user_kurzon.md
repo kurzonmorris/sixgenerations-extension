@@ -6,6 +6,39 @@
 
 ## 1. Communication Style
 
+### Write all replies in Simplified Technical English (ASD-STE100)
+
+**Asked for on 2026-09-20. This is a requirement, not a preference.** It applies
+to every reply in chat. It is the same reason the screens must be calm: the
+person who reads this has autism, ADHD and sensory sensitivities, and long
+sentences with many ideas in them are hard work.
+
+Write like this:
+
+- **Keep sentences short.** 20 words maximum for an instruction. 25 words
+  maximum for a description.
+- **Put one instruction in one sentence.** Do not join two steps with "and".
+- **Use the active voice.** Write "Press the button", not "the button should be
+  pressed".
+- **Start an instruction with the verb.** "Open the page." "Run the command."
+- **Use one word for one meaning.** Do not change "fetch" to "pull" to "get" in
+  the same reply.
+- **Use simple tenses.** Write "The page shows the count", not "the page will be
+  showing the count".
+- **Use a vertical list for a procedure.** Number the steps.
+- **Use articles.** Write "Press the Stop button", not "Press Stop button".
+- **Say what happened first, then what to do.** This is the same rule the error
+  messages follow.
+- **Do not use jargon, idiom or metaphor.** Write "the fetch stopped", not "the
+  fetch fell over".
+- **Do not use a noun made from a verb when a verb is clearer.** Write "before
+  you import the file", not "before the importing of the file".
+- **Keep paragraphs to six sentences or fewer.**
+
+Keep the technical words this project already uses: SKU, Vinted, eBay, Shopify,
+Docker, container, CSV. They are the correct names. STE permits technical nouns.
+
+
 - Short, direct requests. Does not explain context unless asked.
 - Requests often say "increase version", "add X to Y", "fix this error" — find the relevant files yourself.
 - Shows log output or tracebacks verbatim when reporting bugs.
