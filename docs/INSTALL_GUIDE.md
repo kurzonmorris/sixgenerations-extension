@@ -186,6 +186,23 @@ docker exec sixgenbot python -m sixgenbot photos
 docker exec sixgenbot python -m sixgenbot check
 ```
 
+## Finding an item
+
+**The Table** in the left menu, or `http://<server>:8770/table`.
+
+Type any word in the search box. It looks in the title, the description, the
+brand, the colour, the material and your private notes. Press **Search**.
+
+Use the fields on the left to narrow the list. The line above the results always
+says what you are looking at, and how many there are.
+
+**To see one box, use the Box field on the left.** Type `11-1`. Do not type the
+box number in the search box: the search treats `11-1` as two separate numbers.
+
+Open **Choose the columns** to add or remove columns. The choice is remembered.
+
+The Table finds items. To change an item, use **To review**.
+
 ## Working through the backlog
 
 **To review** in the left menu, or `http://<server>:8770/review`.

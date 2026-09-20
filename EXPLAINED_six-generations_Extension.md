@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 (2) | **The Table** (§3B.15) — every item, one search box across every field, filters that say what they are doing in words, thumbnails, and server-side paging. `core/itemQuery.py`. Two findings from the real data: a box code is not a search term, and `13-8` is not a real box. 169 tests |
 | 2026-09-20 | **The Photos page** (§3B.14) — the photo fetch moved off the command line: a button, a count you can come back to, a Stop that works in seconds rather than an hour, and the failures named. Also `/photos/duplicates`, which answers the §3B.11 correction by content. 149 tests |
 | 2026-09-15 (7) | **"To review", the batch edit screen** (§3B.13) — U-16 built. Pick a batch, choose which fields show, correct them, save the lot; every change recorded with its value before and after. Also `core/itemEdit.py` and `sku.SQL_ORDER`, which fixes item order being character order rather than room order. **972, not 988**: 16 of the never-listed items are already sold. 138 tests |
 | 2026-09-15 (6) | **Files page: upload and download in the browser** (§3B.12). Removes the network-share-and-`cp` dance entirely. Also `core/csvExport.py`, the first export with the multi-value flattening rules. 119 tests |
@@ -578,6 +579,64 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.15 The Table — every item, one search box
+
+`modules/itemTable/`, with `core/itemQuery.py` behind it.
+`docs/INTERFACE_LAYOUT.md §4` in code.
+
+The screen that answers *"do you have anything with velvet in it?"* while the
+customer is still standing there.
+
+**It finds. It does not change.** Ticking rows and editing them is already the
+job of "To review" (§3B.13), and doing it in two places would mean two places to
+keep right. The Table links there. In-place cell editing — §4.4 of the layout —
+is **not built**, and is the one part of U-13 still open, because it needs
+JavaScript and that decision has not been taken. → Q51.
+
+### Nothing loads the whole table
+
+Every count and every page is one query with a LIMIT. On the real 2,125 items:
+
+| | |
+|---|---|
+| Count everything | 0.2 ms |
+| Build page 1 | 2.3 ms |
+| Fill the filter lists | 0.4 ms |
+
+Per page, the extra data is **one query per kind of thing, not one per row**:
+thumbnails, photo counts and attributes are each fetched for all 50 rows at once.
+That is the difference between a table that works at 100,000 items and one that
+does not.
+
+### The filters say what they are doing
+
+`describe()` writes the sentence above the results:
+
+> **On sale, size 12, with photographs — 34 items.**
+
+Never a row of ticked boxes the reader has to decode. "1 item", not "1 items".
+
+### Two things found in the real data
+
+**The box code is not a search term.** Full-text search splits `11-1` into the
+tokens `11` and `1`, so typing a box code in the search box returns hundreds of
+unrelated items. The **Box** filter does it properly with
+`sku LIKE '11-1-%'`, and accepts `11 1` as well as `11-1`. The page says this,
+rather than quietly returning the wrong set.
+
+**Real boxes are 11-1, 1-1, 8-5 and 11-2**, not the `13-8` used as an example
+throughout the documents. `13-8` does not exist in the catalogue. The example is
+correct as an *explanation* of the format; it is not a real box.
+
+**Duplicate codes carry a suffix.** 639 items share a code, and the importer
+gives the later ones `1-1-1 #055f63`. `formatSku()` shows that as `1-1 1 #055f63`,
+and `SQL_ORDER` still sorts it with the rest of box 1-1.
+
+### A search has a ceiling
+
+`SEARCH_CEILING` is 1,000. A search that matches more says so on the page and
+asks for another word, rather than pretending the first 1,000 are all of them.
 
 ## 3B.14 The Photos page — the only deadline that cannot be undone
 

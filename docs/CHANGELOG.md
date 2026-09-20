@@ -7,6 +7,47 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 (2) · The Table
+
+169 sixgenbot tests, 37 extension tests.
+
+**Every item, on one screen.** One search box reaches every field: the title,
+the description, the brand, the colour, the material and your private notes.
+
+**Filters down the side**: status, size, brand, colour, box, price range, has
+photographs, ever listed. The screen says what the filters are doing, in words:
+
+> **On sale, size 12, with photographs — 34 items.**
+
+**Thumbnails**, now that the photographs are on the server.
+
+Choose the columns you want. The choice is remembered. Choose the order: storage
+order, newest, cheapest, dearest, or title.
+
+50 items a page, with plain Back and On links. Paging keeps your search and your
+filters. Nothing loads the whole table: on the real 2,125 items, counting takes
+0.2 ms and building a page takes 2.3 ms.
+
+### Two things the real data taught us
+
+**A box code is not a search term.** The search splits `11-1` into `11` and `1`,
+so it returns hundreds of items you did not want. Use the **Box** field on the
+left instead. It accepts `11-1` or `11 1`. The page says so.
+
+**`13-8` is not a real box.** It is used as an example all through these
+documents, and it explains the format correctly, but the catalogue has no such
+box. The real ones are 11-1, 1-1, 8-5 and 11-2.
+
+### What is not built
+
+**Editing a cell in place.** `INTERFACE_LAYOUT §4.4` asks for it, and it needs
+JavaScript, which no screen uses yet. The Table finds items and links to **To
+review** to change them. See **Q51**.
+
+**Q50 is answered.** Every photograph is on the server.
+
+---
+
 ## Unreleased — 2026-09-20 · the Photos page
 
 149 sixgenbot tests, 37 extension tests.

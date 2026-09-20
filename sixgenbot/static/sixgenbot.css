@@ -211,3 +211,37 @@ summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 0 1.5rem;
 }
+
+/* The Table: filters down the side, the list beside them. */
+.withSide { display: flex; gap: 2rem; align-items: flex-start; }
+
+.sideFilters {
+  flex: 0 0 13rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--card);
+  padding: 0.25rem 1rem 0.75rem;
+}
+
+.sideFilters h2 { margin: 0.75rem 0 0.5rem; }
+.sideFilters p { margin: 0 0 0.7rem; }
+.sideFilters input, .sideFilters select { max-width: 100%; }
+
+.tableBody { flex: 1; min-width: 0; }
+.tableBody table { display: block; overflow-x: auto; }
+
+.tableSearch input[type="search"] { max-width: 28rem; }
+
+img.thumb {
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  display: block;
+}
+
+@media (max-width: 60rem) {
+  .withSide { display: block; }
+  .sideFilters { margin: 0 0 1.5rem; }
+}

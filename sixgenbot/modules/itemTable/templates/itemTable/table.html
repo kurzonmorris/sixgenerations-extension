@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block heading %}The Table{% endblock %}
+
+{% block content %}
+  <form method="get" action="/table" class="tableSearch">
+    <p>
+      <label for="q">Search everything</label>
+      <input type="search" id="q" name="q" value="{{ filters.q }}" size="36">
+      <button type="submit">Search</button>
+      {% if filters.q %}<a href="/table">Clear the search</a>{% endif %}
+    </p>
+    <p class="quiet">
+      Type anything: a word from the title, a brand, a colour, a material, or
+      private notes. To see one box, put the box number in the
+      <strong>Box</strong> field on the left instead — the search box treats
+      <code>11-1</code> as two separate numbers.
+    </p>
+  </form>
+
+  <div class="withSide">
+    <form method="get" action="/table" class="sideFilters">
+      <input type="hidden" name="q" value="{{ filters.q }}">
+      <h2>Narrow it down</h2>
+
+      <p>
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="">Any</option>
+          {% for name in choices.statuses %}
+            <option value="{{ name }}" {% if filters.status == name %}selected{% endif %}>
+              {{ statusWords.get(name, name) }}
+            </option>
+          {% endfor %}
+        </select>
+      </p>
+
+      <p>
+        <label for="size">Size</label>
+        <select id="size" name="size">
+          <option value="">Any</option>
+          {% for value in choices.sizes %}
+            <option value="{{ value }}" {% if filters.size == value %}selected{% endif %}>
+              {{ value }}
+            </option>
+          {% endfor %}
+        </select>
+      </p>
+
+      <p>
+        <label for="brand">Brand</label>
+        <input id="brand" name="brand" value="{{ filters.brand }}">
+      </p>
+
+      <p>
+        <label for="colour">Colour</label>
+        <input id="colour" name="colour" value="{{ filters.colour }}">
+      </p>
+
+      <p>
+        <label for="box">Box</label>
+        <input id="box" name="box" value="{{ filters.box }}" placeholder="11-1">
+      </p>
+
+      <p>
+        <label for="photos">Photographs</label>
+        <select id="photos" name="photos">
+          <option value="">Any</option>
+          <option value="yes" {% if filters.photos == 'yes' %}selected{% endif %}>Has photographs</option>
+          <option value="no" {% if filters.photos == 'no' %}selected{% endif %}>Has none</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="listed">Listed</label>
+        <select id="listed" name="listed">
+          <option value="">Any</option>
+          <option value="yes" {% if filters.listed == 'yes' %}selected{% endif %}>Listed somewhere</option>
+          <option value="no" {% if filters.listed == 'no' %}selected{% endif %}>Never listed</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="priceFrom">Price from</label>
+        <input id="priceFrom" name="priceFrom" value="{{ filters.priceFrom }}" size="6" inputmode="decimal">
+      </p>
+      <p>
+        <label for="priceTo">Price to</label>
+        <input id="priceTo" name="priceTo" value="{{ filters.priceTo }}" size="6" inputmode="decimal">
+      </p>
+
+      <p>
+        <label for="sort">Order</label>
+        <select id="sort" name="sort">
+          {% for name, pair in sorts.items() %}
+            <option value="{{ name }}" {% if sort == name %}selected{% endif %}>{{ pair[0] }}</option>
+          {% endfor %}
+        </select>
+      </p>
+
+      <p>
+        <button type="submit">Show these</button>
+        <a href="/table">Start again</a>
+      </p>
+    </form>
+
+    <div class="tableBody">
+      <p><strong>{{ sentence }}</strong></p>
+
+      {% if atCeiling %}
+        <p class="quiet">
+          The search stopped at {{ '{:,}'.format(ceiling) }} matches. Add a word
+          to the search, or use a filter, to see a smaller set.
+        </p>
+      {% endif %}
+
+      <details>
+        <summary>Choose the columns</summary>
+        <form method="get" action="/table">
+          {% for name, value in [('q', filters.q), ('status', filters.status),
+                                 ('brand', filters.brand), ('size', filters.size),
+                                 ('colour', filters.colour), ('box', filters.box),
+                                 ('photos', filters.photos), ('listed', filters.listed),
+                                 ('priceFrom', filters.priceFrom), ('priceTo', filters.priceTo),
+                                 ('sort', sort)] %}
+            <input type="hidden" name="{{ name }}" value="{{ value }}">
+          {% endfor %}
+          <ul class="pickList">
+            {% for name, label in allColumns %}
+              <li>
+                <label>
+                  <input type="checkbox" name="show" value="{{ name }}"
+                         {% if name in columns %}checked{% endif %}> {{ label }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+          <p><button type="submit">Show these columns</button></p>
+        </form>
+      </details>
+
+      <table>
+        <thead>
+          <tr>
+            {% for name, label in allColumns if name in columns %}<th>{{ label }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr>
+              {% for name, label in allColumns if name in columns %}
+                {% if name == 'photo' %}
+                  <td>
+                    {% if item.cells.photo %}
+                      <img class="thumb" src="/photos/image/{{ item.cells.photo }}"
+                           alt="Photograph of {{ item.cells.sku }}">
+                    {% else %}
+                      <span class="quiet">none</span>
+                    {% endif %}
+                  </td>
+                {% else %}
+                  <td>{{ item.cells.get(name, '') }}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="{{ columns | length }}" class="quiet">
+                Nothing matches. Clear a filter, or use fewer words in the search.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if pages > 1 %}
+        <p>
+          Page {{ page }} of {{ '{:,}'.format(pages) }}.
+          {% if page > 1 %}
+            <a href="/table?{{ baseQuery }}&amp;page={{ page - 1 }}">Back a page</a>
+          {% endif %}
+          {% if page > 1 and page < pages %} · {% endif %}
+          {% if page < pages %}
+            <a href="/table?{{ baseQuery }}&amp;page={{ page + 1 }}">On a page</a>
+          {% endif %}
+        </p>
+      {% endif %}
+
+      <p class="quiet">
+        To change any of these, open <a href="/review">To review</a>. This screen
+        finds items; that one changes them.
+      </p>
+    </div>
+  </div>
+{% endblock %}
