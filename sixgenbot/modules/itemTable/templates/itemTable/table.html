@@ -71,6 +71,66 @@
       </p>
 
       <p>
+        <label for="missing">Missing something</label>
+        <select id="missing" name="missing">
+          <option value="">Any</option>
+          {% for name, words in missingChoices %}
+            <option value="{{ name }}" {% if filters.missing == name %}selected{% endif %}>
+              {{ words }}
+            </option>
+          {% endfor %}
+        </select>
+      </p>
+
+      <p>
+        <label for="titleHas">Title contains</label>
+        <input id="titleHas" name="titleHas" value="{{ filters.titleHas }}">
+      </p>
+
+      <p>
+        <label for="descriptionHas">Description contains</label>
+        <input id="descriptionHas" name="descriptionHas" value="{{ filters.descriptionHas }}">
+      </p>
+
+      <p>
+        <label for="notesHas">Private notes contain</label>
+        <input id="notesHas" name="notesHas" value="{{ filters.notesHas }}">
+      </p>
+
+      <p>
+        <label for="addedDays">Added in the last (days)</label>
+        <input id="addedDays" name="addedDays" value="{{ filters.addedDays }}" size="5" inputmode="numeric">
+      </p>
+
+      <p>
+        <label for="addedFrom">Added from</label>
+        <input id="addedFrom" name="addedFrom" value="{{ filters.addedFrom }}" placeholder="2026-04-01">
+      </p>
+      <p>
+        <label for="addedTo">Added up to</label>
+        <input id="addedTo" name="addedTo" value="{{ filters.addedTo }}" placeholder="2026-04-30">
+      </p>
+
+      <p>
+        <label for="checked">Checked by a person</label>
+        <select id="checked" name="checked">
+          <option value="">Any</option>
+          <option value="no" {% if filters.checked == 'no' %}selected{% endif %}>Not checked yet</option>
+          <option value="yes" {% if filters.checked == 'yes' %}selected{% endif %}>Already checked</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="sharedCode">Shares a code</label>
+        <select id="sharedCode" name="sharedCode">
+          <option value="">Any</option>
+          <option value="yes" {% if filters.sharedCode == 'yes' %}selected{% endif %}>
+            Shares a code with another item
+          </option>
+        </select>
+      </p>
+
+      <p>
         <label for="listed">Listed</label>
         <select id="listed" name="listed">
           <option value="">Any</option>
@@ -104,6 +164,7 @@
     </form>
 
     <div class="tableBody">
+      {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
       <p><strong>{{ sentence }}</strong></p>
 
       {% if atCeiling %}
@@ -138,15 +199,23 @@
         </form>
       </details>
 
+      <form method="post" action="/review/edit">
+        {% for name, value in carry %}
+          <input type="hidden" name="{{ name }}" value="{{ value }}">
+        {% endfor %}
+        <input type="hidden" name="back" value="/table?{{ baseQuery }}">
+
       <table>
         <thead>
           <tr>
+            <th>Work on</th>
             {% for name, label in allColumns if name in columns %}<th>{{ label }}</th>{% endfor %}
           </tr>
         </thead>
         <tbody>
           {% for item in items %}
             <tr>
+              <td><input type="checkbox" name="pick" value="{{ item.itemId }}"></td>
               {% for name, label in allColumns if name in columns %}
                 {% if name == 'photo' %}
                   <td>
@@ -164,13 +233,29 @@
             </tr>
           {% else %}
             <tr>
-              <td colspan="{{ columns | length }}" class="quiet">
+              <td colspan="{{ columns | length + 1 }}" class="quiet">
                 Nothing matches. Clear a filter, or use fewer words in the search.
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
+
+      {% if items %}
+        <p>
+          <button type="submit">Work on the ticked items</button>
+          <button type="submit" name="useFilters" value="yes">
+            Work on all {{ '{:,}'.format(total) }}
+          </button>
+        </p>
+        <p class="quiet">
+          <strong>Work on the ticked items</strong> takes the boxes you ticked on
+          this page. <strong>Work on all {{ '{:,}'.format(total) }}</strong> takes
+          every item in the line above, not only this page — a batch at a time,
+          in storage order.
+        </p>
+      {% endif %}
+      </form>
 
       {% if pages > 1 %}
         <p>
@@ -186,8 +271,8 @@
       {% endif %}
 
       <p class="quiet">
-        To change any of these, open <a href="/review">To review</a>. This screen
-        finds items; that one changes them.
+        <a href="/review">To review</a> does the same job, starting from the
+        items nobody has checked yet.
       </p>
     </div>
   </div>

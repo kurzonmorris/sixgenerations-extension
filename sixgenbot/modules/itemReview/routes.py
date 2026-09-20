@@ -1,9 +1,12 @@
+from urllib.parse import quote_plus
+
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from ...core.appLogging import getLogger
 from ...core.database import searchItems
-from ...core.itemEdit import BY_NAME, applyEdits, currentValues, markChecked
+from ...core.itemEdit import BY_NAME, FIELDS, applyEdits, currentValues, markChecked
+from ...core.itemQuery import Filters, buildWhere, countItems, findPage
 from ...core.readiness import factsFor, summarise
 from ...core.sku import SQL_ORDER, formatSku
 from ...core.webApp import render
@@ -13,6 +16,7 @@ log = getLogger("review")
 
 PAGE_SIZE = 50
 MOST_AT_ONCE = 40          # a batch you can still hold in your head
+MOST_IN_A_COLUMN = 200     # one box each, so many more fit before it is a wall
 SEARCH_CEILING = 500
 
 # Every column that can be shown, in the order they are drawn. The ones with a
@@ -142,14 +146,35 @@ def review(request: Request, which: str = "unchecked", q: str = "", page: int = 
 
 @router.post("/review/edit", response_class=HTMLResponse, include_in_schema=False)
 async def edit(request: Request):
-    """The chosen items, side by side, showing only the chosen fields."""
+    """The chosen items, ready to change.
+
+    Two ways in: the ticked rows, or everything that matches the filters. Two
+    ways to lay it out: one card per item, or **one column** — every item's
+    brand under one another, which is what makes Tab walk down the column
+    instead of across one item.
+    """
     bot = request.app.state.bot
     connection = bot.db.connection()
     form = await request.form()
 
-    picked = form.getlist("pick")[:MOST_AT_ONCE]
+    only = form.get("only", "")
+    only = only if only in BY_NAME else ""
+    limit = MOST_IN_A_COLUMN if only else MOST_AT_ONCE
+
     columns = chosenColumns(request, form.get("columns", ""))
-    fields = [BY_NAME[name] for name in columns if name in BY_NAME]
+    fields = [BY_NAME[only]] if only else [BY_NAME[name] for name in columns if name in BY_NAME]
+
+    if form.get("useFilters") == "yes":
+        filters = Filters(**{
+            name: form.get(name, "") for name in Filters().__dataclass_fields__
+        })
+        where, parameters, _ = buildWhere(connection, filters)
+        matched = countItems(connection, where, parameters)
+        picked = [row["itemId"] for row in findPage(connection, where, parameters, "sku", 1, limit)]
+        carry = list(filters.asPairs())
+    else:
+        ticked = form.getlist("pick")
+        matched, picked, carry = len(ticked), ticked[:limit], []
 
     if not picked:
         return RedirectResponse("/review?message=Tick+the+items+you+want+to+work+on.",
@@ -165,10 +190,15 @@ async def edit(request: Request):
         ).fetchone()
         if row is None:
             continue
+        thumbnail = connection.execute(
+            "SELECT imageId FROM itemImage WHERE itemId = ? AND filePath != ''"
+            " ORDER BY position LIMIT 1", (itemId,)
+        ).fetchone()
         items.append({
             "itemId": itemId,
             "sku": formatSku(row["sku"]) or row["sku"],
             "title": row["title"],
+            "thumbnail": thumbnail["imageId"] if thumbnail else None,
             "values": currentValues(connection, itemId),
             "needs": summarise(factsFor(connection, itemId)),
         })
@@ -178,7 +208,13 @@ async def edit(request: Request):
         "itemReview/reviewEdit.html",
         items=items,
         fields=fields,
+        only=only,
+        everyField=FIELDS,
+        matched=matched,
+        limit=limit,
         columns=",".join(columns),
+        carry=carry,
+        back=form.get("back", "/review"),
         which=form.get("which", "unchecked"),
     )
 
@@ -195,13 +231,18 @@ async def save(request: Request):
         if len(parts) == 3 and parts[0] == "f":
             edits.setdefault(parts[1], {})[parts[2]] = form[key]
 
+    # One column at a time has no box per row — it would sit between the two
+    # boxes Tab is meant to join. The whole batch is marked together instead.
+    everyOne = form.get("checkAll") == "yes"
+
     changed = checked = 0
     connection.execute("BEGIN IMMEDIATE")
     try:
         for itemId, changes in edits.items():
             made = applyEdits(connection, itemId, changes)
             changed += len(made)
-            if form.get(f"checked:{itemId}") and markChecked(connection, itemId):
+            wanted = everyOne or form.get(f"checked:{itemId}")
+            if wanted and markChecked(connection, itemId):
                 checked += 1
         connection.execute("COMMIT")
     except Exception as error:
@@ -215,7 +256,9 @@ async def save(request: Request):
         bot.emit("items.edited", items=len(edits), changes=changed, checked=checked)
     log.info(f"{len(edits)} items, {changed} changes, {checked} marked as checked")
 
-    message = (f"Saved {len(edits)} items. {changed} changes, "
-               f"{checked} marked as checked.").replace(" ", "+")
-    which = form.get("which", "unchecked")
-    return RedirectResponse(f"/review?which={which}&message={message}", status_code=303)
+    message = quote_plus(
+        f"Saved {len(edits)} items. {changed} changes, {checked} marked as checked."
+    )
+    back = form.get("back", "") or f"/review?which={form.get('which', 'unchecked')}"
+    joiner = "&" if "?" in back else "?"
+    return RedirectResponse(f"{back}{joiner}message={message}", status_code=303)

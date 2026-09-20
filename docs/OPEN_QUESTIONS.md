@@ -87,6 +87,38 @@ is before 639 rows are imported:
 **Proposed either way:** import all of them, flag every clash, and put them at
 the front of the review queue. Nothing is merged and nothing is skipped.
 
+## Q52 — A Next button that works on hover ⏳
+
+Asked for on 2026-09-20, as one of three ways to move from one box to the next:
+
+> *"maybe a keyboard combo or mouse is hovering over a button called next and
+> the currently editing box moves to the next one"*
+
+**Two of the three are built and need nothing:**
+
+- **Tab** moves to the same box on the next item. One press.
+- **Shift and Tab** move back up.
+
+Both work because the column layout puts the boxes one after another, and a
+browser follows the order the page is written in.
+
+**The third is not built**, for two reasons:
+
+1. **It breaks a hard rule.** `INTERFACE_PRINCIPLES.md` U-04: *"Nothing happens
+   on hover."* That rule was accepted, not assumed.
+2. **It would be slower.** Hovering means moving a hand to the mouse, finding
+   the button, and moving back to type. Tab is already one press without leaving
+   the keyboard. A Next button that had to be *pressed* would be two presses an
+   item, which is worse than Tab.
+
+**The question: is Tab enough?**
+
+- **Yes** — then U-04 stands, and this is closed.
+- **No** — say what Tab is not doing for you, and I will build a Next button
+  that is **pressed**, not hovered. That keeps U-04.
+
+---
+
 ## Q51 — Editing a cell on the Table needs JavaScript ⏳
 
 `docs/INTERFACE_LAYOUT.md §4.4` asks for editing in place on the Table: *"Click a

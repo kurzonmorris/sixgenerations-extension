@@ -203,6 +203,30 @@ Open **Choose the columns** to add or remove columns. The choice is remembered.
 
 The Table finds items. To change an item, use **To review**.
 
+## Change many items at once
+
+1. Open **The Table**.
+2. Use the fields on the left to choose the items. For example, set **Missing
+   something** to *no brand*.
+3. Read the line above the list. It says what you chose and how many there are.
+4. Tick the rows you want. Or press **Work on all**, which takes every item that
+   matches.
+5. On the next screen, open **One column at a time**.
+6. Choose one thing, such as *Brand*. Press **Show it that way**.
+7. Type in the first box. **Press Tab.** You are now in the brand box of the
+   next item.
+8. Press **Save all** at the bottom.
+
+Shift and Tab together move back up the column.
+
+You can combine choices. *Never listed* and *no brand* together gives 142 items.
+
+A column holds 200 items. A page of cards holds 40. If more items match, the
+page says so. Save the ones you have and come back for the next.
+
+The items you fix leave the list by themselves. The batch gets smaller as you
+work.
+
 ## Working through the backlog
 
 **To review** in the left menu, or `http://<server>:8770/review`.

@@ -245,3 +245,22 @@ img.thumb {
   .withSide { display: block; }
   .sideFilters { margin: 0 0 1.5rem; }
 }
+
+/* One column at a time. The boxes are one under another, so Tab walks down
+   them — the browser follows the order the page is written in, and that is
+   what makes "fill in forty brands" a keyboard job. */
+.columnEdit td { vertical-align: middle; padding-right: 1rem; }
+.columnEdit td:first-child { display: flex; align-items: center; gap: 0.6rem; }
+.columnEdit input:not([type="checkbox"]), .columnEdit textarea { max-width: 20rem; }
+
+.skuLine { font-weight: 600; white-space: nowrap; }
+
+/* Read by a screen reader, not shown. Every box still says which item it is
+   for, because "Brand" forty times over tells a reader nothing. */
+.hiddenLabel {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

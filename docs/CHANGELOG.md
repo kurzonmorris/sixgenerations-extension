@@ -7,6 +7,69 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 (4) · choose items, then edit down a column
+
+212 sixgenbot tests, 37 extension tests.
+
+### Choose the items you want
+
+Tick the boxes on the rows. Or press **Work on all**, which takes every item
+that matches, not only the items on that page.
+
+You can now choose items by what they have in common:
+
+| Choice | Items in your catalogue |
+|---|---|
+| No brand | **385** |
+| No size | **424** |
+| No colour | 173 |
+| No weight | 56 |
+| Shares a code with another item | 324 |
+| Added on one day (21 April) | 98 |
+
+You can also choose by a word in the title, the description or your private
+notes. You can choose by a date range, or by the last so many days. You can
+choose items that nobody has checked.
+
+**Every choice joins with every other choice.** *Never listed, with no brand* is
+142 items. The line above the list always names what you chose.
+
+### Edit one thing down a column
+
+Pick one field, such as Brand. The page becomes **one column of boxes, one item
+to a line**.
+
+**Press Tab. The next box is the brand of the next item.** Press Shift and Tab
+together to go back up.
+
+Nothing was added to make this work. The boxes are one after another, and that
+is how a keyboard moves through a page.
+
+A tick box on each row had spoiled this: Tab went brand, Done, brand, Done — two
+presses for each item. That box is gone. You mark the whole batch as checked at
+the bottom instead, and it is off unless you tick it.
+
+### How many at a time
+
+| | |
+|---|---|
+| One item a card | 40 |
+| One column | 200 |
+
+A bigger set is not refused. The page says **"These are the first 200 of 385"**.
+Save them and come back. The saved items leave the list by themselves: 385 with
+no brand became 382 after three were filled in.
+
+Saving takes you back to the list you came from, with your choices still set.
+
+### One thing not built
+
+You asked for a **Next** button that moves the box when the mouse hovers over
+it. Hovering breaks a rule you agreed: *nothing happens on hover*. It would also
+be slower than Tab. See **Q52** — tell me if Tab is not enough.
+
+---
+
 ## Unreleased — 2026-09-20 (3) · the photographs are small now
 
 181 sixgenbot tests, 37 extension tests.

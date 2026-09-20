@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 
 from ...core.appLogging import getLogger
 from ...core.itemQuery import (
+    MISSING,
     PAGE_SIZE,
     SEARCH_CEILING,
     SORTS,
@@ -131,13 +132,25 @@ def table(
     listed: str = "",
     priceFrom: str = "",
     priceTo: str = "",
+    missing: str = "",
+    titleHas: str = "",
+    descriptionHas: str = "",
+    notesHas: str = "",
+    addedFrom: str = "",
+    addedTo: str = "",
+    addedDays: str = "",
+    checked: str = "",
+    sharedCode: str = "",
     sort: str = "sku",
     page: int = 1,
     show: list[str] | None = Query(None),
+    message: str = "",
 ):
     bot = request.app.state.bot
     connection = bot.db.connection()
-    filters = Filters(q, status, brand, size, colour, box, photos, listed, priceFrom, priceTo)
+    filters = Filters(q, status, brand, size, colour, box, photos, listed, priceFrom,
+                      priceTo, missing, titleHas, descriptionHas, notesHas, addedFrom,
+                      addedTo, addedDays, checked, sharedCode)
     sort = sort if sort in SORTS else "sku"
     page = max(1, page)
     columns = chosenColumns(request, show or [])
@@ -152,6 +165,9 @@ def table(
         request,
         "itemTable/table.html",
         filters=filters,
+        message=message,
+        carry=filters.asPairs(),
+        missingChoices=[(name, words) for name, (words, _) in MISSING.items()],
         sentence=describe(filters, total),
         atCeiling=atCeiling,
         ceiling=SEARCH_CEILING,

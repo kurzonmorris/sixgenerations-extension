@@ -196,9 +196,9 @@ def test_choosing_what_is_shown_decides_what_can_be_changed(tmp_path):
     reply = client.post(
         "/review/edit", data={"pick": "i1", "columns": "sku,sizeUk,price"}
     )
-    assert "Size UK" in reply.text
-    assert "Private notes" not in reply.text
     assert 'name="f:i1:sizeUk"' in reply.text
+    assert 'name="f:i1:price"' in reply.text
+    assert 'name="f:i1:notes"' not in reply.text, "a column that was not chosen is not a box"
 
 
 def test_saving_a_batch_writes_every_item(tmp_path):

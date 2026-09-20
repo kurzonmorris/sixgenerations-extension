@@ -1,53 +1,154 @@
 {% extends "base.html" %}
-{% block heading %}Working on {{ items | length }} items{% endblock %}
+{% block heading %}
+  {% if only %}{{ fields[0].label }} — {{ items | length }} items{% else %}Working on {{ items | length }} items{% endif %}
+{% endblock %}
 
 {% block content %}
+  {% if matched > items | length %}
+    <p>
+      <strong>
+        These are the first {{ items | length }} of {{ '{:,}'.format(matched) }}.
+      </strong>
+      Save these, then come back for the next ones.
+    </p>
+  {% endif %}
+
   <p class="quiet">
     Change what needs changing and leave the rest alone. Nothing is saved until
     you press the button at the bottom, and nothing goes on Vinted, eBay or the
     shop from this screen.
   </p>
 
+  <details {% if only %}open{% endif %}>
+    <summary>One column at a time</summary>
+    <p class="quiet">
+      Pick one thing and you get a single column of boxes, one item to a line.
+      <strong>Tab then moves down the column</strong> to the same thing on the
+      next item, so you can fill in forty brands without touching the mouse.
+      Shift and Tab together go back up.
+    </p>
+    <form method="post" action="/review/edit">
+      {% for name, value in carry %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}">
+      {% endfor %}
+      {% if carry %}<input type="hidden" name="useFilters" value="yes">{% endif %}
+      {% for item in items %}<input type="hidden" name="pick" value="{{ item.itemId }}">{% endfor %}
+      <input type="hidden" name="columns" value="{{ columns }}">
+      <input type="hidden" name="back" value="{{ back }}">
+      <p>
+        <label for="only">Work down one column</label>
+        <select id="only" name="only">
+          <option value="">All of them, one item at a time</option>
+          {% for field in everyField %}
+            <option value="{{ field.name }}" {% if only == field.name %}selected{% endif %}>
+              {{ field.label }}
+            </option>
+          {% endfor %}
+        </select>
+        <button type="submit">Show it that way</button>
+      </p>
+    </form>
+  </details>
+
   <form method="post" action="/review/save">
     <input type="hidden" name="columns" value="{{ columns }}">
     <input type="hidden" name="which" value="{{ which }}">
+    <input type="hidden" name="back" value="{{ back }}">
 
-    {% for item in items %}
-      <section class="itemCard">
-        <h2>{{ item.sku }} — {{ item.title or 'no title' }}</h2>
-        <p class="quiet">{{ item.needs }}</p>
-
-        <div class="fieldGrid">
-          {% for field in fields %}
-            <p>
-              <label for="{{ item.itemId }}-{{ field.name }}">{{ field.label }}</label>
-              {% if field.kind == 'long' %}
-                <textarea id="{{ item.itemId }}-{{ field.name }}"
-                          name="f:{{ item.itemId }}:{{ field.name }}"
-                          rows="3">{{ item.values[field.name] }}</textarea>
-              {% else %}
-                <input id="{{ item.itemId }}-{{ field.name }}"
-                       name="f:{{ item.itemId }}:{{ field.name }}"
-                       value="{{ item.values[field.name] }}"
-                       {% if field.kind == 'money' %}inputmode="decimal"{% endif %}
-                       {% if field.kind == 'number' %}inputmode="numeric"{% endif %}>
-              {% endif %}
-            </p>
+    {% if only %}
+      <table class="columnEdit">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>{{ fields[0].label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr>
+              <td>
+                {% if item.thumbnail %}
+                  <img class="thumb" src="/photos/image/{{ item.thumbnail }}?small=yes"
+                       alt="Photograph of {{ item.sku }}">
+                {% endif %}
+                <span class="skuLine">{{ item.sku }}</span>
+                <span class="quiet">{{ item.title or 'no title' }}</span>
+              </td>
+              <td>
+                <label class="hiddenLabel" for="{{ item.itemId }}-{{ fields[0].name }}">
+                  {{ fields[0].label }} for {{ item.sku }}
+                </label>
+                {% if fields[0].kind == 'long' %}
+                  <textarea id="{{ item.itemId }}-{{ fields[0].name }}"
+                            name="f:{{ item.itemId }}:{{ fields[0].name }}"
+                            rows="2">{{ item.values[fields[0].name] }}</textarea>
+                {% else %}
+                  <input id="{{ item.itemId }}-{{ fields[0].name }}"
+                         name="f:{{ item.itemId }}:{{ fields[0].name }}"
+                         value="{{ item.values[fields[0].name] }}"
+                         {% if fields[0].kind == 'money' %}inputmode="decimal"{% endif %}
+                         {% if fields[0].kind == 'number' %}inputmode="numeric"{% endif %}>
+                {% endif %}
+              </td>
+            </tr>
           {% endfor %}
-        </div>
+        </tbody>
+      </table>
 
-        <p>
-          <label>
-            <input type="checkbox" name="checked:{{ item.itemId }}" value="yes" checked>
-            I have checked this one
-          </label>
-        </p>
-      </section>
-    {% endfor %}
+      <p class="quiet">
+        <strong>Tab</strong> moves to the same box on the next item. Shift and Tab
+        together go back up. There is nothing in between to step over.
+      </p>
+
+      <p>
+        <label>
+          <input type="checkbox" name="checkAll" value="yes">
+          Also mark all {{ items | length }} as checked by a person
+        </label>
+      </p>
+      <p class="quiet">
+        Leave this empty unless you have looked at the whole item. Correcting one
+        thing is not the same as checking everything.
+      </p>
+
+    {% else %}
+      {% for item in items %}
+        <section class="itemCard">
+          <h2>{{ item.sku }} — {{ item.title or 'no title' }}</h2>
+          <p class="quiet">{{ item.needs }}</p>
+
+          <div class="fieldGrid">
+            {% for field in fields %}
+              <p>
+                <label for="{{ item.itemId }}-{{ field.name }}">{{ field.label }}</label>
+                {% if field.kind == 'long' %}
+                  <textarea id="{{ item.itemId }}-{{ field.name }}"
+                            name="f:{{ item.itemId }}:{{ field.name }}"
+                            rows="3">{{ item.values[field.name] }}</textarea>
+                {% else %}
+                  <input id="{{ item.itemId }}-{{ field.name }}"
+                         name="f:{{ item.itemId }}:{{ field.name }}"
+                         value="{{ item.values[field.name] }}"
+                         {% if field.kind == 'money' %}inputmode="decimal"{% endif %}
+                         {% if field.kind == 'number' %}inputmode="numeric"{% endif %}>
+                {% endif %}
+              </p>
+            {% endfor %}
+          </div>
+
+          <p>
+            <label>
+              <input type="checkbox" name="checked:{{ item.itemId }}" value="yes" checked>
+              I have checked this one
+            </label>
+          </p>
+        </section>
+      {% endfor %}
+    {% endif %}
 
     <p>
       <button type="submit">Save all {{ items | length }}</button>
-      <a href="/review?which={{ which }}">Go back without saving</a>
+      <a href="{{ back }}">Go back without saving</a>
     </p>
   </form>
 {% endblock %}
