@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block heading %}Ready to list{% endblock %}
+
+{% block content %}
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+  <p>
+    {{ '{:,}'.format(neverListed) }} items have never been listed.
+    {% if withoutPhotos %}
+      {{ '{:,}'.format(withoutPhotos) }} of them have no photographs here yet —
+      <a href="/photos">bring those here first</a>.
+    {% endif %}
+  </p>
+
+  <p class="quiet">
+    These are in storage order, so a page of them is a box you can go and fetch.
+    Open one, copy each answer into Vinted, then press the button at the bottom.
+  </p>
+
+  <table>
+    <thead><tr><th>SKU</th><th>Title</th><th>What it needs</th><th></th></tr></thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td class="skuLine">{{ item.sku }}</td>
+          <td>{{ item.title or 'no title' }}</td>
+          <td class="quiet">{{ item.needs }}</td>
+          <td><a href="/list/{{ item.itemId }}">Open it</a></td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4" class="quiet">
+            Nothing is waiting with photographs here. Either everything is
+            listed, or the photographs have not been brought here yet.
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -92,10 +92,11 @@ sixgenerations-extension/
 │   │   ├── fileTransfer/             upload a spreadsheet, download the inventory
 │   │   ├── itemReview/               "To review" — pick a batch, fix it, save the lot
 │   │   ├── photoLibrary/            fetch the photographs off Crosslist, before it ends
-│   │   └── itemTable/                The Table — every item, one search box
+│   │   ├── itemTable/                The Table — every item, one search box
+│   │   └── listingHelper/            Ready to list — one item, everything laid out
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 218 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 241 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

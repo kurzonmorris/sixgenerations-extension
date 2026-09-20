@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block heading %}{{ sheet.sku }}{% endblock %}
+
+{% block content %}
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+  <p class="quiet">{{ sheet.whereItIs or 'no storage code' }}</p>
+
+  {% if sheet.missing %}
+    <p>
+      <strong>Not ready yet.</strong>
+      {{ sheet.missing | join(', ') | capitalize }} still needed.
+      <a href="/table?q={{ sheet.sku }}">Fix it first</a>.
+    </p>
+  {% endif %}
+
+  <h2>The photographs</h2>
+  <div class="photoStrip">
+    {% for imageId in sheet.photos %}
+      <img src="/photos/image/{{ imageId }}?small=yes"
+           alt="Photograph {{ loop.index }} of {{ sheet.sku }}">
+    {% else %}
+      <span class="quiet">none here</span>
+    {% endfor %}
+  </div>
+  <p>
+    {% if sheet.photos %}
+      <a href="/list/{{ sheet.itemId }}/photos.zip">Download all
+        {{ sheet.photos | length }}</a>
+      — numbered 01, 02, 03, so they go up in this order.
+      <a href="/photos/order/{{ sheet.itemId }}?back=/list/{{ sheet.itemId }}">Change the order</a>
+    {% endif %}
+  </p>
+
+  <h2>Copy these into Vinted</h2>
+  <p class="quiet">
+    Press Tab to land in a box. <strong>A one-line box is picked out for you</strong>,
+    so Ctrl and C copies all of it, then Tab again for the next one.
+    <strong>The description is a tall box, and Tab does not pick it out</strong> —
+    press Ctrl and A first, then Ctrl and C.
+  </p>
+
+  <p>
+    <label for="title">Title</label>
+    <input id="title" readonly value="{{ sheet.title }}">
+  </p>
+
+  <p>
+    <label for="description">Description — the SKU is already on the end</label>
+    <textarea id="description" readonly rows="8">{{ sheet.description }}</textarea>
+  </p>
+
+  <p>
+    <label for="price">Price</label>
+    <input id="price" readonly value="{{ sheet.price }}">
+  </p>
+
+  <div class="rows">
+    <div class="row"><span>Brand</span><span class="value">{{ sheet.brand or '—' }}</span></div>
+    <div class="row">
+      <span>Size</span>
+      <span class="value">
+        {%- for system, value in sheet.sizes %}{% if system %}{{ system }} {% endif %}{{ value }}{% if not loop.last %}, {% endif %}{% else %}—{% endfor -%}
+      </span>
+    </div>
+    <div class="row"><span>Condition</span><span class="value">{{ sheet.condition or '—' }}</span></div>
+    <div class="row"><span>Colour</span><span class="value">{{ sheet.colours | join(', ') or '—' }}</span></div>
+    <div class="row"><span>Material</span><span class="value">{{ sheet.materials | join(', ') or '—' }}</span></div>
+    <div class="row"><span>Category</span><span class="value">{{ sheet.category or '—' }}</span></div>
+    <div class="row"><span>Weight</span><span class="value">{{ sheet.weightGrams or '—' }}{% if sheet.weightGrams %} g{% endif %}</span></div>
+  </div>
+
+  {% if sheet.worthAdding %}
+    <p class="quiet">
+      Worth adding, but never a reason to hold it back:
+      {{ sheet.worthAdding | join(', ') }}.
+    </p>
+  {% endif %}
+
+  <h2>When it is up</h2>
+  {% if sheet.listedOn %}
+    <p>This was recorded as listed on {{ sheet.listedOn }}.</p>
+  {% endif %}
+  <form method="post" action="/list/{{ sheet.itemId }}/listed">
+    <p>
+      <label for="url">The Vinted address, if you have it</label>
+      <input id="url" name="url" placeholder="https://www.vinted.co.uk/items/...">
+    </p>
+    <p>
+      <label for="listedPrice">The price you listed it at</label>
+      <input id="listedPrice" name="price" value="{{ sheet.price }}" size="8" inputmode="decimal">
+    </p>
+    <p><button type="submit">It is on Vinted now</button></p>
+  </form>
+
+  <p><a href="/list">Back to the list</a></p>
+{% endblock %}

@@ -305,3 +305,9 @@ button[disabled] { color: var(--quiet); border-style: dashed; cursor: default; }
 
 .everything { font-size: 0.9rem; }
 .everything .row { padding: 0.3rem 0; }
+
+/* The listing sheet: boxes you copy out of, not into. */
+input[readonly], textarea[readonly] {
+  background: var(--paper);
+  border-style: dashed;
+}

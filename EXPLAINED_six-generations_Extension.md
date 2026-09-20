@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 (6) | **Ready to list** (§3B.19) — the step nothing helped with: one garment, every answer the Vinted form asks for, the photographs as a numbered zip, and a button that records it is up. Also a measurement that killed a feature: the 424 items with "no size" are books and toys, not garments. And a correction — **Tab picks out a one-line box, never a tall one**. 241 tests |
 | 2026-09-20 (5) | **Photographs while editing, and the old value beside every box** (§3B.18). Also §7.10f: **every edit box had been empty**, because `item.values` in Jinja is the dict's own method — saving an untouched item would have wiped it. Found in a real browser. Tab already picks out the text, checked in Chromium. 218 tests |
 | 2026-09-20 (4) | **Choosing items many ways, and editing down one column** (§3B.17). Pick by what items have in common — no brand (385), no size (424), a word in a field, added between two dates — and combine them. Then one field becomes a single column and **Tab walks down it**, with no JavaScript. A tick box on each row had made that two presses an item; it is gone. 212 tests |
 | 2026-09-20 (3) | **Small copies of the photographs** (§3B.16). A page of the Table was sending **76 MB** of full-size photographs; it now sends 0.6 MB. Also the trap that hid it: the stylesheet had no version on its address, so **every screen change was invisible** until a browser cache was cleared. 181 tests |
@@ -583,20 +584,86 @@ is not a rule.
 
 Without those two, "modules" is just folders.
 
+## 3B.19 Ready to list — the step nothing helped with
+
+`modules/listingHelper/`, with `core/listingSheet.py` behind it.
+
+Items could be found, chosen, corrected and photographed. Then putting one back
+on Vinted meant hunting through the catalogue for its details and its
+photographs. **That is the 3-to-6-a-day limit**, and 972 withdrawn items are
+waiting behind it.
+
+Nothing here talks to Vinted. It is a copying screen: every answer the listing
+form asks for, in one place, so each one is a copy rather than a search. The
+Vinted write path replaces the copying later and reuses the same module.
+
+### What is on the sheet
+
+The photographs (with **Download all N** as a zip, named `8-3-36_01.jpg`,
+`_02`, `_03` — a listing form uploads them in the order they are picked, so the
+numbering is the whole point), the title, the **description with the SKU already
+on the end**, the price, and then brand, size, condition, colour, material,
+category and weight.
+
+`sku.withSku()` does the description. It was written for the Vinted write path
+and this is its first real use. A description retyped without the SKU is a
+garment the system loses.
+
+### What was measured first, and what it changed
+
+**"424 items have no size" is not a backlog.** Grouped by category, they are
+children's books (73), models and action figures (76), accessories (38) and
+"other" (40). They are not garments. Only **2 of 424** have a size hidden in the
+description. Guessing sizes from the text was going to be the next feature; the
+measurement killed it before it was built.
+
+### The one-item screen is deliberately not a robot
+
+`readiness.suggestedStatus()` never returns `on_sale`, because being ready is
+not being listed. **It is on Vinted now** is the other half: a person saying it
+is up. Until the Vinted read exists, that is the only thing that can say so. It
+writes `dateListed`, a `listing` row (`platform = vinted`, `state = live`, with
+the address if you paste it) and an `event`, all in one transaction, and the
+item leaves the waiting list by itself.
+
+Pressing it twice does not make two listings — `ON CONFLICT (itemId, platform)
+DO UPDATE`.
+
+### The waiting list
+
+Never listed, **and the photographs are here**, in room order. Photographs are
+the bar because an item without them cannot be listed at all, and the page says
+how many are still missing them and links to the Photos page.
+
 ## 3B.18 Photographs while editing, the old value, and what Tab already does
 
 Asked for on 2026-09-20: see the photographs while editing and re-arrange them,
 see the original information, and have Tab pick out the text so typing replaces
 it.
 
-### Tab already does the third one
+### Tab already does the third one — but only for one-line boxes
 
-**Checked in a real Chromium, not assumed.** Tab into a text box and the browser
-selects the whole contents; type and it replaces them. `"Whistles"` became
-`"Hobbs"` in one keystroke. Clicking does **not** select — it places a cursor.
+**Checked in a real Chromium, not assumed.** Tab into an `<input>` and the
+browser selects the whole contents; type and it replaces them. `"Whistles"`
+became `"Hobbs"` in one keystroke. Clicking does **not** select — it places a
+cursor.
 
-So nothing was built for it. Making a *click* select as well would need
-JavaScript, and has not been asked for.
+⚠ **Corrected 2026-09-20, same day.** This was first written as "a text box",
+which is wrong. Measured in Chromium:
+
+| Box | Tab selects it? |
+|---|---|
+| `<input>` | **yes** |
+| `<input readonly>` | **yes** |
+| `<textarea>` | **no** — the cursor lands at position 0 |
+| `<textarea readonly>` | **no** |
+
+So the description and the private notes are **not** picked out by Tab, and
+every screen that says so now says Ctrl and A first. Saying it wrongly is worse
+than not saying it: it sends somebody to type over text that is still there.
+
+Making a *click* select as well, or making a textarea select on focus, would
+need JavaScript, and has not been asked for.
 
 ### Photographs, and putting them in order
 
