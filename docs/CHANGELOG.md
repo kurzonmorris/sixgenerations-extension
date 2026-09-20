@@ -7,6 +7,47 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 (3) · the photographs are small now
+
+181 sixgenbot tests, 37 extension tests.
+
+**Reported: the pictures on The Table are too large.** There were two faults, and
+the second one was costing far more than it looked.
+
+### Your browser was using an old stylesheet
+
+The page asked for the stylesheet without a version number. A browser keeps a
+file like that and does not ask for it again. The rule that makes a photograph
+small was there all along. It never reached your screen.
+
+This was not only about pictures. **Every change to every screen was invisible**
+after the first visit. The address now changes whenever the stylesheet changes,
+so a new screen arrives at once.
+
+### A page was sending 76 MB of photographs
+
+Each row fetched a whole photograph and made it small in the browser. Fifty rows
+meant fifty whole photographs.
+
+The system now makes a small copy once and keeps it:
+
+| | |
+|---|---|
+| Full photograph | 1,561 KB |
+| Small copy | 13 KB |
+| One page of 50 | **76.2 MB → 0.6 MB** |
+
+The small copy takes 47 ms to make. After that it takes 0.15 ms to send.
+
+The full photograph is still there. Nothing was thrown away.
+
+### One new requirement
+
+`Pillow` is now in `requirements.txt`. It makes the small copies. If it is ever
+missing, the system sends the full photograph instead. The screen still works.
+
+---
+
 ## Unreleased — 2026-09-20 (2) · The Table
 
 169 sixgenbot tests, 37 extension tests.

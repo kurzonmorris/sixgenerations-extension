@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 (3) | **Small copies of the photographs** (§3B.16). A page of the Table was sending **76 MB** of full-size photographs; it now sends 0.6 MB. Also the trap that hid it: the stylesheet had no version on its address, so **every screen change was invisible** until a browser cache was cleared. 181 tests |
 | 2026-09-20 (2) | **The Table** (§3B.15) — every item, one search box across every field, filters that say what they are doing in words, thumbnails, and server-side paging. `core/itemQuery.py`. Two findings from the real data: a box code is not a search term, and `13-8` is not a real box. 169 tests |
 | 2026-09-20 | **The Photos page** (§3B.14) — the photo fetch moved off the command line: a button, a count you can come back to, a Stop that works in seconds rather than an hour, and the failures named. Also `/photos/duplicates`, which answers the §3B.11 correction by content. 149 tests |
 | 2026-09-15 (7) | **"To review", the batch edit screen** (§3B.13) — U-16 built. Pick a batch, choose which fields show, correct them, save the lot; every change recorded with its value before and after. Also `core/itemEdit.py` and `sku.SQL_ORDER`, which fixes item order being character order rather than room order. **972, not 988**: 16 of the never-listed items are already sold. 138 tests |
@@ -579,6 +580,53 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.16 Small copies of the photographs, and a trap that hid a fix
+
+Reported on 2026-09-20: *"the images are too large"*. Two separate faults, and
+the second one matters far more than the picture size.
+
+### The trap: a browser keeps the stylesheet
+
+`base.html` asked for `/static/sixgenbot.css` with **no version on the address**.
+A browser caches that and does not ask again. The rule that makes a photograph
+small (`img.thumb`, 3.25rem) was in the new stylesheet and **never reached the
+screen**, so every photograph drew at its natural size.
+
+This was not a one-off. **Every screen change was invisible** until somebody
+cleared their cache. The address now carries a short hash of the stylesheet's own
+contents (`webApp.styleVersion()`), so the browser fetches it again the moment it
+changes, and never otherwise. Two tests hold it.
+
+⚠ **Any new file under `static/` needs the same treatment.** Only the stylesheet
+is stamped today, because it is the only file there.
+
+### The real cost: a page was sending 76 MB
+
+The Table shows 50 rows. Each row was fetching the **full-size photograph** and
+letting the browser shrink it. On a 1,200 × 1,600 photograph:
+
+| | |
+|---|---|
+| Full photograph | 1,561 KB |
+| Small copy | 13 KB — **120 times smaller** |
+| A page of 50 | **76.2 MB → 0.6 MB** |
+
+`core/thumbnails.py` makes the small copy at 320 px, writes it to
+`<data>/thumbnails/`, and serves it from there afterwards: 47 ms to make, 0.15 ms
+once it exists. 320 px is twice the width shown, so it stays sharp on a good
+screen. **The size is in the filename** (`7_320.jpg`), so raising `SIZE` later
+makes new files rather than serving old ones at the wrong size.
+
+`/photos/image/{id}?small=yes` serves the small copy. Without `small=yes` the
+full photograph is served, unchanged — nothing is lost.
+
+### Pillow is optional on purpose
+
+`thumbnails.py` imports Pillow inside a `try`. If it is missing, `thumbnailFor()`
+returns `None` and the route serves the full photograph: slow, but correct. **A
+missing library must not empty the screen.** Pillow is in `requirements.txt`, so
+this only matters if a build goes wrong.
 
 ## 3B.15 The Table — every item, one search box
 
@@ -1195,6 +1243,30 @@ real one (**2,125 updated, 9,098 photos**), then again (2,125 unchanged).
 
 **The lesson:** an idempotence check has to cover everything the operation
 writes, not just the row it started from.
+
+## 7.10e A browser keeps a stylesheet until its address changes
+
+**Found 2026-09-20.** `base.html` linked `/static/sixgenbot.css` with nothing on
+the end of the address. A browser caches that and does not ask for it again.
+
+So the rule that makes a photograph small was written, tested, merged and
+deployed — and **the screen never changed**. It looked like the rule was wrong.
+It was not. The browser was still using a stylesheet from days earlier.
+
+Worse than one bad screen: **every change to any screen was invisible** to anyone
+who had already opened the site.
+
+The address now carries a short hash of the stylesheet's own contents. It changes
+when the file changes and at no other time, so the browser fetches it exactly
+when it must. `webApp.styleVersion()`, two tests.
+
+⚠ **This applies to any file added under `static/` later.** Today the stylesheet
+is the only one.
+
+**The wider lesson:** when a screen does not change after a deploy, check that
+the browser actually has the new file before you go looking at the code.
+
+---
 
 ## 7.11 GraphQL 200 ≠ success
 Shopify returns HTTP 200 with a `userErrors` array. Always assert on it.

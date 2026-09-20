@@ -17,6 +17,7 @@ of its own can have it then, rather than now for nobody.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -42,6 +43,20 @@ HERE = Path(__file__).resolve().parent.parent
 # The order the left menu is drawn in. A module names its group; unknown groups
 # are appended, so a new one does not need core to change.
 MENU_GROUPS = ["TODAY", "ITEMS", "MONEY", "SITES", "SYSTEM"]
+
+
+def styleVersion() -> str:
+    """A short stamp for the stylesheet address.
+
+    Without it a browser keeps the stylesheet it already has, and a change to
+    the screens is invisible until somebody clears their cache. That happened:
+    the rule that makes the photographs small never arrived.
+    """
+    sheet = HERE / "static" / "sixgenbot.css"
+    try:
+        return hashlib.sha256(sheet.read_bytes()).hexdigest()[:10]
+    except OSError:
+        return VERSION
 
 
 @dataclass(frozen=True)
@@ -118,6 +133,7 @@ class Bot:
         jinja.env.globals.update(
             siteTitle=self.config.title,
             version=VERSION,
+            styleVersion=styleVersion(),
             menu=self.groupedMenu,
         )
         app.state.bot = self
