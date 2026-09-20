@@ -203,6 +203,24 @@ Open **Choose the columns** to add or remove columns. The choice is remembered.
 
 The Table finds items. To change an item, use **To review**.
 
+## Put an item back on Vinted
+
+1. Open **Ready to list** in the left menu.
+2. Press **Open it** on an item.
+3. Press **Download all 3** to get the photographs. They are numbered in order.
+4. Open Vinted in another tab. Start a new listing.
+5. Upload the photographs. They go up in the order they are numbered.
+6. Press Tab to land in the **Title** box. The box is picked out. Press Ctrl and
+   C. Paste it into Vinted.
+7. Click the **Description** box. Press Ctrl and A, then Ctrl and C. Paste it.
+   The SKU is already on the end. Leave it there.
+8. Copy the price. Then read off the brand, size, condition and category.
+9. Finish the listing on Vinted.
+10. Come back. Paste the Vinted address if you have it.
+11. Press **It is on Vinted now**.
+
+The item leaves the waiting list. That is one more back online.
+
 ## Put the photographs in order
 
 1. Open an item to edit, as below.

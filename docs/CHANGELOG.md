@@ -7,6 +7,62 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 (6) · Ready to list
+
+241 sixgenbot tests, 37 extension tests.
+
+### A correction first
+
+I told you Tab picks out the text in a box. **That is only true of one-line
+boxes.** I measured it properly in a real browser:
+
+| Box | Does Tab pick it out? |
+|---|---|
+| A one-line box | **Yes** |
+| A tall box — the description, the notes | **No** |
+
+For a tall box, press **Ctrl and A** first. Every screen now says this.
+
+### Ready to list
+
+**This is the step nothing helped with.** You could find items, choose them, fix
+them and photograph them. Then putting one back on Vinted meant hunting for its
+details and its pictures.
+
+**Ready to list** in the left menu. It shows items that have never been listed
+and have their photographs here, in storage order, so a page is a box you can go
+and fetch.
+
+Open one and you get everything the Vinted form asks for, on one screen:
+
+- The photographs, and **Download all 3** as one file. They are numbered 01, 02,
+  03, so they go up in the right order.
+- The title.
+- **The description, with the SKU already on the end.**
+- The price, brand, size, condition, colour, material, category and weight.
+- Where the garment is: *column 8, box 3, item 36*.
+
+If something is still missing, the page says so before you start.
+
+When it is up, paste the Vinted address if you have it and press **It is on
+Vinted now**. That records the date, the listing and the history. The item
+leaves the waiting list by itself.
+
+Nothing here talks to Vinted. You still fill in the form. This makes every
+answer a copy instead of a search.
+
+### A measurement that stopped a feature
+
+I was going to build "guess the size from the title". I measured it first.
+
+**The 424 items with no size are not garments.** They are children's books (73),
+models and action figures (76), accessories (38) and other things (40). Only
+**2 of 424** have a size hidden in the text.
+
+So your data is mostly right, and that feature was not worth building.
+
+---
+
 ## Unreleased — 2026-09-20 (5) · photographs and old values while you edit
 
 218 sixgenbot tests, 37 extension tests.

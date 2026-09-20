@@ -287,7 +287,27 @@ once Crosslist is cancelled. This takes the fetch off the command line.
 | A-178 | ✅ | **What this item says now** — every field, folded away on a card | `reviewEdit.html` |
 | A-179 | ✅ | **Tab picks out the text in the box** so typing replaces it — the browser already does this, checked in Chromium | nothing to build |
 | A-180 | ✅ | **A column has nothing focusable between its boxes** — a fold made it two presses an item | `reviewEdit.html` |
-| A-181 | ✅ | 218 pytest tests | `sixgenbot/tests/` |
+| A-181 | ✅ | (test count now in A-193) | `sixgenbot/tests/` |
+
+## A.6l sixgenbot — Ready to list *(2026-09-20)*
+
+The step nothing helped with. Judged by the only measure that matters:
+does it put more items up in a day.
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-182 | ✅ | **One garment, every answer the Vinted form asks for**, in one place | `core/listingSheet.py` |
+| A-183 | ✅ | **The SKU already on the end of the description** — first real use of `withSku()` | `sku.withSku()` |
+| A-184 | ✅ | **Download all the photographs** as a zip, numbered 01, 02, 03 | `listingSheet.photoZip()` |
+| A-185 | ✅ | **Where the garment is**, in words: column 8, box 3, item 36 | `sku.describeSku()` |
+| A-186 | ✅ | **Says what is still missing** before you start | `readiness.missingFor()` |
+| A-187 | ✅ | **It is on Vinted now** — records the date, the listing and the history in one go | `routes.markListed()` |
+| A-188 | ✅ | **Pressing it twice does not make two listings** | `ON CONFLICT DO UPDATE` |
+| A-189 | ✅ | **The item leaves the waiting list by itself** once it is up | `listingSheet.waitingToList()` |
+| A-190 | ✅ | **The waiting list needs photographs**, and says how many are still missing them | `routes.waiting()` |
+| A-191 | ✅ | **The Vinted address can be pasted in**, and is kept | `listing.url` |
+| A-192 | ✅ | **Boxes you copy out of, not into** — readonly, dashed | `sheet.html` |
+| A-193 | ✅ | 241 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -395,7 +415,7 @@ together, however interesting the analytics are.
 | **U-16** | ✅ | **Batch review and edit** — pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f. Extended 2026-09-20 with choosing by what items have in common, and editing down one column — A.6j |
 | **U-17** | 🟡 | **Photo order** — built 2026-09-20 with Move up, Move down and Make it first, one item at a time (A.6k). **Dragging is not built**: it needs JavaScript. Doing a whole batch at once is also still open |
 | **U-18** | 📋 | **Item history** — every change to a garment, with what it was before. The rows are already being written by `itemEdit` (A-111); this is the screen that reads them |
-| **X-12** | 📋 | **Put the 972 withdrawn items back online.** Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project |
+| **X-12** | 🟡 | **Put the 972 withdrawn items back online.** The sheet that makes one of them a copying job rather than a search is built — A.6l. Doing it *for* you needs the Vinted write path. **Put the 972 withdrawn items back online.** Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project |
 
 
 Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
