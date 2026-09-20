@@ -190,16 +190,20 @@ async def edit(request: Request):
         ).fetchone()
         if row is None:
             continue
-        thumbnail = connection.execute(
-            "SELECT imageId FROM itemImage WHERE itemId = ? AND filePath != ''"
-            " ORDER BY position LIMIT 1", (itemId,)
-        ).fetchone()
+        photos = [
+            image["imageId"]
+            for image in connection.execute(
+                "SELECT imageId FROM itemImage WHERE itemId = ? AND filePath != ''"
+                " ORDER BY position", (itemId,)
+            )
+        ]
         items.append({
             "itemId": itemId,
             "sku": formatSku(row["sku"]) or row["sku"],
             "title": row["title"],
-            "thumbnail": thumbnail["imageId"] if thumbnail else None,
-            "values": currentValues(connection, itemId),
+            "photos": photos,
+            "thumbnail": photos[0] if photos else None,
+            "current": currentValues(connection, itemId),
             "needs": summarise(factsFor(connection, itemId)),
         })
 
@@ -219,12 +223,12 @@ async def edit(request: Request):
     )
 
 
-@router.post("/review/save", include_in_schema=False)
-async def save(request: Request):
-    bot = request.app.state.bot
-    connection = bot.db.connection()
-    form = await request.form()
+def _applyForm(bot, connection, form) -> tuple[int, int, int, str]:
+    """Writes everything the form holds. (items, changes, checked, problem).
 
+    Shared by Save and by "Save and arrange photographs", so leaving the edit
+    screen to move a photograph can never lose what has been typed.
+    """
     edits: dict[str, dict[str, str]] = {}
     for key in form.keys():
         parts = key.split(":", 2)
@@ -248,17 +252,51 @@ async def save(request: Request):
     except Exception as error:
         connection.execute("ROLLBACK")
         log.error(f"batch save failed, nothing was changed: {error}")
-        return RedirectResponse(
-            "/review?message=Nothing+was+saved.+Please+try+again.", status_code=303
-        )
+        return 0, 0, 0, str(error)
 
     if changed or checked:
         bot.emit("items.edited", items=len(edits), changes=changed, checked=checked)
     log.info(f"{len(edits)} items, {changed} changes, {checked} marked as checked")
+    return len(edits), changed, checked, ""
+
+
+@router.post("/review/save", include_in_schema=False)
+async def save(request: Request):
+    bot = request.app.state.bot
+    form = await request.form()
+    items, changed, checked, problem = _applyForm(bot, bot.db.connection(), form)
+
+    if problem:
+        return RedirectResponse(
+            "/review?message=Nothing+was+saved.+Please+try+again.", status_code=303
+        )
 
     message = quote_plus(
-        f"Saved {len(edits)} items. {changed} changes, {checked} marked as checked."
+        f"Saved {items} items. {changed} changes, {checked} marked as checked."
     )
     back = form.get("back", "") or f"/review?which={form.get('which', 'unchecked')}"
     joiner = "&" if "?" in back else "?"
     return RedirectResponse(f"{back}{joiner}message={message}", status_code=303)
+
+
+@router.post("/review/photos/{itemId}", include_in_schema=False)
+async def saveThenArrange(request: Request, itemId: str):
+    """Saves what has been typed, then opens that item's photographs.
+
+    Moving a photograph means leaving this page. Saving first is the whole
+    point of the button: nothing typed is lost by going to look at the order.
+    """
+    bot = request.app.state.bot
+    form = await request.form()
+    _items, changed, _checked, problem = _applyForm(bot, bot.db.connection(), form)
+
+    if problem:
+        return RedirectResponse(
+            "/review?message=Nothing+was+saved.+Please+try+again.", status_code=303
+        )
+
+    back = form.get("back", "") or "/review"
+    kept = "Saved+what+you+typed." if changed else "Nothing+needed+saving."
+    return RedirectResponse(
+        f"/photos/order/{itemId}?back={quote_plus(back)}&message={kept}", status_code=303
+    )

@@ -271,7 +271,23 @@ once Crosslist is cancelled. This takes the fetch off the command line.
 | A-167 | ✅ | **A column holds 200**, a page of cards holds 40 | `routes.MOST_IN_A_COLUMN` |
 | A-168 | ✅ | **"The first 200 of 385"**, said plainly, and the batch shrinks as it is worked | `reviewEdit.html` |
 | A-169 | ✅ | **Saving returns you to the list you came from**, filters intact | `routes.save()` |
-| A-170 | ✅ | 212 pytest tests | `sixgenbot/tests/` |
+| A-170 | ✅ | (test count now in A-181) | `sixgenbot/tests/` |
+
+## A.6k sixgenbot — photographs and old values while editing *(2026-09-20)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-171 | ✅ | **Every photograph shown while you edit**, in order | `reviewEdit.html` |
+| A-172 | ✅ | **Put the photographs in order** — Move up, Move down, Make it first | `/photos/order/{itemId}` |
+| A-173 | ✅ | **A move renumbers in two passes**, because `UNIQUE (itemId, position)` blocks a one-at-a-time swap | `photoOrder._renumber()` |
+| A-174 | ✅ | **A move marks the order `manual`**, which a later platform read must not overwrite | `photoOrder.move()` |
+| A-175 | ✅ | **The order change is recorded** in the item's history | `photoOrder._record()` |
+| A-176 | ✅ | **Save and put these in order** — saves your typing before leaving the page | `routes.saveThenArrange()` |
+| A-177 | ✅ | **The old value under every box** — *was Marks & Spencer*, or *was empty* | `reviewEdit.html` |
+| A-178 | ✅ | **What this item says now** — every field, folded away on a card | `reviewEdit.html` |
+| A-179 | ✅ | **Tab picks out the text in the box** so typing replaces it — the browser already does this, checked in Chromium | nothing to build |
+| A-180 | ✅ | **A column has nothing focusable between its boxes** — a fold made it two presses an item | `reviewEdit.html` |
+| A-181 | ✅ | 218 pytest tests | `sixgenbot/tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -377,7 +393,7 @@ together, however interesting the analytics are.
 | **X-11** | 📋 | **Returns keep their SKU** — the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping |
 | **U-15** | 📋 | **"Needs fixing" at the top of the dashboard** — failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half |
 | **U-16** | ✅ | **Batch review and edit** — pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f. Extended 2026-09-20 with choosing by what items have in common, and editing down one column — A.6j |
-| **U-17** | 📋 | **Drag and drop the photo order**, in a batch. The numbering is the listing order on every platform |
+| **U-17** | 🟡 | **Photo order** — built 2026-09-20 with Move up, Move down and Make it first, one item at a time (A.6k). **Dragging is not built**: it needs JavaScript. Doing a whole batch at once is also still open |
 | **U-18** | 📋 | **Item history** — every change to a garment, with what it was before. The rows are already being written by `itemEdit` (A-111); this is the screen that reads them |
 | **X-12** | 📋 | **Put the 972 withdrawn items back online.** Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project |
 

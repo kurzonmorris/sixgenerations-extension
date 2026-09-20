@@ -368,11 +368,20 @@ def test_nothing_sits_between_two_boxes_in_a_column(tmp_path):
     reply = client.post("/review/edit",
                         data={"useFilters": "yes", "missing": "brand", "only": "brand"})
     body = reply.text[reply.text.index('action="/review/save"'):]
-    stops = [name for name in
-             re.findall(r'<(?:input|textarea|select|button)\b[^>]*?name="([^"]+)"', body)
-             if name not in ("columns", "which", "back")]
 
-    assert stops[:4] == [f"f:i{n}:brand" for n in range(1, 5)]
+    # Everything a keyboard can land on, not only the boxes. A <details> fold
+    # and a link are both stops, and a browser proved that the hard way.
+    stops = re.findall(
+        r"<(input|textarea|select|button|a|summary)\b([^>]*)>", body)
+    landable = []
+    for tag, rest in stops:
+        if 'type="hidden"' in rest or "disabled" in rest:
+            continue
+        name = re.search(r'name="([^"]+)"', rest)
+        landable.append(name.group(1) if name else tag)
+
+    assert landable[:4] == [f"f:i{n}:brand" for n in range(1, 5)], (
+        f"something sits between two boxes: {landable[:6]}")
 
 
 def test_a_card_still_has_its_own_checked_box(tmp_path):
@@ -408,3 +417,85 @@ def test_a_column_does_not_mark_anything_checked_unless_asked(tmp_path):
 
     assert connection.execute(
         "SELECT verifiedAt FROM item WHERE itemId = 'i1'").fetchone()["verifiedAt"] is None
+
+
+# --- what the boxes actually contain ----------------------------------------
+#
+# Found 2026-09-20 in a real browser. Every box on the edit screen was empty,
+# because `item.values` in Jinja is the dictionary's own `.values` method, not
+# the key called "values". Saving an untouched form would have written an empty
+# string over every field on screen. These tests read the rendered HTML, which
+# is the only place the fault was visible.
+
+def test_a_box_holds_the_value_the_item_already_has(tmp_path):
+    import re
+
+    client, bot = buildClient(tmp_path)
+    addItem(bot.db.connection(), "i1", "1-1-1", brand="Marks & Spencer")
+
+    reply = client.post("/review/edit", data={"pick": "i1", "columns": "brand"})
+    box = re.search(r'name="f:i1:brand"\s+value="([^"]*)"', reply.text)
+
+    assert box is not None, "there should be a brand box"
+    assert box.group(1) == "Marks &amp; Spencer", "the box must not be empty"
+
+
+def test_every_box_on_a_card_holds_its_value(tmp_path):
+    import re
+
+    client, bot = buildClient(tmp_path)
+    addItem(bot.db.connection(), "i1", "1-1-1", brand="Whistles", title="Velvet coat")
+
+    reply = client.post("/review/edit", data={"pick": "i1", "columns": "brand,title,price"})
+
+    assert re.search(r'name="f:i1:brand"\s+value="Whistles"', reply.text)
+    assert re.search(r'name="f:i1:title"\s+value="Velvet coat"', reply.text)
+    assert re.search(r'name="f:i1:price"\s+value="12.00"', reply.text)
+
+
+def test_saving_the_page_untouched_changes_nothing(tmp_path):
+    """The test that would have caught it. Open the editor, save, change nothing."""
+    import html as htmlLib
+    import re
+
+    client, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    addItem(connection, "i1", "1-1-1", brand="Marks & Spencer", title="Velvet coat")
+    before = currentValues(connection, "i1")
+
+    page = client.post("/review/edit", data={"pick": "i1", "columns": "brand,title,price"}).text
+    sending = {htmlLib.unescape(name): htmlLib.unescape(value) for name, value in
+               re.findall(r'name="(f:[^"]+)"\s+value="([^"]*)"', page)}
+    client.post("/review/save", data=sending, follow_redirects=False)
+
+    assert currentValues(connection, "i1") == before
+    assert connection.execute(
+        "SELECT COUNT(*) AS total FROM event WHERE action = 'edit'"
+    ).fetchone()["total"] == 0, "an untouched save must write no history either"
+
+
+def test_the_column_says_what_the_value_was(tmp_path):
+    client, bot = buildClient(tmp_path)
+    addItem(bot.db.connection(), "i1", "1-1-1", brand="Whistles")
+
+    reply = client.post("/review/edit", data={"pick": "i1", "only": "brand"})
+    assert "was Whistles" in reply.text
+
+
+def test_a_column_row_says_what_else_the_item_holds(tmp_path):
+    client, bot = buildClient(tmp_path)
+    addItem(bot.db.connection(), "i1", "1-1-1", brand="Whistles", title="Velvet coat")
+
+    reply = client.post("/review/edit", data={"pick": "i1", "only": "price"})
+    assert "Velvet coat" in reply.text
+    assert "Whistles" in reply.text, "the other fields are readable while you type"
+
+
+def test_one_item_is_not_called_one_items(tmp_path):
+    client, bot = buildClient(tmp_path)
+    addItem(bot.db.connection(), "i1", "1-1-1")
+
+    reply = client.post("/review/edit", data={"pick": "i1", "columns": "brand"})
+    assert "Working on 1 item" in reply.text
+    assert "1 items" not in reply.text
+    assert "Save it" in reply.text, "not \"Save all 1\""

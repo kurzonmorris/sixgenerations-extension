@@ -203,6 +203,15 @@ Open **Choose the columns** to add or remove columns. The choice is remembered.
 
 The Table finds items. To change an item, use **To review**.
 
+## Put the photographs in order
+
+1. Open an item to edit, as below.
+2. Press **Save and put these N in order**. Your typing is saved first.
+3. Use **Make it first**, **Move up** and **Move down**.
+4. Press **Go back**.
+
+Number 1 is the photograph a buyer sees first on Vinted, eBay and the shop.
+
 ## Change many items at once
 
 1. Open **The Table**.

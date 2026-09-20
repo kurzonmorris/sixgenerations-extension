@@ -1,6 +1,49 @@
+{% macro photoStrip(item, withButton) %}
+  <div class="photoStrip">
+    {% for imageId in item.photos %}
+      <img src="/photos/image/{{ imageId }}?small=yes"
+           alt="Photograph {{ loop.index }} of {{ item.sku }}">
+    {% else %}
+      <span class="quiet">no photographs</span>
+    {% endfor %}
+    {% if withButton and item.photos | length > 1 %}
+      <button type="submit" formaction="/review/photos/{{ item.itemId }}">
+        Save and put these {{ item.photos | length }} in order
+      </button>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{# One column at a time must have NOTHING you can Tab to between the boxes.
+   A fold and a button both are, so this says it in plain text instead. The
+   same words, no keyboard stop. #}
+{% macro inWords(item, everyField) %}
+  <span class="quiet alreadySays">
+    {%- for field in everyField if item.current[field.name] and field.name != 'description' -%}
+      {{ field.label }} {{ item.current[field.name] }}{% if not loop.last %} · {% endif %}
+    {%- endfor -%}
+  </span>
+{% endmacro %}
+
+{% macro everything(item, everyField) %}
+  <details class="everything">
+    <summary>What this item says now</summary>
+    <div class="rows">
+      {% for field in everyField %}
+        <div class="row">
+          <span class="quiet">{{ field.label }}</span>
+          <span class="value">{{ item.current[field.name] or '—' }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </details>
+{% endmacro %}
+
 {% extends "base.html" %}
 {% block heading %}
-  {% if only %}{{ fields[0].label }} — {{ items | length }} items{% else %}Working on {{ items | length }} items{% endif %}
+  {% set many = items | length %}
+  {% set word = 'item' if many == 1 else 'items' %}
+  {% if only %}{{ fields[0].label }} — {{ many }} {{ word }}{% else %}Working on {{ many }} {{ word }}{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -67,12 +110,10 @@
           {% for item in items %}
             <tr>
               <td>
-                {% if item.thumbnail %}
-                  <img class="thumb" src="/photos/image/{{ item.thumbnail }}?small=yes"
-                       alt="Photograph of {{ item.sku }}">
-                {% endif %}
+                {{ photoStrip(item, false) }}
                 <span class="skuLine">{{ item.sku }}</span>
                 <span class="quiet">{{ item.title or 'no title' }}</span>
+                {{ inWords(item, everyField) }}
               </td>
               <td>
                 <label class="hiddenLabel" for="{{ item.itemId }}-{{ fields[0].name }}">
@@ -81,14 +122,17 @@
                 {% if fields[0].kind == 'long' %}
                   <textarea id="{{ item.itemId }}-{{ fields[0].name }}"
                             name="f:{{ item.itemId }}:{{ fields[0].name }}"
-                            rows="2">{{ item.values[fields[0].name] }}</textarea>
+                            rows="2">{{ item.current[fields[0].name] }}</textarea>
                 {% else %}
                   <input id="{{ item.itemId }}-{{ fields[0].name }}"
                          name="f:{{ item.itemId }}:{{ fields[0].name }}"
-                         value="{{ item.values[fields[0].name] }}"
+                         value="{{ item.current[fields[0].name] }}"
                          {% if fields[0].kind == 'money' %}inputmode="decimal"{% endif %}
                          {% if fields[0].kind == 'number' %}inputmode="numeric"{% endif %}>
                 {% endif %}
+                <span class="quiet wasBefore">
+                  was {{ item.current[fields[0].name] or 'empty' }}
+                </span>
               </td>
             </tr>
           {% endfor %}
@@ -96,14 +140,15 @@
       </table>
 
       <p class="quiet">
-        <strong>Tab</strong> moves to the same box on the next item. Shift and Tab
+        <strong>Tab</strong> moves to the same box on the next item, and picks out
+        the text already in it — so you can type straight over it. Shift and Tab
         together go back up. There is nothing in between to step over.
       </p>
 
       <p>
         <label>
           <input type="checkbox" name="checkAll" value="yes">
-          Also mark all {{ items | length }} as checked by a person
+          Also mark {% if items | length == 1 %}it{% else %}all {{ items | length }}{% endif %} as checked by a person
         </label>
       </p>
       <p class="quiet">
@@ -117,6 +162,9 @@
           <h2>{{ item.sku }} — {{ item.title or 'no title' }}</h2>
           <p class="quiet">{{ item.needs }}</p>
 
+          <p>{{ photoStrip(item, true) }}</p>
+          {{ everything(item, everyField) }}
+
           <div class="fieldGrid">
             {% for field in fields %}
               <p>
@@ -124,14 +172,15 @@
                 {% if field.kind == 'long' %}
                   <textarea id="{{ item.itemId }}-{{ field.name }}"
                             name="f:{{ item.itemId }}:{{ field.name }}"
-                            rows="3">{{ item.values[field.name] }}</textarea>
+                            rows="3">{{ item.current[field.name] }}</textarea>
                 {% else %}
                   <input id="{{ item.itemId }}-{{ field.name }}"
                          name="f:{{ item.itemId }}:{{ field.name }}"
-                         value="{{ item.values[field.name] }}"
+                         value="{{ item.current[field.name] }}"
                          {% if field.kind == 'money' %}inputmode="decimal"{% endif %}
                          {% if field.kind == 'number' %}inputmode="numeric"{% endif %}>
                 {% endif %}
+                <span class="quiet wasBefore">was {{ item.current[field.name] or 'empty' }}</span>
               </p>
             {% endfor %}
           </div>
@@ -147,7 +196,9 @@
     {% endif %}
 
     <p>
-      <button type="submit">Save all {{ items | length }}</button>
+      <button type="submit">
+        {% if items | length == 1 %}Save it{% else %}Save all {{ items | length }}{% endif %}
+      </button>
       <a href="{{ back }}">Go back without saving</a>
     </p>
   </form>

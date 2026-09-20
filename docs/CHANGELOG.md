@@ -7,6 +7,63 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 (5) · photographs and old values while you edit
+
+218 sixgenbot tests, 37 extension tests.
+
+### A serious fault, found and fixed
+
+**Every box on the edit screen was empty.** It should have held what the item
+already says. It held nothing.
+
+That means: **opening an item and pressing Save would have wiped its brand, its
+title, its price and its description.** Item 8-3 36 holds *Marks & Spencer* in
+the database. The box on screen held nothing.
+
+The cause was one word. The page asked for `item.values`, and in the page
+language `values` is already the name of something else, so it quietly gave
+nothing back.
+
+No test caught it because every test built its own form. The tests now read the
+real page. One of them opens an item, saves it without touching anything, and
+checks that nothing changed.
+
+**Please look at any item you edited before today and check its brand and
+price.** I am sorry. This was my fault.
+
+### See the photographs while you edit
+
+Every photograph now shows on the edit screen, in order.
+
+Press **Save and put these N in order**. It saves your typing first, then opens
+the photographs. You cannot lose work by going to look.
+
+On that page: **Make it first**, **Move up**, **Move down**. Number 1 is the
+photograph a buyer sees first on Vinted, eBay and the shop.
+
+There is no dragging. Dragging needs JavaScript, which no screen uses.
+
+### See the original information
+
+Under every box it now says **was Marks & Spencer**, or **was empty**.
+
+On a card, open **What this item says now** to see every field.
+
+### Tab already picks out the text
+
+You asked for this. **It already works.** I checked it in a real browser.
+
+Press Tab. The whole box is selected. Type, and your text replaces it. I typed
+over *Whistles* and got *Hobbs* in one go.
+
+Clicking does not do this. Clicking places a cursor.
+
+One more thing the browser found: the fold I added had broken Tab in the column
+view. Tab went box, fold, box. That is two presses for each item. The column now
+shows the same words as plain text, so Tab goes straight to the next box.
+
+---
+
 ## Unreleased — 2026-09-20 (4) · choose items, then edit down a column
 
 212 sixgenbot tests, 37 extension tests.
