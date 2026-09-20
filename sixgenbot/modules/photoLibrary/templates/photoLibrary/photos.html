@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block heading %}Photos{% endblock %}
+
+{% block content %}
+  {% if message %}
+    <p><strong>{{ message }}</strong></p>
+  {% endif %}
+
+  <p>
+    Every photograph is still held on Crosslist's servers. When that
+    subscription ends they will very likely stop working, and for items that
+    have never been listed anywhere it is the only copy. This brings them here.
+  </p>
+
+  <div class="rows">
+    <div class="row">
+      <span>Photographs known about</span>
+      <span class="value">{{ '{:,}'.format(counts['total']) }}</span>
+    </div>
+    <div class="row">
+      <span>Safely here, on this server</span>
+      <span class="value">{{ '{:,}'.format(counts['here']) }}</span>
+    </div>
+    <div class="row">
+      <span>Still only on Crosslist</span>
+      <span class="value">{{ '{:,}'.format(counts['toGo']) }}</span>
+    </div>
+    <div class="row">
+      <span>Space used</span>
+      <span class="value">{{ '{:,.0f}'.format(counts['bytes'] / 1000000) }} MB</span>
+    </div>
+  </div>
+
+  {% if run.running %}
+    <h2>Fetching now</h2>
+    <p>
+      Started {{ run.startedAt }}.
+      {% if run.wanted %}
+        {{ '{:,}'.format(run.done) }} of {{ '{:,}'.format(run.wanted) }} done.
+      {% else %}
+        Counting what is missing.
+      {% endif %}
+      {% if run.stopping %}Stopping after the ones already in the air.{% endif %}
+    </p>
+    <p class="quiet">
+      This page does not move on its own. Press Check again when you want a
+      newer number — closing the page does not stop the fetch.
+    </p>
+    <p>
+      <a href="/photos">Check again</a>
+    </p>
+    {% if not run.stopping %}
+      <form method="post" action="/photos/stop">
+        <p><button type="submit">Stop</button></p>
+      </form>
+    {% endif %}
+
+  {% elif counts['toGo'] %}
+    <h2>Bring them here</h2>
+    <p class="quiet">
+      Five at a time, which is polite to their servers. It is safe to stop it and
+      start it again — it only fetches what is still missing, so nothing is done
+      twice. Anything that failed before is tried again.
+    </p>
+    <form method="post" action="/photos/fetch">
+      <p>
+        <label for="howMany">How many this time</label>
+        <input id="howMany" name="howMany" value="" size="8" inputmode="numeric">
+        <span class="quiet">Leave it empty for all
+          {{ '{:,}'.format(counts['toGo']) }}. Try 50 first if you want to see it work.</span>
+      </p>
+      <p><button type="submit">Fetch them</button></p>
+    </form>
+
+  {% else %}
+    <h2>All here</h2>
+    <p>
+      Every photograph is on this server. Crosslist can be cancelled without
+      losing any of them.
+    </p>
+  {% endif %}
+
+  {% if run.finishedAt %}
+    <h2>Last run</h2>
+    <p>Finished {{ run.finishedAt }}. {{ run.outcome }}</p>
+  {% endif %}
+
+  {% if reasons %}
+    <h2>{{ '{:,}'.format(counts['failed']) }} did not come</h2>
+    <p class="quiet">
+      These are tried again next time you press Fetch them. A photo that is
+      genuinely gone will keep failing — that is worth knowing rather than
+      hiding.
+    </p>
+    <table>
+      <thead><tr><th>What the server said</th><th>Photographs</th></tr></thead>
+      <tbody>
+        {% for reason, total in reasons %}
+          <tr>
+            <td class="message">{{ reason }}</td>
+            <td class="at">{{ '{:,}'.format(total) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <h2>Held against more than one item</h2>
+  <p>
+    <a href="/photos/duplicates">Photographs that appear on two or more items</a>
+    — the only way to tell a garment returned and relisted from two different
+    garments with the same title.
+  </p>
+{% endblock %}

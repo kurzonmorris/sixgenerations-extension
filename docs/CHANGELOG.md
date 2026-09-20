@@ -7,6 +7,43 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-20 · the Photos page
+
+149 sixgenbot tests, 37 extension tests.
+
+**The photo fetch has a button now.** It was a terminal command that blocked for
+an hour, said nothing until it finished, and could only be stopped with Ctrl-C —
+for the one thing in this project that cannot be got back once Crosslist is
+cancelled.
+
+The page says how many photographs are **safely here** and how many are **still
+only on Crosslist**. Fetch them all, or put a number in the box and try 50 first.
+It runs in the background, so the page comes straight back and closing it does
+not stop the work.
+
+**Stop now actually stops.** The fetch used one worker pool over all 9,098 jobs,
+and leaving that loop waits for every job still queued — a Stop button that took
+effect an hour later. It works 200 at a time and checks between chunks, so a stop
+lands in seconds.
+
+**Failures are named**, grouped by what the server actually said, with a count
+each. They are tried again next time. A photograph that is genuinely gone keeps
+failing, which is worth knowing.
+
+Nothing updates on its own — there is a **Check again** link, and the page says
+so rather than leaving you wondering whether it has frozen.
+
+**Photographs held against more than one item**, compared by their contents
+rather than their addresses. This is what finally answers whether two listings
+with the same title are one garment relisted or two different garments; Crosslist
+gives a copied listing new addresses for the same photographs, so the address
+never could.
+
+A path stored in the database is not permission to read it: nothing outside the
+images folder is ever served.
+
+---
+
 ## Unreleased — 2026-09-15 (8) · "To review", the screen the backlog is cleared on
 
 138 sixgenbot tests, 37 extension tests.

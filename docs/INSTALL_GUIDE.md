@@ -162,17 +162,27 @@ is safe: the second time reports *0 new, 2125 unchanged*.
 **Do this before the Crosslist subscription ends.** Every photo is hosted on
 their servers, and for items never listed anywhere it is the only copy.
 
+**Photos** in the left menu, or `http://<server>:8770/photos`.
+
+It tells you how many are **safely here** and how many are **still only on
+Crosslist**. Press **Fetch them** — or put `50` in the box first if you want to
+watch it work once before letting it run.
+
+It runs in the background, so you can close the page. The number does not move on
+its own: press **Check again** when you want a newer one. **Stop** stops it within
+a few seconds, and starting again picks up where it left off — nothing is fetched
+twice.
+
+Anything that failed is listed with the reason the server gave, and is tried again
+the next time you press Fetch them.
+
+Expect a couple of GB and a while: 9,098 photos, five at a time, which is polite
+to their servers.
+
+### Or from the command line
+
 ```bash
 docker exec sixgenbot python -m sixgenbot photos
-```
-
-9,098 photos, five at a time — expect it to take a while and a couple of GB.
-**It is safe to stop it** (`Ctrl-C`) and run it again; it only fetches what is
-still missing. Add `--limit 50` to try a few first.
-
-Check how it went:
-
-```bash
 docker exec sixgenbot python -m sixgenbot check
 ```
 

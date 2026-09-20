@@ -88,10 +88,11 @@ sixgenerations-extension/
 │   │   ├── activityLog/              the Console page
 │   │   ├── backups/                  nightly backup, and the page that proves it ran
 │   │   ├── fileTransfer/             upload a spreadsheet, download the inventory
-│   │   └── itemReview/               "To review" — pick a batch, fix it, save the lot
+│   │   ├── itemReview/               "To review" — pick a batch, fix it, save the lot
+│   │   └── photoLibrary/            fetch the photographs off Crosslist, before it ends
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 138 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 149 tests
 │
 ├── tests/                            Run with `npm test` — 37 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node

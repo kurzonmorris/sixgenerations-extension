@@ -33,6 +33,7 @@ log = getLogger("photos")
 TIMEOUT = 30
 RETRIES = 3
 WORKERS = 5          # polite: their servers, and nothing here is in a hurry
+CHUNK = 200          # how often a Stop is noticed
 PAUSE = 0.05
 
 
@@ -125,8 +126,15 @@ def fetchAll(
     dataDir: Path,
     limit: int | None = None,
     onProgress=None,
+    shouldStop=None,
 ) -> FetchCounts:
-    """Downloads everything still missing. Safe to stop and run again."""
+    """Downloads everything still missing. Safe to stop and run again.
+
+    The work is done a chunk at a time so `shouldStop` is asked often enough to
+    matter — a Stop button that only takes effect in an hour is not a Stop
+    button. The job list is taken once at the start, so a photo that fails is
+    not retried in the same run and cannot loop.
+    """
     jobs = outstanding(connection, limit)
     counts = FetchCounts(wanted=len(jobs))
     if not jobs:
@@ -134,32 +142,64 @@ def fetchAll(
         return counts
 
     log.info(f"fetching {len(jobs)} photos")
+    done = 0
 
-    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        for done, (imageId, filePath, digest, size, error) in enumerate(
-            pool.map(lambda row: fetchOne(row, dataDir), jobs), start=1
-        ):
-            if error:
-                counts.failed += 1
-                connection.execute(
-                    "UPDATE itemImage SET fetchError = ? WHERE imageId = ?", (error, imageId)
-                )
-            else:
-                counts.fetched += 1
-                counts.bytes += size
-                connection.execute(
-                    "UPDATE itemImage SET filePath = ?, sha256 = ?, bytes = ?,"
-                    " fetchedAt = datetime('now'), fetchError = '' WHERE imageId = ?",
-                    (filePath, digest, size, imageId),
-                )
+    for start in range(0, len(jobs), CHUNK):
+        if shouldStop and shouldStop():
+            log.info(f"stopped after {done} of {len(jobs)}")
+            break
 
-            if onProgress and done % 100 == 0:
-                onProgress(done, len(jobs))
-            if done % 500 == 0:
-                log.info(f"  {done} of {len(jobs)} — {counts.asSentence()}")
+        with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+            for imageId, filePath, digest, size, error in pool.map(
+                lambda row: fetchOne(row, dataDir), jobs[start:start + CHUNK]
+            ):
+                done += 1
+                if error:
+                    counts.failed += 1
+                    connection.execute(
+                        "UPDATE itemImage SET fetchError = ? WHERE imageId = ?", (error, imageId)
+                    )
+                else:
+                    counts.fetched += 1
+                    counts.bytes += size
+                    connection.execute(
+                        "UPDATE itemImage SET filePath = ?, sha256 = ?, bytes = ?,"
+                        " fetchedAt = datetime('now'), fetchError = '' WHERE imageId = ?",
+                        (filePath, digest, size, imageId),
+                    )
+
+                if onProgress and done % 100 == 0:
+                    onProgress(done, len(jobs))
+                if done % 500 == 0:
+                    log.info(f"  {done} of {len(jobs)} — {counts.asSentence()}")
 
     log.info("photos: " + counts.asSentence())
     return counts
+
+
+def storedCounts(connection: sqlite3.Connection) -> dict[str, int]:
+    """What the Photos page shows: how many are safe, and how many are not."""
+    row = connection.execute(
+        "SELECT COUNT(*) AS total,"
+        " SUM(CASE WHEN filePath != '' THEN 1 ELSE 0 END) AS here,"
+        " SUM(CASE WHEN filePath = '' AND sourceUrl != '' THEN 1 ELSE 0 END) AS toGo,"
+        " SUM(CASE WHEN filePath = '' AND fetchError != '' THEN 1 ELSE 0 END) AS failed,"
+        " SUM(bytes) AS bytes"
+        " FROM itemImage"
+    ).fetchone()
+    return {name: row[name] or 0 for name in ("total", "here", "toGo", "failed", "bytes")}
+
+
+def failureReasons(connection: sqlite3.Connection) -> list[tuple[str, int]]:
+    """The errors, grouped — 4,000 photos usually fail for two or three reasons."""
+    return [
+        (row["fetchError"], row["total"])
+        for row in connection.execute(
+            "SELECT fetchError, COUNT(*) AS total FROM itemImage"
+            " WHERE filePath = '' AND fetchError != ''"
+            " GROUP BY fetchError ORDER BY total DESC LIMIT 20"
+        )
+    ]
 
 
 def duplicateImages(connection: sqlite3.Connection) -> list[tuple[str, int]]:

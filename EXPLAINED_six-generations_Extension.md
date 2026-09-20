@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-20 | **The Photos page** (§3B.14) — the photo fetch moved off the command line: a button, a count you can come back to, a Stop that works in seconds rather than an hour, and the failures named. Also `/photos/duplicates`, which answers the §3B.11 correction by content. 149 tests |
 | 2026-09-15 (7) | **"To review", the batch edit screen** (§3B.13) — U-16 built. Pick a batch, choose which fields show, correct them, save the lot; every change recorded with its value before and after. Also `core/itemEdit.py` and `sku.SQL_ORDER`, which fixes item order being character order rather than room order. **972, not 988**: 16 of the never-listed items are already sold. 138 tests |
 | 2026-09-15 (6) | **Files page: upload and download in the browser** (§3B.12). Removes the network-share-and-`cp` dance entirely. Also `core/csvExport.py`, the first export with the multi-value flattening rules. 119 tests |
 | 2026-09-15 (5) | **A re-import now refreshes sizes, colours, categories and photos**, not just the item row — found by importing the May export (930 rows, **no photos at all**) before the September one. Crosslist-owned rows are replaced, hand-added ones are left alone, photos are only ever added |
@@ -577,6 +578,67 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.14 The Photos page — the only deadline that cannot be undone
+
+`modules/photoLibrary/`, with the additions to `core/photoStore.py` behind it.
+
+Fetching the photographs was `docker exec … python -m sixgenbot photos`: it
+blocked for an hour, said nothing until it finished, and could not be stopped
+except with Ctrl-C. For the thing most at risk in this whole project, that was
+the least visible part of it.
+
+**The page.** How many photographs are known about, how many are *safely here*,
+how many are *still only on Crosslist*, and the space used. A box for how many to
+fetch this time (empty means all; 50 is suggested for a first go), a **Stop**, and
+a **Check again** link.
+
+**It runs in the background.** The fetch is a daemon thread, so the page comes
+straight back and closing it does not stop the work. The thread gets its own
+SQLite connection for free — `Database` hands out one per thread — and WAL means
+its writes never block the page's reads.
+
+**Still, per U-03.** The number does not update on its own. *Check again* is a
+link you press. The page says so, rather than leaving you wondering whether it
+has frozen.
+
+**One run at a time**, guarded by a lock. Two would fight over the same rows and
+neither count would mean anything.
+
+### Stopping had to be built, not just asked for
+
+`fetchAll` used one `ThreadPoolExecutor` over all 9,098 jobs. Breaking out of
+that loop exits the `with` block, which *waits for every remaining future* — so a
+Stop button would have taken effect an hour later, which is not a Stop button.
+
+It now works a chunk of 200 at a time and asks `shouldStop()` between chunks, so
+a stop lands in seconds. The job list is taken **once**, at the start: if it were
+re-read each chunk, a photo that failed would still have no `filePath` and would
+be picked up again forever.
+
+### Failures are named, not hidden
+
+Grouped by what the server actually said, with a count each. Across 9,098 photos
+there are usually two or three distinct reasons, so a table of twenty rows covers
+it. They are retried by the next **Fetch them** — and a photograph that is
+genuinely gone keeps failing, which is worth knowing rather than smoothing over.
+`_download` still never retries a 4xx: a 404 is an answer.
+
+### A path in the database is not permission to read it
+
+`/photos/image/{imageId}` resolves the stored `filePath` and refuses anything
+that is not inside the images folder. The row holds a path that the importer
+wrote, and serving it unchecked would make the database a way to read any file on
+the server. A test points a row at `secrets.toml` and asserts the contents never
+reach the page.
+
+### Duplicates, answered properly at last
+
+`/photos/duplicates` lists photographs held against more than one item, **by
+content**. This is the correction in §3B.11 made answerable: Crosslist gives a
+copied listing new addresses for the same photographs, so comparing URLs could
+never have answered whether two same-titled listings are one garment relisted or
+two garments. Comparing `sha256` does.
 
 ## 3B.13 "To review" — the batch edit screen (U-16)
 
