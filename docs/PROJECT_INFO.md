@@ -13,6 +13,30 @@ at the bottom.
 
 ---
 
+## 1.0 Which shop is it? — verified against the live store 2026-09-21
+
+Read with `shop { id name myshopifyDomain createdAt primaryDomain { host } }`:
+
+| Field | Value | Changes on a rename? |
+|---|---|---|
+| `id` | `gid://shopify/Shop/94814568835` | **No.** It is the store's database id |
+| `myshopifyDomain` | `1kaa6a-ua.myshopify.com` | No — Shopify does not let this be changed |
+| `createdAt` | `2025-08-24T19:02:43Z` | No |
+| `name` | `Six Generations` | **Yes** |
+| `primaryDomain.host` | `www.sixgenerations.co.uk` | **Yes** |
+
+**Use `shop.id` to decide anything.** The shop is being renamed within the year,
+so `name` and `primaryDomain` are for reading, never for comparing.
+
+**The access token is the real barrier.** A token is issued by one store and
+cannot reach another, so nobody else's shop is reachable without their token.
+What `shop.id` adds is a check that the store answering is the store meant — if
+a second store's token were ever pasted in, everything would otherwise carry on
+quietly against the wrong shop.
+
+**Vinted** has the same shape: the numeric user id never changes, the login name
+can change any day. `/api/v2/users/current` gives both.
+
 ## 1. Shopify — Admin GraphQL API
 
 ### 1.1 Connection details

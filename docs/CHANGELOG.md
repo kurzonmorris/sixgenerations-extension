@@ -7,6 +7,54 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-21 (2) · making sure it is your shop
+
+276 sixgenbot tests, 53 extension tests.
+
+You asked how it knows it is your shop, and said the shop is being renamed
+within the year. Both parts of that needed an answer.
+
+### What was protecting it before
+
+**Shopify: the access token, and only the token.** A token belongs to one store
+and cannot read another. Nobody else's shop was ever reachable.
+
+But nothing **checked** that the store answering was the store you meant. If a
+second store's token were ever put in the box, everything would have carried on
+quietly against the wrong shop.
+
+**Vinted: a username you typed in.** A username can be changed any day.
+
+### What it does now
+
+The first connection records the account. Every connection after it is checked.
+
+**It records the number, not the name.** I read these from your live store
+today:
+
+| | Recorded | Shown, never checked |
+|---|---|---|
+| Shopify | `gid://shopify/Shop/94814568835` | Six Generations, www.sixgenerations.co.uk |
+| Vinted | your account number | your username |
+
+**Renaming your shop is fine.** The number does not change when you rename. The
+system allows it, says so once, and remembers the new name.
+
+**A different shop stops the run.** It stops **before it reads anything**, and
+long before it writes. It says: *"This is a different account. Expected Six
+Generations … Nothing was changed."*
+
+A refused connection also cannot overwrite what was recorded. A wrong shop can
+never replace the right one.
+
+### On the settings page
+
+Each platform now says what this copy is tied to, and since when.
+
+If you ever do replace the shop for real, there is a deliberate way to untie it.
+
+---
+
 ## Unreleased — 2026-09-21 · reading Vinted into the database
 
 276 sixgenbot tests, 43 extension tests.

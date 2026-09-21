@@ -38,6 +38,7 @@ async function load() {
   $('#vinted-domain').value = settings.vinted.domain;
   $('#vinted-username').value = settings.vinted.username;
   $('#sixgenbot-url').value = settings.sixgenbot?.url ?? '';
+  showKnown(settings);
 
   $('#rule-inventory').value = settings.sync.inventory;
   $('#rule-price').value = settings.sync.price;
@@ -116,3 +117,23 @@ $('#test-vinted').addEventListener('click', async () => {
 stampVersionInto(document);
 fillDirectionSelects();
 load();
+
+
+/**
+ * Says which shop and which Vinted account this copy is tied to.
+ *
+ * The id is what is checked; the name is only here so a person can see what is
+ * meant. A rename is expected — the shop is being renamed within the year — and
+ * changes nothing.
+ */
+function showKnown(settings) {
+  for (const platform of ['shopify', 'vinted']) {
+    const known = settings.known?.[platform];
+    const line = $(`#${platform}-known`);
+    if (!line) continue;
+    line.textContent = known?.id
+      ? `Tied to ${known.name || 'this account'} (${known.id}) since `
+        + `${(known.firstSeenAt ?? '').slice(0, 10)}. A different account is refused.`
+      : 'Not tied to an account yet. The first connection is remembered.';
+  }
+}

@@ -99,9 +99,11 @@ sixgenerations-extension/
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
 │   └── tests/                        python -m pytest sixgenbot/tests -q — 276 tests
 │
-├── tests/                            Run with `npm test` — 43 tests. Nothing to install
+├── tests/                            Run with `npm test` — 53 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
 │   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
+│   ├── knownAccounts.test.mjs        Is it the right shop? Ids decide, names do not
+│   ├── sixgenbotSender.test.mjs      Handing a Vinted read to the server
 │   ├── parityEngine.test.mjs         The matching and diff rules
 │   ├── extensionWiring.test.mjs      Service worker message handling, settings, token redaction
 │   └── versionConsistency.test.mjs   Fails if the version drifts between its four homes

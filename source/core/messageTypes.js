@@ -14,6 +14,7 @@ export const MSG = {
   CLEAR_LOGS: 'clear-logs',
   EXPORT_REPORT: 'export-report',
   SEND_TO_SIXGENBOT: 'send-to-sixgenbot',
+  FORGET_ACCOUNT: 'forget-account',
 
   // background -> content script (Vinted tab)
   VINTED_PROBE: 'vinted-probe',
@@ -55,6 +56,13 @@ export const DEFAULT_SETTINGS = {
   // given an address, and nothing is sent anywhere until then.
   sixgenbot: {
     url: '', // e.g. http://tower:8770
+  },
+  // Which shop and which Vinted account this copy is tied to. Recorded on the
+  // first connection and compared on every one after it. Ids, never names: the
+  // shop is being renamed and a Vinted username can change any day.
+  known: {
+    shopify: { id: '', name: '', firstSeenAt: null },
+    vinted: { id: '', name: '', firstSeenAt: null },
   },
   sync: {
     dryRun: true,

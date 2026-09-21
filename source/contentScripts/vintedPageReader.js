@@ -104,9 +104,18 @@ async function probe() {
 
 // --- wardrobe ----------------------------------------------------------------
 
-async function scrapeWardrobe({ username } = {}) {
+async function scrapeWardrobe({ username, knownUserId } = {}) {
   const user = await currentUser();
   if (!user) return { error: 'Not signed in to Vinted in this tab.' };
+
+  // The id is what is checked. A username can be changed any day, so it is a
+  // label here and nothing more. The worker holds the recorded id.
+  if (knownUserId && String(knownUserId) !== String(user.id)) {
+    return {
+      error: `This is a different Vinted account. Expected ${knownUserId}, `
+        + `signed in as ${user.login} (${user.id}). Nothing was read.`,
+    };
+  }
   if (username && user.login && username.toLowerCase() !== String(user.login).toLowerCase()) {
     return { error: `Signed in as "${user.login}" but settings say "${username}".` };
   }
