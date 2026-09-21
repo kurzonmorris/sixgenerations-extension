@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-21 | **Reading Vinted into the database** (§3B.20) — the extension hands its wardrobe read to the server, which says what it would change and changes nothing until told. A read never writes over a correction. Three bugs found by simulating a read against the real catalogue, one of which would have **duplicated 324 items**. Only 12% of listings match on the code alone. 276 tests, 43 extension tests |
 | 2026-09-20 (6) | **Ready to list** (§3B.19) — the step nothing helped with: one garment, every answer the Vinted form asks for, the photographs as a numbered zip, and a button that records it is up. Also a measurement that killed a feature: the 424 items with "no size" are books and toys, not garments. And a correction — **Tab picks out a one-line box, never a tall one**. 241 tests |
 | 2026-09-20 (5) | **Photographs while editing, and the old value beside every box** (§3B.18). Also §7.10f: **every edit box had been empty**, because `item.values` in Jinja is the dict's own method — saving an untouched item would have wiped it. Found in a real browser. Tab already picks out the text, checked in Chromium. 218 tests |
 | 2026-09-20 (4) | **Choosing items many ways, and editing down one column** (§3B.17). Pick by what items have in common — no brand (385), no size (424), a word in a field, added between two dates — and combine them. Then one field becomes a single column and **Tab walks down it**, with no JavaScript. A tick box on each row had made that two presses an item; it is gone. 212 tests |
@@ -583,6 +584,86 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.20 Reading the Vinted wardrobe into the database
+
+`modules/vintedSync/` and `core/vintedRead.py`, with `source/core/sixgenbotSender.js`
+at the extension end.
+
+`FEATURE_SPECIFICATION.md §4` puts the read before any writing — *"nothing else
+is trustworthy until the read is"* — and that is right: the database is only
+worth anything if it knows what is actually on Vinted.
+
+**The extension already read Vinted** (paged API, DOM fallback, DataDome pacing).
+What was missing was the hand-over. It now has a button that posts the wardrobe
+to the server and reports what the server says it would do.
+
+### The rule that shapes all of it
+
+**A read never writes over a correction.** The catalogue came down because
+Vinted showed sizes wrongly; those sizes are still wrong on Vinted. So:
+
+| | |
+|---|---|
+| Facts about the listing — address, price on Vinted, live or sold | **always written**, they are Vinted's to state |
+| A field on the garment where ours is **empty** | filled in, nothing is lost |
+| A field that **differs** | **reported, never overwritten** |
+
+### A read cannot change anything by arriving
+
+`POST /vinted/read` only stores the read and works out a plan. Applying is a
+button on the page. That keeps the dry-run rule **and** means an unexpected POST
+cannot alter the catalogue — no shared secret needed for a service on your own
+network.
+
+### What the real catalogue actually says
+
+Simulated a full read of all 1,137 listed items, with the code parsed from the
+description the way the extension really does it:
+
+| | |
+|---|---|
+| Matched on the code alone | **139** |
+| Share a code with another garment | **621** |
+| No code at the end of the description | **377** |
+| New, or duplicated | **0** |
+
+**Only 12% match on their own.** The first read is mostly a linking job — and
+each link is done **once**, because the Vinted listing id is checked before the
+code and settles that pairing for good.
+
+The 377 with no code are the items Kurzon described as "not in the traditional
+box". Some descriptions end `W630g\nB` — the `B` was typed and the code never
+was.
+
+### Three bugs the real data found
+
+**1. Every listing reported a description difference.** Ours lacks the SKU that
+Vinted's carries, so a plain comparison called all 1,137 different and buried
+the real differences. Descriptions are now compared as `withSku(ours)` against
+theirs.
+
+**2. `withSku()` was renumbering padded codes.** Real descriptions write
+`B5-5 004`; `formatSku()` normalises to `5-5 4`, so `withSku` rewrote it —
+a cosmetic change to every listing in the wardrobe, and a false difference on
+every read. It now leaves a code that already parses to the same garment exactly
+as it is. **This also affected the Ready to list sheet**, which was showing a
+renumbered description to copy.
+
+**3. Suffixed items would have been duplicated.** 639 items share a code and the
+importer marks the later one `11-1-26 #f26f36`. Vinted only ever carries the
+plain code, so `WHERE sku = ?` missed all 324 suffixed ones and would have
+created them again. `itemsWithCode()` now matches both — and when **two**
+garments hold a code it returns neither: the plan lists both and a person picks,
+because the code *is* the ambiguity and typing it cannot settle it.
+
+### The extension end
+
+`sixgenbotSender.js`. The server address lives in settings and is empty until
+given one, so nothing is sent anywhere by default. Permission to reach it is
+asked for **at the moment of sending**, through `optional_host_permissions`, not
+at install: the extension ships able to reach Vinted and Shopify and nothing
+else. A test asserts no token or credential is ever in the body.
 
 ## 3B.19 Ready to list — the step nothing helped with
 

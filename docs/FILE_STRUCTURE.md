@@ -93,12 +93,13 @@ sixgenerations-extension/
 │   │   ├── itemReview/               "To review" — pick a batch, fix it, save the lot
 │   │   ├── photoLibrary/            fetch the photographs off Crosslist, before it ends
 │   │   ├── itemTable/                The Table — every item, one search box
-│   │   └── listingHelper/            Ready to list — one item, everything laid out
+│   │   ├── listingHelper/            Ready to list — one item, everything laid out
+│   │   └── vintedSync/               taking a wardrobe read, and linking listings
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 241 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 276 tests
 │
-├── tests/                            Run with `npm test` — 37 tests. Nothing to install
+├── tests/                            Run with `npm test` — 43 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
 │   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
 │   ├── parityEngine.test.mjs         The matching and diff rules

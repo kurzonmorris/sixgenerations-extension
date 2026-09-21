@@ -37,6 +37,7 @@ async function load() {
 
   $('#vinted-domain').value = settings.vinted.domain;
   $('#vinted-username').value = settings.vinted.username;
+  $('#sixgenbot-url').value = settings.sixgenbot?.url ?? '';
 
   $('#rule-inventory').value = settings.sync.inventory;
   $('#rule-price').value = settings.sync.price;
@@ -61,6 +62,9 @@ async function save() {
     vinted: {
       domain: $('#vinted-domain').value,
       username: $('#vinted-username').value.trim(),
+    },
+    sixgenbot: {
+      url: $('#sixgenbot-url').value.trim(),
     },
     sync: {
       inventory: $('#rule-inventory').value,

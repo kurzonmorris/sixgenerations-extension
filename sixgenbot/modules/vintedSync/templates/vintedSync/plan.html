@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block heading %}What this read would do{% endblock %}
+
+{% block content %}
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+  <p class="quiet">{{ fileName }}</p>
+
+  {% if problem %}
+    <p><strong>That read could not be used.</strong> {{ problem }}</p>
+    <p><a href="/vinted">Go back</a></p>
+  {% else %}
+    <p><strong>Nothing has been written.</strong> This is what it would change.</p>
+
+    <div class="rows">
+      <div class="row">
+        <span>New items, found on Vinted but not here</span>
+        <span class="value">{{ '{:,}'.format(plan.newItems | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Matched to an item for the first time</span>
+        <span class="value">{{ '{:,}'.format(plan.linked | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Already known</span>
+        <span class="value">{{ '{:,}'.format(plan.alreadyLinked | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Sold on Vinted</span>
+        <span class="value">{{ '{:,}'.format(plan.soldOnVinted | length) }}</span>
+      </div>
+      <div class="row">
+        <span>No longer on Vinted</span>
+        <span class="value">{{ '{:,}'.format(plan.goneFromVinted | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Blanks it would fill in</span>
+        <span class="value">{{ '{:,}'.format(plan.filledIn | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Share a code with another item — nothing can tell them apart</span>
+        <span class="value">{{ '{:,}'.format(plan.ambiguous | length) }}</span>
+      </div>
+      <div class="row">
+        <span>Could not be matched — no SKU in the description</span>
+        <span class="value">{{ '{:,}'.format(plan.unmatchable | length) }}</span>
+      </div>
+    </div>
+
+    {% if plan.differences %}
+      <h2>{{ '{:,}'.format(plan.differences | length) }} differences — none of these will be changed</h2>
+      <p class="quiet">
+        Vinted says one thing and this database says another. <strong>Yours is
+        kept.</strong> Your catalogue came down because Vinted showed sizes
+        wrongly, so a read is never allowed to write over your corrections. Look
+        through these and change the ones you want by hand.
+      </p>
+      <table>
+        <thead><tr><th>SKU</th><th>Field</th><th>Here</th><th>On Vinted</th><th></th></tr></thead>
+        <tbody>
+          {% for row in plan.differences[:200] %}
+            <tr>
+              <td class="skuLine">{{ row.sku }}</td>
+              <td>{{ row.field }}</td>
+              <td>{{ row.ours[:60] }}</td>
+              <td>{{ row.theirs[:60] }}</td>
+              <td><a href="/list/{{ row.itemId }}">Open it</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if plan.differences | length > 200 %}
+        <p class="quiet">Showing the first 200.</p>
+      {% endif %}
+    {% endif %}
+
+    {% if plan.ambiguous %}
+      <h2>{{ '{:,}'.format(plan.ambiguous | length) }} share a code</h2>
+      <p class="quiet">
+        Two garments in the catalogue hold this code, and Vinted carries only the
+        code, so nothing can say which one this listing is. Open the listing,
+        find which garment it is, and link it by hand. After that the Vinted
+        address settles it and it will never be asked again.
+      </p>
+      <table>
+        <thead><tr><th>On Vinted</th><th>Code</th><th>Which garment is it?</th></tr></thead>
+        <tbody>
+          {% for row in plan.ambiguous[:50] %}
+            <tr>
+              <td>{{ row.get('title', '')[:60] }}</td>
+              <td class="skuLine">{{ row.get('storageCode', '') }}</td>
+              <td>
+                {% if row.get('url') %}<a href="{{ row['url'] }}">See it on Vinted</a>{% endif %}
+                {% for candidate in row.get('candidates', []) %}
+                  <form method="post" action="/vinted/link">
+                    <input type="hidden" name="sourceId" value="{{ row.get('sourceId', '') }}">
+                    <input type="hidden" name="itemId" value="{{ candidate.itemId }}">
+                    <input type="hidden" name="url" value="{{ row.get('url', '') }}">
+                    <input type="hidden" name="back" value="/vinted/plan/{{ fileName }}">
+                    <p>
+                      <button type="submit">It is {{ candidate.sku }}</button>
+                      <span class="quiet">{{ candidate.title[:40] }}</span>
+                    </p>
+                  </form>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+    {% if plan.unmatchable %}
+      <h2>{{ '{:,}'.format(plan.unmatchable | length) }} could not be matched</h2>
+      <p class="quiet">
+        These are on Vinted with no SKU at the end of the description, so there
+        is no safe way to tell which garment they are. Matching by title would
+        guess, and a wrong match is worse than none.
+      </p>
+      <table>
+        <thead><tr><th>Title</th><th>Price</th><th></th></tr></thead>
+        <tbody>
+          {% for row in plan.unmatchable[:50] %}
+            <tr>
+              <td>{{ row.get('title', '')[:70] }}</td>
+              <td class="at">{{ row.get('price', '') }}</td>
+              <td>
+                {% if row.get('url') %}<a href="{{ row['url'] }}">On Vinted</a>{% endif %}
+                <form method="post" action="/vinted/link">
+                  <input type="hidden" name="sourceId" value="{{ row.get('sourceId', '') }}">
+                  <input type="hidden" name="url" value="{{ row.get('url', '') }}">
+                  <input type="hidden" name="back" value="/vinted/plan/{{ fileName }}">
+                  <label class="hiddenLabel" for="sku-{{ row.get('sourceId', '') }}">
+                    The SKU this listing belongs to
+                  </label>
+                  <input id="sku-{{ row.get('sourceId', '') }}" name="sku" size="9" placeholder="13-8 24">
+                  <button type="submit">Link it</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="quiet">
+        Each one only has to be done once. After it, the Vinted address settles
+        that pairing for good and no later read will ask again.
+      </p>
+    {% endif %}
+
+    <h2>Apply it</h2>
+    <p class="quiet">
+      This writes the listings, the sales and the blanks. It never writes over a
+      field you already have.
+    </p>
+    <form method="post" action="/vinted/apply/{{ fileName }}">
+      <p><button type="submit">Do it</button></p>
+    </form>
+    <p><a href="/vinted">Go back without doing it</a></p>
+  {% endif %}
+{% endblock %}

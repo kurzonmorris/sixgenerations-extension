@@ -61,6 +61,13 @@
         <input type="text" id="vinted-username" placeholder="your Vinted username" autocomplete="off">
         <small>Only used as a safety check that the signed-in tab is the right account.</small>
       </label>
+      <label>
+        sixgenbot address <span class="muted">(optional)</span>
+        <input type="text" id="sixgenbot-url" placeholder="http://tower:8770" autocomplete="off">
+        <small>The server on your own network that holds the database. Leave it empty
+          and nothing is ever sent anywhere. Permission to reach it is asked for the
+          first time you send a read.</small>
+      </label>
       <div class="actions">
         <button id="test-vinted" class="ghost">Test connection</button>
         <span id="vinted-result" class="result"></span>

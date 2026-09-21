@@ -203,6 +203,35 @@ Open **Choose the columns** to add or remove columns. The choice is remembered.
 
 The Table finds items. To change an item, use **To review**.
 
+## Read your Vinted wardrobe into the database
+
+Do this first, and do it again whenever you have listed or sold things.
+
+1. Open the extension, then **Settings**.
+2. Put your server address in **sixgenbot address**. For example
+   `http://tower:8770`. Save it.
+3. Open the extension again.
+4. Press **Read my Vinted wardrobe and send it**. Allow the permission it asks
+   for. It reads every listing, which takes a minute or two.
+5. On the server, open **Vinted** in the left menu.
+6. Press **See what it would do** on the newest read.
+7. Read the page. **Nothing has been written yet.**
+8. Press **Do it**.
+
+**Your corrections are safe.** A read never writes over a field you already
+have. Anything that differs is listed for you to look at, and left alone.
+
+### Linking listings, once
+
+Most listings cannot be matched on their own. Either they have no code at the
+end, or two garments share the code.
+
+The page shows them. Where two garments share a code, press the button for the
+right one. Where there is no code, type the SKU and press **Link it**.
+
+**You only do this once for each listing.** After that, Vinted's own listing
+number settles it and no later read will ask again.
+
 ## Put an item back on Vinted
 
 1. Open **Ready to list** in the left menu.

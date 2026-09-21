@@ -13,6 +13,7 @@ export const MSG = {
   GET_LOGS: 'get-logs',
   CLEAR_LOGS: 'clear-logs',
   EXPORT_REPORT: 'export-report',
+  SEND_TO_SIXGENBOT: 'send-to-sixgenbot',
 
   // background -> content script (Vinted tab)
   VINTED_PROBE: 'vinted-probe',
@@ -49,6 +50,11 @@ export const DEFAULT_SETTINGS = {
   vinted: {
     domain: 'www.vinted.co.uk',
     username: '',
+  },
+  // The server on the home network that owns the database. Empty until it is
+  // given an address, and nothing is sent anywhere until then.
+  sixgenbot: {
+    url: '', // e.g. http://tower:8770
   },
   sync: {
     dryRun: true,
