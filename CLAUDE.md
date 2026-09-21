@@ -162,7 +162,7 @@ source/                the extension
   connectors/                  one file per platform
   contentScripts/              runs inside the Vinted tab
   popupPanel/  settingsPage/   UI
-tests/                 npm test — 43 tests, nothing to install
+tests/                 npm test — 53 tests, nothing to install
 
 sixgenbot/             the SERVER (Python, Docker)
   VERSION_v_0.2.0      its own version marker

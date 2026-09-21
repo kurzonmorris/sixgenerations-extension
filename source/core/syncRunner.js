@@ -11,8 +11,33 @@ import { VintedAdapter } from '../connectors/vintedWardrobeConnector.js';
 import { ShopifyAdapter } from '../connectors/shopifyStoreConnector.js';
 import { buildPlan, summarise, ACTION } from './parityEngine.js';
 import { logger } from './activityLog.js';
-import { getSettings, setLastRun, setSnapshot, upsertLink } from './settingsStore.js';
+import { getSettings, saveSettings, setLastRun, setSnapshot, upsertLink } from './settingsStore.js';
+import { checkAccount, mayProceed, noAccount, rememberFrom } from './knownAccounts.js';
 import { keyFor } from './garmentItem.js';
+
+/**
+ * Stops the run if the account answering is not the one recorded.
+ *
+ * Ids, never names. The shop is being renamed within the year and a Vinted
+ * username can change any day, so a rename is allowed and recorded; a different
+ * id is not, and the run ends before a single write.
+ */
+async function confirmOrStop(platform, found) {
+  const settings = await getSettings();
+  const known = settings.known?.[platform] ?? noAccount();
+  const result = checkAccount(known, found);
+
+  if (!mayProceed(result)) {
+    logger.error(`${platform}: ${result.message}`);
+    throw new Error(result.message);
+  }
+  if (result.state === 'first' || result.state === 'renamed') {
+    await saveSettings({ known: { [platform]: rememberFrom(known, result) } });
+    logger.info(`${platform}: ${result.message}`);
+  }
+  return result;
+}
+
 
 export class SyncRun {
   constructor({ onProgress } = {}) {
@@ -43,12 +68,22 @@ export class SyncRun {
 
     logger.info(`Run started (${dryRun ? 'dry run — nothing will be written' : 'LIVE — changes will be written'})`);
 
+    // Before anything is read, and long before anything is written: is this the
+    // shop and the Vinted account this copy is tied to? A run that writes to
+    // the wrong store is the one mistake there is no undoing.
+    this.#progress('confirm');
+    const shopWho = await shopify.testConnection();
+    await confirmOrStop('shopify', { id: shopWho.shopId, name: shopWho.shop });
+    const vintedWho = await vinted.testConnection();
+    await confirmOrStop('vinted', { id: vintedWho.userId, name: vintedWho.username });
+    this.#check();
+
     this.#progress('fetch:shopify');
     const shopifyItems = await shopify.fetchItems();
     this.#check();
 
     this.#progress('fetch:vinted');
-    const vintedItems = await vinted.fetchItems();
+    const vintedItems = await vinted.fetchItems({ knownUserId: vintedWho.userId });
     this.#check();
 
     this.#progress('diff');

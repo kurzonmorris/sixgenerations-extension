@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-09-21 (2) | **Is it the right shop?** (§3B.21) — the first connection records the permanent id, every later one compares it, and a run stops before its first write if they differ. **Ids, never names**: the shop is being renamed within the year. The Shopify shop id and the Vinted user id were read from the live account and written into `PROJECT_INFO §1.0`. 53 extension tests |
 | 2026-09-21 | **Reading Vinted into the database** (§3B.20) — the extension hands its wardrobe read to the server, which says what it would change and changes nothing until told. A read never writes over a correction. Three bugs found by simulating a read against the real catalogue, one of which would have **duplicated 324 items**. Only 12% of listings match on the code alone. 276 tests, 43 extension tests |
 | 2026-09-20 (6) | **Ready to list** (§3B.19) — the step nothing helped with: one garment, every answer the Vinted form asks for, the photographs as a numbered zip, and a button that records it is up. Also a measurement that killed a feature: the 424 items with "no size" are books and toys, not garments. And a correction — **Tab picks out a one-line box, never a tall one**. 241 tests |
 | 2026-09-20 (5) | **Photographs while editing, and the old value beside every box** (§3B.18). Also §7.10f: **every edit box had been empty**, because `item.values` in Jinja is the dict's own method — saving an untouched item would have wiped it. Found in a real browser. Tab already picks out the text, checked in Chromium. 218 tests |
@@ -584,6 +585,54 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.21 Is it the right shop? — ids, never names
+
+Asked on 2026-09-21: *"How are you connecting to my personal shop and not
+someone else's? … we are going to be changing the shop's name."*
+
+### What was actually protecting it
+
+**Shopify: the access token, and only the token.** A token is issued by one
+store and cannot read another, so nobody else's shop was ever reachable. But
+nothing *checked* that the store answering was the store meant — paste a second
+store's token in and everything carries on quietly against the wrong shop. The
+connection query asked for `shop { name myshopifyDomain }` and compared neither.
+
+**Vinted: a username typed into settings**, compared case-insensitively — and
+only if one had been typed. A username can be changed any day.
+
+### What is recorded now
+
+`source/core/knownAccounts.js`. The first connection records the permanent id;
+every connection after it compares. Verified on the live store (`PROJECT_INFO
+§1.0`):
+
+| | Recorded | Shown, never compared |
+|---|---|---|
+| Shopify | `gid://shopify/Shop/94814568835` | `Six Generations`, `www.sixgenerations.co.uk` |
+| Vinted | the numeric user id | the login name |
+
+Four outcomes: **first** (remembered), **same**, **renamed** (allowed, and said
+out loud, and the new name is kept so it is not reported twice), **different**
+(the run stops).
+
+### It stops before it writes, not after
+
+`syncRunner.run()` confirms **both** platforms before the first fetch — long
+before the first write. A run against the wrong store is the one mistake there
+is no undoing, so the check is the first thing that happens, not a report at the
+end. A refused connection also leaves the recorded account untouched: a wrong
+shop can never overwrite the right one. Two tests hold that.
+
+### Why a rename is allowed and a different id is not
+
+The shop is being renamed within the year. If the name were the key, that day
+would break everything; if the name were merely ignored, a rename would be
+invisible. So a rename is allowed, recorded, and reported once.
+
+`MSG.FORGET_ACCOUNT` unties a platform deliberately, from the settings page —
+for the day a shop really is replaced.
 
 ## 3B.20 Reading the Vinted wardrobe into the database
 

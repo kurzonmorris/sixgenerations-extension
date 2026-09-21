@@ -327,7 +327,20 @@ does it put more items up in a day.
 | A-205 | ✅ | **A code two garments share is never guessed** — the page offers both and you pick | `plan.ambiguous` |
 | A-206 | ✅ | **Link a listing to a garment by hand, once** — after that the Vinted id settles it | `POST /vinted/link` |
 | A-207 | ✅ | **A saved read can be uploaded** instead of sent | `POST /vinted/upload` |
-| A-208 | ✅ | 276 pytest tests, 43 extension tests | `sixgenbot/tests/`, `tests/` |
+| A-208 | ✅ | (test counts now in A-216) | `sixgenbot/tests/`, `tests/` |
+
+## A.6n the extension — confirming it is the right shop *(2026-09-21)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-209 | ✅ | **The first connection records the account**; every later one is compared | `source/core/knownAccounts.js` |
+| A-210 | ✅ | **The Shopify shop id decides**, never the name or the address | `shop { id }` |
+| A-211 | ✅ | **The Vinted user id decides**, never the username | `vintedPageReader.scrapeWardrobe()` |
+| A-212 | ✅ | **A rename is allowed, recorded and said once** — the shop is being renamed | `checkAccount()` |
+| A-213 | ✅ | **A different account stops the run before its first write** | `syncRunner.confirmOrStop()` |
+| A-214 | ✅ | **A refused connection cannot overwrite the recorded account** | `rememberFrom()` |
+| A-215 | ✅ | **The settings page says what this copy is tied to**, and since when | `showKnown()` |
+| A-216 | ✅ | 276 pytest tests, 53 extension tests | `sixgenbot/tests/`, `tests/` |
 
 ## A.7 Running it (the extension)
 

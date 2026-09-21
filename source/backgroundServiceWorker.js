@@ -11,6 +11,7 @@ import { logger, getLogs, clearLogs } from './core/activityLog.js';
 import { SyncRun } from './core/syncRunner.js';
 import { VintedAdapter } from './connectors/vintedWardrobeConnector.js';
 import { askPermission, sendWardrobe, tidyUrl } from './core/sixgenbotSender.js';
+import { checkAccount, mayProceed, noAccount, rememberFrom } from './core/knownAccounts.js';
 import { ShopifyAdapter } from './connectors/shopifyStoreConnector.js';
 
 const ALARM_NAME = 'scheduled-sync';
@@ -50,6 +51,29 @@ async function rescheduleAlarm(settings) {
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === ALARM_NAME) startSync({ source: 'schedule' });
 });
+
+/**
+ * Confirms a platform is the one this copy is tied to, and records it the first
+ * time. Throws before anything is read or written if it is a different account.
+ *
+ * Ids, never names: the shop is being renamed within the year and a Vinted
+ * username can change any day, so a name is shown and never compared.
+ */
+async function confirmAccount(platform, found) {
+  const settings = await getSettings();
+  const known = settings.known?.[platform] ?? noAccount();
+  const result = checkAccount(known, found);
+
+  if (!mayProceed(result)) {
+    await logger.error(`${platform}: ${result.message}`);
+    throw new Error(result.message);
+  }
+  if (result.state === 'first' || result.state === 'renamed') {
+    await saveSettings({ known: { [platform]: rememberFrom(known, result) } });
+    await logger.info(`${platform}: ${result.message}`);
+  }
+  return result;
+}
 
 async function startSync({ source = 'manual', dryRunOverride } = {}) {
   if (current.running) return { ok: false, error: 'A sync is already running.' };
@@ -100,12 +124,14 @@ const handlers = {
     if (!settings.shopify.locationId && result.suggestedLocationId) {
       await saveSettings({ shopify: { locationId: result.suggestedLocationId } });
     }
+    await confirmAccount('shopify', { id: result.shopId, name: result.shop });
     await logger.info(`Shopify connected: ${result.shop} (${result.currency})`, result.locations);
     return { ok: true, result };
   },
 
   async [MSG.TEST_VINTED]() {
     const result = await new VintedAdapter(await getSettings()).testConnection();
+    await confirmAccount('vinted', { id: result.userId, name: result.username });
     await logger.info(`Vinted connected as ${result.username || result.userId}`, { via: result.via });
     return { ok: true, result };
   },
@@ -126,13 +152,24 @@ const handlers = {
       throw new Error(`Permission to reach ${url} was not given.`);
     }
 
-    const items = await new VintedAdapter(settings).fetchItems();
+    const adapter = new VintedAdapter(settings);
+    const who = await adapter.testConnection();
+    await confirmAccount('vinted', { id: who.userId, name: who.username });
+
+    const items = await adapter.fetchItems({ knownUserId: who.userId });
     const answer = await sendWardrobe(url, items);
     await logger.info(
       `Sent ${items.length} Vinted listings to ${url} — ${answer.wouldDo ?? 'stored'}`,
       { stored: answer.stored },
     );
     return { ok: true, sent: items.length, answer };
+  },
+
+  /** Deliberate, and only from the settings page: tie this copy to nothing. */
+  async [MSG.FORGET_ACCOUNT]({ platform }) {
+    await saveSettings({ known: { [platform]: noAccount() } });
+    await logger.warn(`${platform}: forgotten. The next connection will be recorded as the one.`);
+    return { ok: true };
   },
 
   async [MSG.GET_LOGS]() {

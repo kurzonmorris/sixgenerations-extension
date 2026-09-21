@@ -70,7 +70,7 @@ export class ShopifyAdapter {
   async testConnection() {
     const data = await this.graphql(`
       query {
-        shop { name myshopifyDomain currencyCode }
+        shop { id name myshopifyDomain currencyCode }
         locations(first: 5) { nodes { id name isActive } }
       }
     `);
@@ -78,6 +78,9 @@ export class ShopifyAdapter {
     const location = data.locations.nodes.find((l) => l.isActive) ?? data.locations.nodes[0] ?? null;
     return {
       ok: true,
+      // The id never changes. The name does — the shop is being renamed within
+      // the year — so nothing is ever decided on the name.
+      shopId: data.shop.id,
       shop: data.shop.name,
       domain: data.shop.myshopifyDomain,
       currency: this.currency,
