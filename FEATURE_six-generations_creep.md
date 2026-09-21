@@ -307,7 +307,27 @@ does it put more items up in a day.
 | A-190 | ✅ | **The waiting list needs photographs**, and says how many are still missing them | `routes.waiting()` |
 | A-191 | ✅ | **The Vinted address can be pasted in**, and is kept | `listing.url` |
 | A-192 | ✅ | **Boxes you copy out of, not into** — readonly, dashed | `sheet.html` |
-| A-193 | ✅ | 241 pytest tests | `sixgenbot/tests/` |
+| A-193 | ✅ | (test count now in A-208) | `sixgenbot/tests/` |
+
+## A.6m sixgenbot — reading Vinted into the database *(2026-09-21)*
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-194 | ✅ | **The extension sends its wardrobe read to the server** | `source/core/sixgenbotSender.js` |
+| A-195 | ✅ | **Permission for the server is asked at send time**, not at install | `optional_host_permissions` |
+| A-196 | ✅ | **A read changes nothing by arriving** — it is stored, and a plan is worked out | `routes.receive()` |
+| A-197 | ✅ | **A read never writes over a field you already have** | `vintedRead.applyRead()` |
+| A-198 | ✅ | **Differences are listed, not applied** | `plan.differences` |
+| A-199 | ✅ | **Blanks are filled in**, because nothing is lost | `plan.filledIn` |
+| A-200 | ✅ | **The listing address, price and state are written** — Vinted's to state | `_writeListing()` |
+| A-201 | ✅ | **A sale on Vinted is carried across** | `plan.soldOnVinted` |
+| A-202 | ✅ | **A listing that has gone is marked ended, never deleted** | `plan.goneFromVinted` |
+| A-203 | ✅ | **Matched by the Vinted id first, then the code. Never the title** | `_findItem()` |
+| A-204 | ✅ | **A suffixed item matches its plain code** — without this, 324 would have been duplicated | `itemsWithCode()` |
+| A-205 | ✅ | **A code two garments share is never guessed** — the page offers both and you pick | `plan.ambiguous` |
+| A-206 | ✅ | **Link a listing to a garment by hand, once** — after that the Vinted id settles it | `POST /vinted/link` |
+| A-207 | ✅ | **A saved read can be uploaded** instead of sent | `POST /vinted/upload` |
+| A-208 | ✅ | 276 pytest tests, 43 extension tests | `sixgenbot/tests/`, `tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -433,7 +453,7 @@ Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
 | S-07 | 📋 | Scheduler for polling, chasing and backups |
 | S-08 | 📋 | Nightly backup of database and images |
 | S-09 | 📋 | Web interface, following `INTERFACE_PRINCIPLES.md` |
-| S-10 | 📋 | One button: **read my Vinted wardrobe** |
+| S-10 | ✅ | One button: **read my Vinted wardrobe**, and send it to the server. Built 2026-09-21, see A.6m |
 
 ## D.2 Vinted
 

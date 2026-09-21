@@ -139,6 +139,18 @@ document.addEventListener('click', async (event) => {
     case 'cancel':
       return send(MSG.CANCEL_SYNC);
 
+    case 'send-vinted': {
+      const button = event.target;
+      button.disabled = true;
+      $('#status').textContent = 'Reading the wardrobe…';
+      const response = await send(MSG.SEND_TO_SIXGENBOT);
+      button.disabled = false;
+      $('#status').textContent = response?.ok
+        ? `Sent ${response.sent} listings. ${response.answer?.wouldDo ?? ''} Open the Vinted page on the server to apply it.`
+        : response?.error ?? 'That did not send.';
+      return;
+    }
+
     case 'clear-logs':
       await send(MSG.CLEAR_LOGS);
       $('#log').innerHTML = '';

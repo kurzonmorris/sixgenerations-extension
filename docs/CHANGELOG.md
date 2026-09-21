@@ -7,6 +7,75 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-09-21 · reading Vinted into the database
+
+276 sixgenbot tests, 43 extension tests.
+
+**You were right to do this before writing.** The database is only worth
+something if it knows what is really on Vinted.
+
+### How it works
+
+1. Open the extension. Put your server address in **Settings** — for example
+   `http://tower:8770`. Leave it empty and nothing is ever sent anywhere.
+2. Press **Read my Vinted wardrobe and send it**.
+3. Open **Vinted** in the left menu on the server.
+4. Press **See what it would do**.
+5. Read it. Then press **Do it**, or do not.
+
+**Nothing changes when a read arrives.** It is only stored. You decide.
+
+### The rule that protects your work
+
+**A read never writes over something you have already corrected.**
+
+Your catalogue came down because Vinted showed sizes wrongly. Those sizes are
+still wrong on Vinted. So:
+
+- Facts about the listing — its address, its price, whether it sold — are always
+  written. Those are Vinted's to say.
+- A field that is **empty** here is filled in. Nothing is lost.
+- A field that **differs** is listed on screen and **left alone**. Yours is kept.
+
+### What your real catalogue says
+
+I ran a full read of all 1,137 listed items:
+
+| | |
+|---|---|
+| Matched on the code alone | **139** |
+| Share a code with another garment | **621** |
+| No code at the end of the description | **377** |
+
+**Only 12 in every 100 match on their own.** The first read is mostly a linking
+job.
+
+**Each link is done once.** After you link a listing to a garment, Vinted's own
+listing number settles it for good. No later read will ask again.
+
+Where two garments share a code, the page shows you both and you press the right
+one. It will not guess. A wrong match is worse than no match.
+
+The 377 with no code are the items not in the traditional box. Some descriptions
+end with `W630g` then a bare `B` — the B was typed and the code never was.
+
+### Three faults the real data found
+
+1. **Every listing looked different.** Your description here has no SKU on the
+   end; the one on Vinted does. So all 1,137 were reported as differences and
+   the real ones were buried.
+2. **Padded codes were being renumbered.** Your descriptions write `B5-5 004`.
+   The system was rewriting that to `5-5 4`. That would have been a pointless
+   change to every listing you own — and **Ready to list was showing you the
+   renumbered version to copy**.
+3. **324 items would have been duplicated.** 639 items share a code, and the
+   later one is marked `11-1-26 #f26f36`. Vinted only carries the plain code, so
+   they matched nothing and would have been created all over again.
+
+All three are fixed, with tests.
+
+---
+
 ## Unreleased — 2026-09-20 (6) · Ready to list
 
 241 sixgenbot tests, 37 extension tests.

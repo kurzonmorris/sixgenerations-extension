@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block heading %}Vinted{% endblock %}
+
+{% block content %}
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+  <p>
+    The database believes {{ '{:,}'.format(onVinted) }} items are on Vinted now.
+  </p>
+
+  <p class="quiet">
+    Vinted has no way in for a private account, so the reading is done by the
+    extension, in your own signed-in browser. It sends what it finds here.
+    <strong>Nothing changes when a read arrives.</strong> You see what it would
+    do first, then press the button.
+  </p>
+
+  <h2>Send a read from the extension</h2>
+  <p class="quiet">
+    Open the extension and press <strong>Read my Vinted wardrobe</strong>. It
+    appears below when it arrives. Press Check again after a minute.
+  </p>
+  <p><a href="/vinted">Check again</a></p>
+
+  <h2>Or send a saved file</h2>
+  <p class="quiet">A JSON file from the extension, if you saved one by hand.</p>
+  <form method="post" action="/vinted/upload" enctype="multipart/form-data">
+    <p><input type="file" name="wardrobe" accept=".json,application/json" required></p>
+    <p><button type="submit">Upload it</button></p>
+  </form>
+
+  <h2>Reads that have arrived</h2>
+  <table>
+    <thead><tr><th>Read</th><th>When</th><th>Size</th><th></th></tr></thead>
+    <tbody>
+      {% for read in reads %}
+        <tr>
+          <td class="message">{{ read.name }}</td>
+          <td class="at">{{ read.when.strftime('%d %b %Y %H:%M') }}</td>
+          <td class="at">{{ '{:,}'.format(read.bytes) }} bytes</td>
+          <td><a href="/vinted/plan/{{ read.name }}">See what it would do</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="quiet">None yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -95,3 +95,28 @@ def test_the_pattern_matches_the_extensions_copy():
         "the Python and JavaScript SKU patterns have drifted apart — "
         "change one, change the other"
     )
+
+
+def test_a_padded_code_is_left_exactly_as_it_is():
+    """Real descriptions write "B5-5 004". It means 5-5-4, so nothing is changed.
+
+    Rewriting it would be a cosmetic change to every listing in the wardrobe,
+    and a false difference on every Vinted read. Found 2026-09-21 by comparing
+    a simulated read against the real catalogue.
+    """
+    from sixgenbot.core.sku import withSku
+
+    body = "A jumper.\n\nW155g\nB5-5 004"
+    assert withSku(body, "5-5-4") == body
+
+
+def test_a_code_for_a_different_garment_is_corrected():
+    from sixgenbot.core.sku import withSku
+
+    assert withSku("A jumper.\n\n5-5 4", "13-8-24").endswith("13-8 24")
+
+
+def test_a_description_with_no_code_still_gets_one():
+    from sixgenbot.core.sku import withSku
+
+    assert withSku("A jumper.", "13-8-24").endswith("13-8 24")

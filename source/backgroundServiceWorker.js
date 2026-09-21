@@ -10,6 +10,7 @@ import { getSettings, saveSettings, getLastRun, getLinks, getSnapshot } from './
 import { logger, getLogs, clearLogs } from './core/activityLog.js';
 import { SyncRun } from './core/syncRunner.js';
 import { VintedAdapter } from './connectors/vintedWardrobeConnector.js';
+import { askPermission, sendWardrobe, tidyUrl } from './core/sixgenbotSender.js';
 import { ShopifyAdapter } from './connectors/shopifyStoreConnector.js';
 
 const ALARM_NAME = 'scheduled-sync';
@@ -107,6 +108,31 @@ const handlers = {
     const result = await new VintedAdapter(await getSettings()).testConnection();
     await logger.info(`Vinted connected as ${result.username || result.userId}`, { via: result.via });
     return { ok: true, result };
+  },
+
+  /**
+   * Reads the wardrobe and hands it to the server that owns the database.
+   *
+   * Nothing is written by sending: the server stores the read and answers with
+   * what it *would* do. Applying it is a button on the server's own page.
+   */
+  async [MSG.SEND_TO_SIXGENBOT]() {
+    const settings = await getSettings();
+    const url = tidyUrl(settings.sixgenbot?.url);
+    if (!url) {
+      throw new Error('Set the sixgenbot address in Settings first.');
+    }
+    if (!(await askPermission(url))) {
+      throw new Error(`Permission to reach ${url} was not given.`);
+    }
+
+    const items = await new VintedAdapter(settings).fetchItems();
+    const answer = await sendWardrobe(url, items);
+    await logger.info(
+      `Sent ${items.length} Vinted listings to ${url} — ${answer.wouldDo ?? 'stored'}`,
+      { stored: answer.stored },
+    );
+    return { ok: true, sent: items.length, answer };
   },
 
   async [MSG.GET_LOGS]() {

@@ -30,8 +30,11 @@ which fields show, correct them, save the lot — and **the Photos page**, which
 takes the photo fetch off the command line, and **the Table (U-13)** — every
 item, one search box, filters, thumbnails — and **Ready to list**, which lays one
 garment out with every answer the Vinted form asks for and the photographs as a
-numbered zip. Next: the Vinted write path, item history (U-18), and in-place
-editing on the Table (Q51). eBay and Shopify wait until Vinted works end to end.
+numbered zip — and **reading Vinted back in**: the extension sends its wardrobe
+read, the server says what it would change, and nothing changes until told.
+**A read never writes over a correction.** Next: the Vinted write path, item
+history (U-18), and in-place editing on the Table (Q51). eBay and Shopify wait
+until Vinted works end to end.
 
 **The photographs are on a clock:** all 9,098 are hosted on
 `media-na.crosslist.com` and will very likely die with the subscription — for 988
@@ -159,14 +162,14 @@ source/                the extension
   connectors/                  one file per platform
   contentScripts/              runs inside the Vinted tab
   popupPanel/  settingsPage/   UI
-tests/                 npm test — 37 tests, nothing to install
+tests/                 npm test — 43 tests, nothing to install
 
 sixgenbot/             the SERVER (Python, Docker)
   VERSION_v_0.2.0      its own version marker
   core/                config, logging, events, database, backup, scheduler, web app
   migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 241 tests
+  tests/               python -m pytest sixgenbot/tests -q — 276 tests
 
 docs/                  everything else
 ```

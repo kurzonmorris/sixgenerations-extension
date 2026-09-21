@@ -64,7 +64,16 @@ def withSku(description: str | None, sku: str) -> str:
         return description or ""
 
     body = str(description or "").rstrip()
-    if parseSku(body):
+    already = parseSku(body)
+
+    # A code that already means this garment is left exactly as it is, however
+    # it is written. Real descriptions pad the item number — "B5-5 004" — and
+    # rewriting that to "5-5 4" would be a cosmetic change to every listing in
+    # the wardrobe, and a false difference on every Vinted read. Found 2026-09-21.
+    if already == str(sku or ""):
+        return body
+
+    if already:
         return TRAILING_SKU.sub(written, body)
     return f"{body}\n\n{written}" if body else written
 
