@@ -99,6 +99,16 @@ sixgenerations-extension/
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
 │   └── tests/                        python -m pytest sixgenbot/tests -q — 276 tests
 │
+│
+├── docs/design/                  the four design documents — START HERE when lost
+│   ├── 01_pages.html             every page drawn: boxes, arrows, notes
+│   ├── 02_pagesInDetail.html     every built feature allocated to a screen
+│   ├── 03_featureStatus.html     all 312 features, colour-coded. GENERATED
+│   ├── 04_buildSchedule.html     stages A to K, each one mergeable on its own
+│   ├── buildDesignDocs.py        rebuilds all four from the feature file
+│   ├── designDocPages.py         the pages, their regions and the open questions
+│   └── designDocShared.py        the look, and the diagram drawer
+│
 ├── tests/                            Run with `npm test` — 53 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
 │   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
