@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 2 — what happens on each page</title><style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: #f4f2ee; color: #2a2825;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55; font-size: 16px;
+}
+.sheet { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+h1 { font-size: 1.9rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.3rem; margin: 2.6rem 0 .6rem; padding-top: .8rem;
+      border-top: 2px solid #ddd8d0; }
+h3 { font-size: 1.05rem; margin: 1.6rem 0 .4rem; }
+p { max-width: 46rem; margin: 0 0 .8rem; }
+.lead { color: #6a655e; max-width: 46rem; }
+a { color: #35506b; }
+code { background: #fbfaf7; border: 1px solid #ddd8d0; border-radius: 3px;
+        padding: .05rem .3rem; font-size: .9em; }
+table { border-collapse: collapse; width: 100%; margin: .6rem 0 1.4rem;
+         font-size: .92rem; background: #fbfaf7; }
+th, td { text-align: left; padding: .45rem .7rem; border: 1px solid #ddd8d0;
+          vertical-align: top; }
+th { background: #efece6; font-size: .8rem; letter-spacing: .04em;
+      text-transform: uppercase; color: #6a655e; }
+.tag { display: inline-block; padding: .08rem .5rem; border-radius: 10px;
+        font-size: .78rem; font-weight: 600; white-space: nowrap;
+        border: 1px solid rgba(0,0,0,.12); }
+.ask { background: #f6ead8; border: 2px solid #b08642; border-radius: 6px;
+        padding: .9rem 1.1rem; margin: 1rem 0; max-width: 46rem; }
+.ask b { display: block; margin-bottom: .3rem; }
+.ask ul { margin: .4rem 0 0 1.1rem; padding: 0; }
+.note { background: #fbfaf7; border-left: 4px solid #ddd8d0;
+         padding: .7rem 1rem; margin: 1rem 0; max-width: 46rem; }
+.key { display: flex; flex-wrap: wrap; gap: .5rem 1.1rem; margin: .8rem 0 1.6rem;
+        font-size: .85rem; }
+.key span { display: flex; align-items: center; gap: .4rem; }
+.swatch { width: 1rem; height: 1rem; border: 1px solid rgba(0,0,0,.2);
+           border-radius: 2px; display: inline-block; }
+figure { margin: 1rem 0 2rem; }
+figcaption { color: #6a655e; font-size: .88rem; margin-top: .3rem; }
+svg { max-width: 100%; height: auto; background: #fbfaf7;
+       border: 1px solid #ddd8d0; border-radius: 4px; }
+.docnav { background: #fbfaf7; border: 1px solid #ddd8d0; border-radius: 4px;
+           padding: .7rem 1rem; margin: 0 0 2rem; font-size: .92rem; }
+.docnav a { margin-right: 1rem; }
+.stamp { color: #6a655e; font-size: .85rem; margin-bottom: 1.6rem; }
+@media print { body { background: #fff; } h2 { page-break-after: avoid; }
+                figure { page-break-inside: avoid; } }
+</style></head>
+<body><div class="sheet">
+<h1>Part 2 — what happens on each page</h1>
+<p class="stamp">Generated from the repository at 39029e7 2026-09-21. Regenerate with python docs/design/buildDesignDocs.py</p>
+
+<nav class="docnav">
+  <b>The four parts:</b>
+  <a href="01_pages.html">1. Every page, drawn</a>
+  <a href="02_pagesInDetail.html">2. What happens on each page</a>
+  <a href="03_featureStatus.html">3. Every feature and its status</a>
+  <a href="04_buildSchedule.html">4. The build schedule</a>
+</nav>
+
+<p class="lead"></p>
+<p class="lead">What happens on each screen, with every feature from the feature file allocated to one. Nothing is left floating.</p>
+<h2>The extension (Vinted and Shopify)</h2>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-01</td><td><b>Read the entire Vinted wardrobe</b> — title, description, price, brand, size, colour, condition, category, material, photo URLs, sold/hidden state</td><td><code>contentScripts/vintedPageReader.js:124</code></td></tr>
+<tr><td>A-02</td><td>Reads through the user's own signed-in tab; no credentials handled</td><td><code>connectors/vintedWardrobeConnector.js:31</code></td></tr>
+<tr><td>A-03</td><td>Paced at 900 ms per page so bot protection is not triggered</td><td><code>vintedPageReader.js:24</code></td></tr>
+<tr><td>A-04</td><td>Three ways to identify the signed-in user, whichever works reported in the log</td><td><code>vintedPageReader.js:74</code></td></tr>
+<tr><td>A-05</td><td>Falls back to reading the on-screen grid if the JSON endpoint moves</td><td><code>vintedPageReader.js:196</code></td></tr>
+<tr><td>A-06</td><td>Refuses to return a half-read wardrobe — throws instead</td><td><code>vintedPageReader.js:135</code></td></tr>
+<tr><td>A-07</td><td><b>Read the whole Shopify catalogue</b>, one row per variant</td><td><code>connectors/shopifyStoreConnector.js:114</code></td></tr>
+<tr><td>A-08</td><td>Respects Shopify's cost budget; waits the exact time the bucket needs</td><td><code>shopifyStoreConnector.js:95</code></td></tr>
+<tr><td>A-09</td><td>Retries once after a throttle</td><td><code>shopifyStoreConnector.js:193</code></td></tr>
+<tr><td>A-10</td><td><b>Pair items on the storage code</b> <code>13-8 24</code> at the end of the description</td><td><code>core/storageCode.js:24</code></td></tr>
+<tr><td>A-11</td><td>Tolerates spellings: <code>13-8-24</code>, <code>13 - 8 24</code>, en-dashes, trailing full stop</td><td><code>core/storageCode.js:27</code></td></tr>
+<tr><td>A-12</td><td>Anchored to the end, so <code>fits 10-12</code> is never mistaken for a location</td><td><code>core/storageCode.js:24</code></td></tr>
+<tr><td>A-13</td><td>Falls back to SKU, then title+size</td><td><code>core/garmentItem.js:102</code></td></tr>
+<tr><td>A-14</td><td><b>Never writes from a title guess</b> — reports it for review instead</td><td><code>core/parityEngine.js:104</code></td></tr>
+<tr><td>A-15</td><td>Shows how confident each pairing is</td><td><code>core/garmentItem.js:111</code></td></tr>
+<tr><td>A-16</td><td><b>Size normalisation</b> — <code>UK 10</code>, <code>Size 10</code> and <code>10</code> compare equal</td><td><code>core/garmentItem.js:62</code></td></tr>
+<tr><td>A-17</td><td>Prices compared in pence, never as floats</td><td><code>core/garmentItem.js:48</code></td></tr>
+<tr><td>A-18</td><td>Remembers pairings between runs in a link table</td><td><code>core/settingsStore.js:164</code></td></tr>
+<tr><td>A-19</td><td><b>Full difference report</b> across price, stock, title, description, brand, size, colour, condition</td><td><code>core/parityEngine.js:67</code></td></tr>
+<tr><td>A-20</td><td>Direction set per field group — stock one way, price and content the other</td><td><code>core/messageTypes.js:53</code></td></tr>
+<tr><td>A-21</td><td>Detects sold-on-one-side and proposes archiving the other</td><td><code>core/parityEngine.js:122</code></td></tr>
+<tr><td>A-22</td><td>Flags items present on only one platform</td><td><code>core/parityEngine.js:88</code></td></tr>
+<tr><td>A-23</td><td>Counts matched / one-sided / guessed</td><td><code>core/parityEngine.js:183</code></td></tr>
+<tr><td>A-37</td><td>Run by hand from the popup</td><td><code>popupPanel/</code></td></tr>
+<tr><td>A-38</td><td>Optional schedule, minimum 15 minutes, <b>off by default</b></td><td><code>backgroundServiceWorker.js:41</code></td></tr>
+<tr><td>A-39</td><td>Test-connection buttons for both platforms</td><td><code>backgroundServiceWorker.js:95</code></td></tr>
+<tr><td>A-40</td><td>Shopify location picked automatically on first connect</td><td><code>backgroundServiceWorker.js:99</code></td></tr>
+<tr><td>A-41</td><td>Settings page for domains, token, directions, interval, logging</td><td><code>settingsPage/</code></td></tr>
+<tr><td>A-42</td><td>Version shown in the UI, read from the manifest, enforced by a test</td><td><code>core/extensionVersion.js</code></td></tr>
+<tr><td>A-43</td><td>36 tests, no dependencies to install</td><td><code>tests/</code></td></tr>
+</table>
+<h2>sixgenerations.co.uk — the shop</h2>
+<p class="lead"><code>/shop</code> — The extension already reads and writes Shopify. The server has no page for it.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-24</td><td>Write a price to Shopify</td><td><code>shopifyStoreConnector.js:206</code></td></tr>
+<tr><td>A-25</td><td>Write stock to Shopify</td><td><code>shopifyStoreConnector.js:222</code></td></tr>
+<tr><td>A-26</td><td>Write title / description / brand to Shopify</td><td><code>shopifyStoreConnector.js:244</code></td></tr>
+<tr><td>A-27</td><td>Archive a sold Shopify product</td><td><code>shopifyStoreConnector.js:267</code></td></tr>
+<tr><td>A-28</td><td>Turns Shopify's own error messages into readable ones</td><td><code>shopifyStoreConnector.js:283</code></td></tr>
+</table>
+<h2>Rules that hold everywhere</h2>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-29</td><td><b>Dry run on by default</b> — see the whole plan, write nothing</td><td><code>core/messageTypes.js:54</code></td></tr>
+<tr><td>A-30</td><td>Cancel mid-run, between actions</td><td><code>core/syncRunner.js:23</code></td></tr>
+<tr><td>A-31</td><td>Every action logged with before/after values</td><td><code>core/syncRunner.js:65</code></td></tr>
+<tr><td>A-32</td><td>Ring-buffer activity log, size configurable</td><td><code>core/activityLog.js</code></td></tr>
+<tr><td>A-33</td><td><b>Shopify token redacted from every export</b></td><td><code>backgroundServiceWorker.js:151</code></td></tr>
+<tr><td>A-34</td><td>Token stored only in <code>chrome.storage.local</code>, never synced</td><td><code>core/settingsStore.js</code></td></tr>
+<tr><td>A-35</td><td>Export the whole run as JSON</td><td><code>backgroundServiceWorker.js:122</code></td></tr>
+<tr><td>A-36</td><td>Snapshot of both catalogues stored after each run</td><td><code>core/syncRunner.js:108</code></td></tr>
+<tr><td>A-209</td><td><b>The first connection records the account</b>; every later one is compared</td><td><code>source/core/knownAccounts.js</code></td></tr>
+<tr><td>A-210</td><td><b>The Shopify shop id decides</b>, never the name or the address</td><td><code>shop { id }</code></td></tr>
+<tr><td>A-211</td><td><b>The Vinted user id decides</b>, never the username</td><td><code>vintedPageReader.scrapeWardrobe()</code></td></tr>
+<tr><td>A-212</td><td><b>A rename is allowed, recorded and said once</b> — the shop is being renamed</td><td><code>checkAccount()</code></td></tr>
+<tr><td>A-213</td><td><b>A different account stops the run before its first write</b></td><td><code>syncRunner.confirmOrStop()</code></td></tr>
+<tr><td>A-214</td><td><b>A refused connection cannot overwrite the recorded account</b></td><td><code>rememberFrom()</code></td></tr>
+<tr><td>A-215</td><td><b>The settings page says what this copy is tied to</b>, and since when</td><td><code>showKnown()</code></td></tr>
+<tr><td>A-216</td><td>276 pytest tests, 53 extension tests</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td></tr>
+</table>
+<h2>The server itself</h2>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-44</td><td><b>It runs</b> — as a container, or <code>python -m sixgenbot serve</code></td><td><code>sixgenbot/__main__.py</code></td></tr>
+<tr><td>A-45</td><td><b><code>check</code> command</b> — loads everything, reports, exits non-zero if broken, no port opened</td><td><code>__main__.py:52</code></td></tr>
+<tr><td>A-46</td><td><b>Module loader</b> — a feature is a folder; core never names one</td><td><code>core/moduleLoader.py</code></td></tr>
+<tr><td>A-47</td><td><b>A broken module cannot stop the others</b> — proved against three broken fixtures</td><td><code>tests/test_moduleLoader.py</code></td></tr>
+<tr><td>A-48</td><td><b>Modules switched off from settings</b>, no code change</td><td><code>core/appConfig.py</code></td></tr>
+<tr><td>A-49</td><td><b>Event bus</b> — publishers never learn who listened; a bad listener cannot stop the rest</td><td><code>core/eventBus.py</code></td></tr>
+<tr><td>A-50</td><td><b>Settings in one readable file</b>, secrets in a separate one, environment wins</td><td><code>core/appConfig.py</code></td></tr>
+<tr><td>A-51</td><td><b>Logging</b> to console, rotating file, and a ring buffer the UI reads</td><td><code>core/appLogging.py</code></td></tr>
+<tr><td>A-52</td><td><b>Console page</b> — frozen by design, filter to problems only</td><td><code>modules/activityLog/</code></td></tr>
+<tr><td>A-53</td><td><b>Status page</b> — what loaded, what broke, where things are</td><td><code>modules/systemStatus/</code></td></tr>
+<tr><td>A-54</td><td><b>Left menu</b>, fixed group order, current page marked by weight and border not colour</td><td><code>core/webApp.py:33</code></td></tr>
+<tr><td>A-55</td><td><b>Calm stylesheet enforced by test</b> — no animation, no <code>:hover</code>, no pure white or black</td><td><code>static/sixgenbot.css</code></td></tr>
+<tr><td>A-56</td><td><b>Health check</b> for Docker; 503 when a module failed</td><td><code>core/webApp.py</code></td></tr>
+<tr><td>A-57</td><td><b>Modules never import each other</b>, enforced by an <code>ast</code> test</td><td><code>tests/test_moduleIsolation.py</code></td></tr>
+<tr><td>A-58</td><td>23 pytest tests</td><td><code>sixgenbot/tests/</code></td></tr>
+<tr><td>A-59</td><td><b>The full schema</b> from <code>DATA_MODEL.md</code> — items, multi-value attributes, categories, listings, images, orders, messages, lots, purchases, posting trips, events</td><td><code>migrations/0001_initialSchema.sql</code></td></tr>
+<tr><td>A-60</td><td><b>Numbered migrations</b>, each atomic, safe to re-run, applied on every start</td><td><code>core/database.py</code></td></tr>
+<tr><td>A-61</td><td><b>A failed migration leaves no trace</b> — proved with a deliberately broken one</td><td><code>tests/test_database.py</code></td></tr>
+<tr><td>A-62</td><td><b>Search across everything at once</b> — title, description, brand, SKU, notes, every attribute, every category</td><td><code>core/database.py</code> <code>searchItems()</code></td></tr>
+<tr><td>A-63</td><td>Search survives whatever is typed — quotes, stars, punctuation</td><td><code>core/database.py</code></td></tr>
+<tr><td>A-64</td><td><b>Money in integer pence</b>, dates in ISO-8601</td><td>schema-wide</td></tr>
+<tr><td>A-65</td><td><b>A bad status is refused</b>, not stored</td><td><code>CHECK</code> constraints</td></tr>
+<tr><td>A-66</td><td><b>Nothing is deleted</b> — status changes and the details stay</td><td>tested</td></tr>
+<tr><td>A-67</td><td><b>Nightly backup at 02:30</b>, checked as it is written, newest 14 kept</td><td><code>modules/backups/</code></td></tr>
+<tr><td>A-68</td><td><b>Restore, with the replaced database kept</b> as <code>.beforeRestore</code></td><td><code>core/backup.py</code></td></tr>
+<tr><td>A-69</td><td><b>The round trip is tested</b> — fill, back up, delete, restore, check every row</td><td><code>tests/test_backup.py</code></td></tr>
+<tr><td>A-70</td><td>A damaged backup is refused rather than restored</td><td><code>core/backup.py</code></td></tr>
+<tr><td>A-71</td><td><b>Scheduler</b> — <code>bot.addJob(name, when, run)</code>; a job that throws does not stop the others</td><td><code>core/scheduler.py</code></td></tr>
+<tr><td>A-72</td><td><code>migrate</code>, <code>backup</code>, <code>restore</code> commands; <code>check</code> reports schema, counts and backups</td><td><code>__main__.py</code></td></tr>
+<tr><td>A-73</td><td>The status page shows real counts and the scheduled jobs</td><td><code>modules/systemStatus/</code></td></tr>
+<tr><td>A-74</td><td><b>Copy-and-paste install guide</b>, with and without Compose</td><td><code>docs/INSTALL_GUIDE.md</code></td></tr>
+<tr><td>A-75</td><td>50 pytest tests</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>Files — in and out</h2>
+<p class="lead"><code>/files</code> — Upload a spreadsheet, see what importing would do, download the inventory.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-76</td><td><b>The SKU parser in Python</b> — parse, format, describe, rewrite a description without losing the code, sort a picking route</td><td><code>core/sku.py</code></td></tr>
+<tr><td>A-77</td><td><b>A test that fails if the Python and JavaScript SKU patterns drift apart</b></td><td><code>tests/test_sku.py</code></td></tr>
+<tr><td>A-78</td><td><b>"What is missing" in plain words</b>, per platform, ready to put on a screen</td><td><code>core/readiness.py</code></td></tr>
+<tr><td>A-79</td><td><b>"Nobody has checked this" tracked separately from "a field is empty"</b></td><td><code>migrations/0002_verifiedAt.sql</code></td></tr>
+<tr><td>A-80</td><td>Recommendations never block an item (D-103)</td><td><code>core/readiness.py</code></td></tr>
+<tr><td>A-81</td><td>An unknown platform asks for nothing rather than inventing requirements</td><td><code>core/readiness.py</code></td></tr>
+<tr><td>A-82</td><td>Nothing imported is ever put straight on sale</td><td><code>suggestedStatus()</code></td></tr>
+<tr><td>A-83</td><td><b>Import the Crosslist export</b> — 2,125 items, dry run by default</td><td><code>core/crosslistImport.py</code></td></tr>
+<tr><td>A-84</td><td><b>Idempotent</b> — a second run changes nothing</td><td><code>crosslistId</code></td></tr>
+<tr><td>A-85</td><td><b>The weight read out of the description</b> (<code>W###g</code>), because the column is junk</td><td><code>readWeight()</code></td></tr>
+<tr><td>A-86</td><td><b>The SKU read out of the description</b>, raw form kept as well</td><td><code>readRawCode()</code></td></tr>
+<tr><td>A-87</td><td>Items with no code import and are flagged, never skipped</td><td><code>importNote</code></td></tr>
+<tr><td>A-88</td><td>Items sharing a code both survive, neither merged</td><td><code>_uniqueSku()</code></td></tr>
+<tr><td>A-89</td><td><b>Nothing is ever imported as on sale</b></td><td><code>statusFor()</code></td></tr>
+<tr><td>A-90</td><td><b>Every import writes a dated history entry</b></td><td><code>event</code> table</td></tr>
+<tr><td>A-91</td><td><b>Download every photo</b>, resumable, five at a time</td><td><code>core/photoStore.py</code></td></tr>
+<tr><td>A-92</td><td>Every photo hashed, so identical images across items are findable</td><td><code>duplicateImages()</code></td></tr>
+<tr><td>A-93</td><td>A dead URL is retried twice; <b>a 404 is not retried at all</b></td><td><code>_download()</code></td></tr>
+<tr><td>A-94</td><td><b>Photo order recorded as a guess, not the truth</b> — <code>crosslist</code> / <code>vinted</code> / <code>manual</code></td><td>migration 0003</td></tr>
+<tr><td>A-95</td><td>(test count now in A-105)</td><td><code>sixgenbot/tests/</code></td></tr>
+<tr><td>A-96</td><td><b>A missing import file is a sentence</b>, listing what is in the folder and giving both paths</td><td><code>__main__.py</code></td></tr>
+<tr><td>A-97</td><td><b>A re-import refreshes sizes, colours, categories and photos</b>, replacing only Crosslist's own rows and never removing a photograph</td><td><code>_refreshChildren()</code></td></tr>
+<tr><td>A-98</td><td><b>Upload a spreadsheet from the browser</b> — no share, no <code>cp</code>, works from a phone</td><td><code>modules/fileTransfer/</code></td></tr>
+<tr><td>A-99</td><td><b>Upload shows the dry run first</b>; nothing is written until Import it is pressed</td><td><code>routes.preview()</code></td></tr>
+<tr><td>A-100</td><td><b>Download the inventory as CSV</b>, whole or by status</td><td><code>core/csvExport.py</code></td></tr>
+<tr><td>A-101</td><td><b>Download a backup</b> from the page</td><td><code>routes.downloadBackup()</code></td></tr>
+<tr><td>A-102</td><td><b>The flattening rules</b> — <code>sizeUk</code>/<code>sizeEu</code>/<code>sizeUs</code>/<code>sizeLetter</code>, <code>;</code> for lists, no commas inside values</td><td><code>core/csvExport.py</code></td></tr>
+<tr><td>A-103</td><td><b>A filename cannot escape its folder</b>, and the database is never served</td><td><code>tidyName()</code>, <code>insideFolder()</code></td></tr>
+<tr><td>A-104</td><td>A spreadsheet that cannot be read says so rather than showing a traceback</td><td><code>routes.preview()</code></td></tr>
+<tr><td>A-105</td><td>(test count now in A-121)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>To review</h2>
+<p class="lead"><code>/review</code> — Items nobody has checked. Pick a batch, choose which fields show, correct them, save the lot.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-106</td><td><b>Three lists</b>: not checked yet, <b>never listed</b> (the 972 still worth putting up), listed but not checked</td><td><code>routes._where()</code></td></tr>
+<tr><td>A-107</td><td><b>Choose what is shown</b>, and the choice is remembered in a cookie</td><td><code>routes.chosenColumns()</code></td></tr>
+<tr><td>A-108</td><td><b>The chosen columns decide what can be changed</b> on the next screen — no separate settings</td><td><code>routes.edit()</code></td></tr>
+<tr><td>A-109</td><td><b>Tick items, work on up to 40, save the lot in one press</b></td><td><code>routes.save()</code></td></tr>
+<tr><td>A-110</td><td><b>Sizes edited per system</b> — UK, EU, US, letter — as attributes, not columns. The field the whole backlog turns on</td><td><code>core/itemEdit.py</code></td></tr>
+<tr><td>A-111</td><td><b>Every change recorded</b> with its value before and after, so a batch save can be explained afterwards</td><td><code>itemEdit._record()</code></td></tr>
+<tr><td>A-112</td><td><b>"I have checked this one"</b> is separate from saving a correction — and is what sets <code>verifiedAt</code></td><td><code>itemEdit.markChecked()</code></td></tr>
+<tr><td>A-113</td><td><b>Checking recomputes the status</b>, and never to <code>on_sale</code> — ready is not listed</td><td><code>itemEdit.markChecked()</code></td></tr>
+<tr><td>A-114</td><td><b>An item already sold or archived is never disturbed</b> by a status recompute</td><td><code>itemEdit.SETTLED</code></td></tr>
+<tr><td>A-115</td><td><b>Room order</b> — column, then box, then item. <code>7-4 3</code> before <code>7-4 21</code> before <code>13-8 24</code>; no-code items last</td><td><code>core/sku.py SQL_ORDER</code></td></tr>
+<tr><td>A-116</td><td><b>The SKU shown the way the business writes it</b> — <code>13-8 24</code>, not the stored <code>13-8-24</code></td><td><code>sku.formatSku()</code></td></tr>
+<tr><td>A-117</td><td><b>Search across every field</b> from the same screen, submitted not live</td><td><code>database.searchItems()</code></td></tr>
+<tr><td>A-118</td><td><b>Server-side paging</b>, 50 a page, plain Back/On links. Nothing loads the whole table</td><td><code>routes.findItems()</code></td></tr>
+<tr><td>A-119</td><td><b>A batch save is all or nothing</b> — one failure rolls the whole thing back and says so in a sentence</td><td><code>routes.save()</code></td></tr>
+<tr><td>A-120</td><td><b>An edit reaches the search index</b>, because it is spread over three tables</td><td><code>database.reindexItem()</code></td></tr>
+<tr><td>A-121</td><td>(test count now in A-133)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>Photos</h2>
+<p class="lead"><code>/photos</code> — Bringing every photograph off Crosslist before the subscription ends.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-122</td><td><b>Fetch the photographs from a button</b>, in the background — the page comes straight back</td><td><code>modules/photoLibrary/</code></td></tr>
+<tr><td>A-123</td><td><b>How many are safely here</b> versus still only on Crosslist, plus space used</td><td><code>photoStore.storedCounts()</code></td></tr>
+<tr><td>A-124</td><td><b>Fetch a few first</b> — a count box, empty means all</td><td><code>routes.startFetch()</code></td></tr>
+<tr><td>A-125</td><td><b>Stop, and it stops in seconds</b> — chunked 200 at a time rather than one pool over 9,098</td><td><code>photoStore.fetchAll(shouldStop=)</code></td></tr>
+<tr><td>A-126</td><td><b>The job list is taken once</b>, so a failed photo cannot loop forever</td><td><code>photoStore.fetchAll()</code></td></tr>
+<tr><td>A-127</td><td><b>One run at a time</b>, under a lock</td><td><code>routes.lock</code></td></tr>
+<tr><td>A-128</td><td><b>No auto-refresh</b> — a *Check again* link, and the page says so</td><td><code>photos.html</code></td></tr>
+<tr><td>A-129</td><td><b>Failures grouped by what the server said</b>, with counts, retried next run</td><td><code>photoStore.failureReasons()</code></td></tr>
+<tr><td>A-130</td><td><b>Stored photographs served</b> to the browser</td><td><code>routes.image()</code></td></tr>
+<tr><td>A-131</td><td><b>A path in the database is not permission to read it</b> — nothing outside the images folder is ever served</td><td><code>routes.image()</code></td></tr>
+<tr><td>A-132</td><td><b>Duplicates by content, not address</b> — answers the §3B.11 correction</td><td><code>/photos/duplicates</code></td></tr>
+<tr><td>A-133</td><td>(test count now in A-147)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>The Table — every garment</h2>
+<p class="lead"><code>/table</code> — One search box across every field, filters down the side, thumbnails. <b>Editing a cell in place is not built</b> — Q51.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-134</td><td><b>One search box across every field</b> — title, description, brand, colour, material, notes</td><td><code>database.searchItems()</code></td></tr>
+<tr><td>A-135</td><td><b>Filters</b>: status, size, brand, colour, box, price range, has photographs, ever listed</td><td><code>core/itemQuery.py</code></td></tr>
+<tr><td>A-136</td><td><b>The filters say what they are doing in words</b> above the results</td><td><code>itemQuery.describe()</code></td></tr>
+<tr><td>A-137</td><td><b>Thumbnails</b>, now the photographs are on the server</td><td><code>table.html</code></td></tr>
+<tr><td>A-138</td><td><b>Columns can be chosen</b>, and the choice is remembered</td><td><code>routes.chosenColumns()</code></td></tr>
+<tr><td>A-139</td><td><b>Sorting is a choice</b> — storage order, newest, cheapest, dearest, title</td><td><code>itemQuery.SORTS</code></td></tr>
+<tr><td>A-140</td><td><b>Server-side paging</b>, 50 a page, plain links. Nothing loads the whole table</td><td><code>itemQuery.findPage()</code></td></tr>
+<tr><td>A-141</td><td><b>One query per kind of thing, not one per row</b> — what makes it work at 100,000</td><td><code>routes._decorate()</code></td></tr>
+<tr><td>A-142</td><td><b>Paging keeps the search and the filters</b></td><td><code>routes._withoutPage()</code></td></tr>
+<tr><td>A-143</td><td><b>A search ceiling of 1,000</b>, and the page says when it is reached</td><td><code>itemQuery.SEARCH_CEILING</code></td></tr>
+<tr><td>A-144</td><td><b>The Box filter accepts <code>11-1</code> or <code>11 1</code></b> — and the page says why the search box cannot do it</td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-145</td><td><b>A photo row with no file does not count</b> as having a photograph</td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-146</td><td><b>Nothing matching is a sentence</b>, not a blank table</td><td><code>table.html</code></td></tr>
+<tr><td>A-147</td><td>(test count now in A-154)</td><td><code>sixgenbot/tests/</code></td></tr>
+<tr><td>A-148</td><td><b>Small copies of the photographs</b>, made once and kept — a page of the Table went from 76 MB to 0.6 MB</td><td><code>core/thumbnails.py</code></td></tr>
+<tr><td>A-149</td><td><b>The size is in the filename</b>, so raising it later cannot serve an old copy at the wrong size</td><td><code>thumbnails.thumbnailFor()</code></td></tr>
+<tr><td>A-150</td><td><b>The full photograph is still served</b> without <code>small=yes</code></td><td><code>routes.image()</code></td></tr>
+<tr><td>A-151</td><td><b>Pillow is optional</b> — if it is missing the full photograph is served, and the screen still works</td><td><code>thumbnails.canResize</code></td></tr>
+<tr><td>A-152</td><td><b>The stylesheet address carries a stamp of its own contents</b> — a screen change now reaches the browser at once</td><td><code>webApp.styleVersion()</code></td></tr>
+<tr><td>A-153</td><td><b>The small copies can be thrown away</b> and are made again on demand</td><td><code>thumbnails.removeAll()</code></td></tr>
+<tr><td>A-154</td><td>(test count now in A-170)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>Edit the chosen items</h2>
+<p class="lead"><code>/review/edit</code> — The chosen garments, one card each, showing only the fields you ticked.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-155</td><td><b>Tick the rows you want</b>, on any filtered list</td><td><code>table.html</code></td></tr>
+<tr><td>A-156</td><td><b>Or take everything that matches</b> — not just the page</td><td><code>routes.edit()</code></td></tr>
+<tr><td>A-157</td><td><b>Choose by what is missing</b> — brand, size, colour, price, weight, title, description, photographs, category</td><td><code>itemQuery.MISSING</code></td></tr>
+<tr><td>A-158</td><td><b>Choose by a word in the title, the description or the private notes</b></td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-159</td><td><b>Choose by when an item arrived</b> — between two dates and times, or in the last N days</td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-160</td><td><b>An inclusive end date</b> — <code>dateAdded</code> holds a time, so a date-only end would drop that whole day</td><td><code>itemQuery._endOfDay()</code></td></tr>
+<tr><td>A-161</td><td><b>Choose by checked or not checked</b></td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-162</td><td><b>Choose the items that share a code</b> with another item</td><td><code>itemQuery.buildWhere()</code></td></tr>
+<tr><td>A-163</td><td><b>Every choice combines with every other</b>, and the sentence names them all</td><td><code>itemQuery.describe()</code></td></tr>
+<tr><td>A-164</td><td><b>One field becomes one column</b>, one item to a line</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-165</td><td><b>Tab walks down the column</b>, Shift and Tab walk back up. No JavaScript</td><td>the page order itself</td></tr>
+<tr><td>A-166</td><td><b>Nothing focusable sits between two boxes</b> — a per-row tick box made it two presses an item</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-167</td><td><b>A column holds 200</b>, a page of cards holds 40</td><td><code>routes.MOST_IN_A_COLUMN</code></td></tr>
+<tr><td>A-168</td><td><b>"The first 200 of 385"</b>, said plainly, and the batch shrinks as it is worked</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-169</td><td><b>Saving returns you to the list you came from</b>, filters intact</td><td><code>routes.save()</code></td></tr>
+<tr><td>A-170</td><td>(test count now in A-181)</td><td><code>sixgenbot/tests/</code></td></tr>
+<tr><td>A-171</td><td><b>Every photograph shown while you edit</b>, in order</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-172</td><td><b>Put the photographs in order</b> — Move up, Move down, Make it first</td><td><code>/photos/order/{itemId}</code></td></tr>
+<tr><td>A-173</td><td><b>A move renumbers in two passes</b>, because <code>UNIQUE (itemId, position)</code> blocks a one-at-a-time swap</td><td><code>photoOrder._renumber()</code></td></tr>
+<tr><td>A-174</td><td><b>A move marks the order <code>manual</code></b>, which a later platform read must not overwrite</td><td><code>photoOrder.move()</code></td></tr>
+<tr><td>A-175</td><td><b>The order change is recorded</b> in the item's history</td><td><code>photoOrder._record()</code></td></tr>
+<tr><td>A-176</td><td><b>Save and put these in order</b> — saves your typing before leaving the page</td><td><code>routes.saveThenArrange()</code></td></tr>
+<tr><td>A-177</td><td><b>The old value under every box</b> — *was Marks &amp; Spencer*, or *was empty*</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-178</td><td><b>What this item says now</b> — every field, folded away on a card</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-179</td><td><b>Tab picks out the text in the box</b> so typing replaces it — the browser already does this, checked in Chromium</td><td>nothing to build</td></tr>
+<tr><td>A-180</td><td><b>A column has nothing focusable between its boxes</b> — a fold made it two presses an item</td><td><code>reviewEdit.html</code></td></tr>
+<tr><td>A-181</td><td>(test count now in A-193)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>Ready to list</h2>
+<p class="lead"><code>/list</code> — Garments never listed that have their photographs here, in storage order.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-182</td><td><b>One garment, every answer the Vinted form asks for</b>, in one place</td><td><code>core/listingSheet.py</code></td></tr>
+<tr><td>A-183</td><td><b>The SKU already on the end of the description</b> — first real use of <code>withSku()</code></td><td><code>sku.withSku()</code></td></tr>
+<tr><td>A-184</td><td><b>Download all the photographs</b> as a zip, numbered 01, 02, 03</td><td><code>listingSheet.photoZip()</code></td></tr>
+<tr><td>A-185</td><td><b>Where the garment is</b>, in words: column 8, box 3, item 36</td><td><code>sku.describeSku()</code></td></tr>
+<tr><td>A-186</td><td><b>Says what is still missing</b> before you start</td><td><code>readiness.missingFor()</code></td></tr>
+<tr><td>A-187</td><td><b>It is on Vinted now</b> — records the date, the listing and the history in one go</td><td><code>routes.markListed()</code></td></tr>
+<tr><td>A-188</td><td><b>Pressing it twice does not make two listings</b></td><td><code>ON CONFLICT DO UPDATE</code></td></tr>
+<tr><td>A-189</td><td><b>The item leaves the waiting list by itself</b> once it is up</td><td><code>listingSheet.waitingToList()</code></td></tr>
+<tr><td>A-190</td><td><b>The waiting list needs photographs</b>, and says how many are still missing them</td><td><code>routes.waiting()</code></td></tr>
+<tr><td>A-191</td><td><b>The Vinted address can be pasted in</b>, and is kept</td><td><code>listing.url</code></td></tr>
+<tr><td>A-192</td><td><b>Boxes you copy out of, not into</b> — readonly, dashed</td><td><code>sheet.html</code></td></tr>
+<tr><td>A-193</td><td>(test count now in A-208)</td><td><code>sixgenbot/tests/</code></td></tr>
+</table>
+<h2>Vinted</h2>
+<p class="lead"><code>/vinted</code> — Taking a wardrobe read from the extension, and linking listings to garments.</p>
+<table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
+<tr><td>A-194</td><td><b>The extension sends its wardrobe read to the server</b></td><td><code>source/core/sixgenbotSender.js</code></td></tr>
+<tr><td>A-195</td><td><b>Permission for the server is asked at send time</b>, not at install</td><td><code>optional_host_permissions</code></td></tr>
+<tr><td>A-196</td><td><b>A read changes nothing by arriving</b> — it is stored, and a plan is worked out</td><td><code>routes.receive()</code></td></tr>
+<tr><td>A-197</td><td><b>A read never writes over a field you already have</b></td><td><code>vintedRead.applyRead()</code></td></tr>
+<tr><td>A-198</td><td><b>Differences are listed, not applied</b></td><td><code>plan.differences</code></td></tr>
+<tr><td>A-199</td><td><b>Blanks are filled in</b>, because nothing is lost</td><td><code>plan.filledIn</code></td></tr>
+<tr><td>A-200</td><td><b>The listing address, price and state are written</b> — Vinted's to state</td><td><code>_writeListing()</code></td></tr>
+<tr><td>A-201</td><td><b>A sale on Vinted is carried across</b></td><td><code>plan.soldOnVinted</code></td></tr>
+<tr><td>A-202</td><td><b>A listing that has gone is marked ended, never deleted</b></td><td><code>plan.goneFromVinted</code></td></tr>
+<tr><td>A-203</td><td><b>Matched by the Vinted id first, then the code. Never the title</b></td><td><code>_findItem()</code></td></tr>
+<tr><td>A-204</td><td><b>A suffixed item matches its plain code</b> — without this, 324 would have been duplicated</td><td><code>itemsWithCode()</code></td></tr>
+<tr><td>A-205</td><td><b>A code two garments share is never guessed</b> — the page offers both and you pick</td><td><code>plan.ambiguous</code></td></tr>
+<tr><td>A-206</td><td><b>Link a listing to a garment by hand, once</b> — after that the Vinted id settles it</td><td><code>POST /vinted/link</code></td></tr>
+<tr><td>A-207</td><td><b>A saved read can be uploaded</b> instead of sent</td><td><code>POST /vinted/upload</code></td></tr>
+<tr><td>A-208</td><td>(test counts now in A-216)</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td></tr>
+</table>
+<h2>Promised but not built</h2>
+<p class="lead">Named in the plans, with no screen behind them yet. Part 4 says when each one is scheduled.</p>
+<table><tr><th>ID</th><th>What it would do</th><th>Group</th></tr>
+<tr><td>X-06</td><td><b>Reversible holding area.</b> When something sells it is delisted everywhere immediately, but the delisted listings are held — not destroyed — until the sale is confirmed, and one press puts them back. Kurzon's design, and better than what the paid tools do</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>X-07</td><td><b>Urgent double-sale alert</b> — the one event allowed to be loud</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>S-11</td><td><b>Offsite backup to pCloud</b>, alongside the onsite copy</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>S-12</td><td><b>Reachable over Tailscale</b>, with nothing exposed publicly</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>S-13</td><td><b>LibreOffice Calc compatibility</b> as an export requirement, tested</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>S-14</td><td><b>Two-way Google Sheet</b> for purchases entered on a phone</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-09</td><td><b>Dashboard with a left menu</b> — specified in <code>docs/INTERFACE_LAYOUT.md</code>. Overrides U-01 for the home screen only</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-10</td><td><b>Console viewer</b>, frozen by default, never live-tailing</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-11</td><td><b>Phone-first entry screens, desk-first packing screens</b> — two shapes, not one compromise</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>F-28</td><td>Read views, likes, offers and listing age from Vinted</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>F-29</td><td>Read the Vinted category tree once and keep it</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>L-11</td><td><b>Import the existing ledger</b> — 63 monthly sheets, 2,864 sales, five years. <code>docs/EXISTING_LEDGER.md</code></td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>L-12</td><td><b>Petrol and posting trips in the profit calculation</b>, exactly as the sheet already does it: <code>trips × 0.959 × price per litre</code>, and profit = sold − (stock + petrol). This is existing behaviour, not a new feature</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>L-13</td><td><b>Recreate the monthly sheet as an export</b>, with the same totals, so nothing is lost by moving off it</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>L-14</td><td><b>The SKU on every sale record</b> — the missing link that makes profit-per-item, time-to-sell and per-platform comparison possible at all</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-13</td><td><b>The Table</b> — every item, one search box across every field, filters, thumbnails, server-side paging at 100,000 rows. Built 2026-09-20, see A.6h. <b>In-place cell editing (<code>INTERFACE_LAYOUT §4.4</code>) is not built</b> — it needs a decision on JavaScript, Q51</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>X-08</td><td><b>Clear the unlisted backlog</b> — roughly 3,000 items bought and never listed. Stock already paid for</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>X-09</td><td><b>Throughput as the headline measure</b> — items listed per day, shown where it is seen, because it is the number that matters</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-14</td><td><b>Batch listing workflow</b> — photograph a batch, then assign and publish them one after another with no pause between (D-249, D-250, D-097)</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>L-15</td><td><b>Answer memory</b> — every answer given to the review queue is offered for the next similar item (D-098)</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>X-11</td><td><b>Returns keep their SKU</b> — the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-15</td><td><b>"Needs fixing" at the top of the dashboard</b> — failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-17</td><td><b>Photo order</b> — built 2026-09-20 with Move up, Move down and Make it first, one item at a time (A.6k). <b>Dragging is not built</b>: it needs JavaScript. Doing a whole batch at once is also still open</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>U-18</td><td><b>Item history</b> — every change to a garment, with what it was before. The rows are already being written by <code>itemEdit</code> (A-111); this is the screen that reads them</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>X-12</td><td><b>Put the 972 withdrawn items back online.</b> The sheet that makes one of them a copying job rather than a search is built — A.6l. Doing it *for* you needs the Vinted write path. <b>Put the 972 withdrawn items back online.</b> Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project</td><td>D.0 — accepted 2026-09-09</td></tr>
+<tr><td>S-01</td><td><b>Docker container</b>, Python, one volume, runs on Unraid and HexOS alike</td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-03</td><td><b>CSV export</b> of <code>onsale_inventory</code>, <code>sold_items</code>, <code>orders</code>, <code>archive</code></td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-04</td><td><b>CSV import</b>, so a hand-edited file can be read back</td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-05</td><td><b>Image store</b> — full resolution, numbered in original order, deduplicated by hash</td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-07</td><td>Scheduler for polling, chasing and backups</td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-08</td><td>Nightly backup of database and images</td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>S-09</td><td>Web interface, following <code>INTERFACE_PRINCIPLES.md</code></td><td>D.1 The server (new — this is where the system is going)</td></tr>
+<tr><td>F-01</td><td>Verify the read against the real 2,000-item wardrobe</td><td>D.2 Vinted</td></tr>
+<tr><td>F-02</td><td>Write a price to Vinted</td><td>D.2 Vinted</td></tr>
+<tr><td>F-03</td><td>Hide or delete a sold Vinted listing</td><td>D.2 Vinted</td></tr>
+<tr><td>F-04</td><td>Write title / description, preserving the storage code</td><td>D.2 Vinted</td></tr>
+<tr><td>F-05</td><td>Create a Vinted listing, photos included</td><td>D.2 Vinted</td></tr>
+<tr><td>F-24</td><td><b>Read every extra field</b> — measurements, all size systems, all colours, full category path, upload date</td><td>D.2 Vinted</td></tr>
+<tr><td>F-25</td><td><b>Read sold items and orders</b></td><td>D.2 Vinted</td></tr>
+<tr><td>F-26</td><td><b>Read buyer/seller messages</b></td><td>D.2 Vinted</td></tr>
+<tr><td>E-06</td><td>Read eBay orders and fees for the ledger</td><td>D.3 eBay</td></tr>
+<tr><td>X-03</td><td>Storage code into the eBay SKU field</td><td>D.4 Cross-platform</td></tr>
+<tr><td>X-04</td><td><b>"Needs extra info" queue</b> — one screen, one item, only the fields the target platform demands</td><td>D.4 Cross-platform</td></tr>
+<tr><td>X-05</td><td>Per-platform required-field rules, so the queue knows what to ask for</td><td>D.4 Cross-platform</td></tr>
+<tr><td>L-03</td><td>Profit per garment</td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>L-05</td><td>Unsold stock value</td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>L-06</td><td>Period totals</td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>L-08</td><td><b>"Posted" button</b> with a photo of the parcel in its bag</td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>L-09</td><td>Tracking numbers and delivery status</td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>L-10</td><td><b>Archive after completion, kept 5 years</b></td><td>D.5 Orders, postage and money</td></tr>
+<tr><td>N-01</td><td>Something sold</td><td>D.6 Notifications</td></tr>
+<tr><td>N-02</td><td>Something delivered</td><td>D.6 Notifications</td></tr>
+<tr><td>N-03</td><td><b>Delivery overdue</b></td><td>D.6 Notifications</td></tr>
+<tr><td>N-04</td><td>Something is broken — a read failed, a token expired, a platform changed</td><td>D.6 Notifications</td></tr>
+<tr><td>N-05</td><td>Sold on two platforms before a check ran</td><td>D.6 Notifications</td></tr>
+<tr><td>U-01</td><td>One screen, one job</td><td>D.7 Interface</td></tr>
+<tr><td>U-02</td><td>Plain language, not data</td><td>D.7 Interface</td></tr>
+<tr><td>U-03</td><td>Nothing moves — no animation, no toasts, no auto-refresh</td><td>D.7 Interface</td></tr>
+<tr><td>U-04</td><td>Predictable placement; nothing happens on hover</td><td>D.7 Interface</td></tr>
+<tr><td>U-05</td><td>Detail folded away</td><td>D.7 Interface</td></tr>
+<tr><td>U-06</td><td>Per-item review before applying</td><td>D.7 Interface</td></tr>
+<tr><td>U-07</td><td>Grouping and filtering at scale</td><td>D.7 Interface</td></tr>
+</table>
+<h2>Deliberately refusing, for now</h2>
+<p class="lead">These exist in the code and say so plainly rather than failing strangely.</p>
+<table><tr><th>ID</th><th>What it refuses</th><th>Where</th></tr>
+<tr><td>C-01</td><td>Write a price to Vinted</td><td><code>vintedWardrobeConnector.js:78</code></td></tr>
+<tr><td>C-02</td><td>Write stock to Vinted</td><td><code>vintedWardrobeConnector.js:82</code></td></tr>
+<tr><td>C-03</td><td>Write content to Vinted</td><td><code>vintedWardrobeConnector.js:86</code></td></tr>
+<tr><td>C-04</td><td>Hide or delete a Vinted listing</td><td><code>vintedWardrobeConnector.js:90</code></td></tr>
+<tr><td>C-05</td><td>Create a listing from scratch</td><td><code>core/syncRunner.js:142</code></td></tr>
+</table>
+</div></body></html>

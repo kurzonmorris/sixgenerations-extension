@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 4 — the build schedule</title><style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: #f4f2ee; color: #2a2825;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55; font-size: 16px;
+}
+.sheet { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+h1 { font-size: 1.9rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.3rem; margin: 2.6rem 0 .6rem; padding-top: .8rem;
+      border-top: 2px solid #ddd8d0; }
+h3 { font-size: 1.05rem; margin: 1.6rem 0 .4rem; }
+p { max-width: 46rem; margin: 0 0 .8rem; }
+.lead { color: #6a655e; max-width: 46rem; }
+a { color: #35506b; }
+code { background: #fbfaf7; border: 1px solid #ddd8d0; border-radius: 3px;
+        padding: .05rem .3rem; font-size: .9em; }
+table { border-collapse: collapse; width: 100%; margin: .6rem 0 1.4rem;
+         font-size: .92rem; background: #fbfaf7; }
+th, td { text-align: left; padding: .45rem .7rem; border: 1px solid #ddd8d0;
+          vertical-align: top; }
+th { background: #efece6; font-size: .8rem; letter-spacing: .04em;
+      text-transform: uppercase; color: #6a655e; }
+.tag { display: inline-block; padding: .08rem .5rem; border-radius: 10px;
+        font-size: .78rem; font-weight: 600; white-space: nowrap;
+        border: 1px solid rgba(0,0,0,.12); }
+.ask { background: #f6ead8; border: 2px solid #b08642; border-radius: 6px;
+        padding: .9rem 1.1rem; margin: 1rem 0; max-width: 46rem; }
+.ask b { display: block; margin-bottom: .3rem; }
+.ask ul { margin: .4rem 0 0 1.1rem; padding: 0; }
+.note { background: #fbfaf7; border-left: 4px solid #ddd8d0;
+         padding: .7rem 1rem; margin: 1rem 0; max-width: 46rem; }
+.key { display: flex; flex-wrap: wrap; gap: .5rem 1.1rem; margin: .8rem 0 1.6rem;
+        font-size: .85rem; }
+.key span { display: flex; align-items: center; gap: .4rem; }
+.swatch { width: 1rem; height: 1rem; border: 1px solid rgba(0,0,0,.2);
+           border-radius: 2px; display: inline-block; }
+figure { margin: 1rem 0 2rem; }
+figcaption { color: #6a655e; font-size: .88rem; margin-top: .3rem; }
+svg { max-width: 100%; height: auto; background: #fbfaf7;
+       border: 1px solid #ddd8d0; border-radius: 4px; }
+.docnav { background: #fbfaf7; border: 1px solid #ddd8d0; border-radius: 4px;
+           padding: .7rem 1rem; margin: 0 0 2rem; font-size: .92rem; }
+.docnav a { margin-right: 1rem; }
+.stamp { color: #6a655e; font-size: .85rem; margin-bottom: 1.6rem; }
+@media print { body { background: #fff; } h2 { page-break-after: avoid; }
+                figure { page-break-inside: avoid; } }
+</style></head>
+<body><div class="sheet">
+<h1>Part 4 — the build schedule</h1>
+<p class="stamp">Generated from the repository at 39029e7 2026-09-21. Regenerate with python docs/design/buildDesignDocs.py</p>
+
+<nav class="docnav">
+  <b>The four parts:</b>
+  <a href="01_pages.html">1. Every page, drawn</a>
+  <a href="02_pagesInDetail.html">2. What happens on each page</a>
+  <a href="03_featureStatus.html">3. Every feature and its status</a>
+  <a href="04_buildSchedule.html">4. The build schedule</a>
+</nav>
+
+<p class="lead"></p>
+<p class="lead">The order to build in, and what each stage needs. Each stage is sized so it can be built, tested and merged on its own — a stage that is too big is where mistakes come from.</p>
+<div class="note"><b>What “needs” means.</b> Some stages wait on an answer from you; some wait on finding something out from a live website, which cannot be guessed from documentation. Those are marked, because they are the ones that stall.</div>
+<h2>The order at a glance</h2>
+<table><tr><th>Stage</th><th>What it is</th><th>Roughly</th><th>Waits on</th></tr>
+<tr><td><b>A</b></td><td>Answer the questions that block screens</td><td>an evening</td><td><b>You.</b> Reading part 1 and saying yes, no, or “you choose”.</td></tr>
+<tr><td><b>B</b></td><td>The dashboard — make the first screen about the work</td><td>2–3 days</td><td>Stage A, question 1 and 2.</td></tr>
+<tr><td><b>C</b></td><td>One garment, and its history (U-18)</td><td>2–3 days</td><td>Stage A, question 4.</td></tr>
+<tr><td><b>D</b></td><td>Writing to Vinted — price and hiding a sold listing</td><td>1–2 weeks</td><td><b>Investigation first.</b> Vinted's edit form has to be read from the live site — docs/CLAUDE_BROWSER_TASKS.md. Nothing here can be written from documentation.</td></tr>
+<tr><td><b>E</b></td><td>Writing descriptions and titles, keeping the SKU</td><td>1 week</td><td>Stage D.</td></tr>
+<tr><td><b>F</b></td><td>Creating a Vinted listing outright</td><td>2–3 weeks</td><td>Stages D and E. <b>Investigation of the new-listing form on the live site.</b></td></tr>
+<tr><td><b>G</b></td><td>The ledger — sales, purchases, totals</td><td>2 weeks</td><td>Stage A, question 5. The petrol price per litre.</td></tr>
+<tr><td><b>H</b></td><td>Sales and orders read from Vinted</td><td>1 week</td><td>Stage G. Investigation of the Vinted orders pages.</td></tr>
+<tr><td><b>I</b></td><td>To post, and the Boxes page</td><td>1 week</td><td>Stage H for To post. Stage A, question 3 for Boxes.</td></tr>
+<tr><td><b>J</b></td><td>eBay, read only</td><td>1–2 weeks</td><td>eBay developer keys. <b>PROJECT_INFO §3 is unverified</b> and must be checked first.</td></tr>
+<tr><td><b>K</b></td><td>eBay writes, and sold-anywhere-removes-everywhere</td><td>2 weeks</td><td>Stages D, F and J.</td></tr>
+</table>
+<h2>Stage A — Answer the questions that block screens</h2>
+<p><b>What it is for.</b> Nothing is built in this stage. It removes the guesswork from every stage after it.</p>
+<p><b>Why now.</b> Four screens cannot be designed without decisions only you can make. Each one in part 1 offers <b>Claude decides</b>, so this can be as short as saying “you choose”.</p>
+<h3>What gets built</h3><ul><li>Q51 — may the Table have in-place editing (JavaScript)?</li><li>What the dashboard shows, and where the technical Status block goes</li><li>What the Boxes page is for</li><li>Whether a page for one garment should exist (and so where history lives)</li><li>Whether the five years of old books get imported</li></ul>
+<h3>Files it touches</h3><ul><li><code>docs/OPEN_QUESTIONS.md</code></li><li><code>docs/INTERFACE_LAYOUT.md</code></li></ul>
+<h3>How we know it works</h3><p>Every orange block in part 1 has an answer written next to it.</p>
+<h3>What it waits on</h3><p><b>You.</b> Reading part 1 and saying yes, no, or “you choose”.</p>
+<h2>Stage B — The dashboard — make the first screen about the work</h2>
+<p><b>What it is for.</b> Replace the technical Status page as the first thing you see.</p>
+<p><b>Why now.</b> The first screen is the one seen most. Today it is about the server; it should be about today's work. It also needs nothing new underneath — every count already exists.</p>
+<h3>What gets built</h3><ul><li>Needs fixing at the top (U-15): failed copies, double sales, dead connections</li><li>Today: to review · to post · ready to list, each a link with the filter set</li><li>The counts: on sale, never listed, sold this month</li><li>Items listed per day (X-09) — the number the project is judged on</li><li>Move the technical block to SYSTEM</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/modules/dashboard/ (new)</li><li>sixgenbot/core/itemQuery.py (counts)</li><li>sixgenbot/modules/systemStatus/ (moves off /)</li></ul>
+<h3>How it fits the rest</h3><p>Reads only. Every number is a query that already exists in itemQuery; the links carry the same filter names the Table already understands.</p>
+<h3>How we know it works</h3><p>Counts match The Table with the same filter set. Nothing moves on its own. A dashboard with nothing wrong still shows the block, with one line.</p>
+<h3>What it waits on</h3><p>Stage A, question 1 and 2.</p>
+<h2>Stage C — One garment, and its history (U-18)</h2>
+<p><b>What it is for.</b> A page for a single garment, with every change it has ever had.</p>
+<p><b>Why now.</b> Every list wants somewhere to click through to, and there is nowhere. The history rows are <b>already being written</b> by every edit, every Vinted read and every photograph move — this is only the screen that reads them.</p>
+<h3>What gets built</h3><ul><li>Everything the garment says now, every field</li><li>Its photographs in order, with the reorder link</li><li>Where it is listed: Vinted, eBay, the shop</li><li>Its history: every change, what it was before, who did it and when</li><li>Links out to edit it, to Ready to list, to the box it is in</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/modules/itemPage/ (new)</li><li>the <code>event</code> table (already filled)</li><li>every existing table gains a link to it</li></ul>
+<h3>How it fits the rest</h3><p>Pure read, except the links out. The event table already records actor (user / vinted / system), field, value before and value after.</p>
+<h3>How we know it works</h3><p>An edit made on the To review screen appears in the history within the same minute, with its old value. A Vinted read appears as actor “vinted”.</p>
+<h3>What it waits on</h3><p>Stage A, question 4.</p>
+<h2>Stage D — Writing to Vinted — price and hiding a sold listing</h2>
+<p><b>What it is for.</b> The first writes. Change a price; hide a listing that has sold elsewhere.</p>
+<p><b>Why now.</b> These two are the smallest useful writes and the least dangerous. They do not create anything and they do not touch descriptions, so the SKU can never be lost.</p>
+<h3>What gets built</h3><ul><li>Drive Vinted's own edit form in the signed-in tab</li><li>Price only, then hide or delete</li><li>Dry run first, always: show the plan, then do it</li><li>Record every write in the garment's history</li><li>Stop on anything unexpected rather than guessing</li></ul>
+<h3>Files it touches</h3><ul><li>source/connectors/vintedWardrobeConnector.js (setPrice, archive)</li><li>source/contentScripts/vintedPageReader.js (the edit form)</li><li>sixgenbot/core/vintedRead.py (what to ask for)</li></ul>
+<h3>How it fits the rest</h3><p>Needs the linking from stage 0 to be done — a write can only go to a listing whose Vinted number is known. Reads stay the source of truth.</p>
+<h3>How we know it works</h3><p>A dry run on ten garments lists exactly what it would change. A real run on ONE garment changes that one and nothing else. The description is untouched.</p>
+<h3>What it waits on</h3><p><b>Investigation first.</b> Vinted's edit form has to be read from the live site — docs/CLAUDE_BROWSER_TASKS.md. Nothing here can be written from documentation.</p>
+<h2>Stage E — Writing descriptions and titles, keeping the SKU</h2>
+<p><b>What it is for.</b> Change listing text on Vinted without ever losing the storage code.</p>
+<p><b>Why now.</b> This is how the 972 withdrawn garments get their sizes corrected in place, rather than being relisted from scratch.</p>
+<h3>What gets built</h3><ul><li>Use withSku() so the code is always on the end</li><li>Leave a padded code (B5-5 004) exactly as it is</li><li>Show the before and after text before writing anything</li><li>Refuse to write if the code would change</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/core/sku.py (withSku, already correct)</li><li>source/connectors/vintedWardrobeConnector.js (updateContent)</li></ul>
+<h3>How it fits the rest</h3><p>Reuses the description already shown on Ready to list. A write that would change the parsed code is a bug, not a feature — it stops.</p>
+<h3>How we know it works</h3><p>A hundred descriptions round-trip with the code unchanged, padding and all.</p>
+<h3>What it waits on</h3><p>Stage D.</p>
+<h2>Stage F — Creating a Vinted listing outright</h2>
+<p><b>What it is for.</b> One button: put this garment on Vinted.</p>
+<p><b>Why now.</b> <b>This is the point of the project.</b> 972 garments are waiting, 3 to 6 go up a day by hand. This is the step that changes that number.</p>
+<h3>What gets built</h3><ul><li>Upload the photographs in order</li><li>Fill the form from the garment, including the SKU on the end</li><li>Category and size pickers — the hardest part, and why F comes after E</li><li>Record the new listing number straight away, so it is linked for ever</li><li>One garment at a time, with the plan shown first</li></ul>
+<h3>Files it touches</h3><ul><li>source/contentScripts/vintedPageReader.js (the new-listing form)</li><li>sixgenbot/core/listingSheet.py (already produces every answer)</li><li>sixgenbot/modules/listingHelper/ (becomes a button, not a copying screen)</li></ul>
+<h3>How it fits the rest</h3><p>listingSheet already assembles everything the form asks for — that work is done. This stage is the driving, not the data.</p>
+<h3>How we know it works</h3><p>One garment, end to end, on the real account. Then ten. The photographs come out in the right order and the SKU is on the end.</p>
+<h3>What it waits on</h3><p>Stages D and E. <b>Investigation of the new-listing form on the live site.</b></p>
+<h2>Stage G — The ledger — sales, purchases, totals</h2>
+<p><b>What it is for.</b> The money side, matching the existing books exactly.</p>
+<p><b>Why now.</b> Everything about the garment is built; nothing about what it cost or made. docs/EXISTING_LEDGER.md has five years of real numbers to check against.</p>
+<h3>What gets built</h3><ul><li>Record a sale against a garment, with fees and postage</li><li>Record a purchase as a lot, sharing cost across its garments</li><li>Petrol in the profit sum, exactly as the sheet does it</li><li>A monthly export shaped like the old sheet</li><li>Import the five years of old books, read-only</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/modules/ledger/ (new)</li><li>the salesOrder, lot, purchase, postingTrip tables (all already in the database)</li><li><code>sixgenbot/core/csvExport.py</code></li></ul>
+<h3>How it fits the rest</h3><p>The tables exist and are empty. A sale read from Vinted (stage H) fills them automatically; before that they are filled by hand.</p>
+<h3>How we know it works</h3><p>A month imported from the old sheet totals the same to the penny. If it does not, the import is wrong.</p>
+<h3>What it waits on</h3><p>Stage A, question 5. The petrol price per litre.</p>
+<h2>Stage H — Sales and orders read from Vinted</h2>
+<p><b>What it is for.</b> A sale on Vinted appears here without being typed.</p>
+<p><b>Why now.</b> Removes the main piece of daily typing, and makes To post possible.</p>
+<h3>What gets built</h3><ul><li>Read sold listings and buyer details in the signed-in session</li><li>Match to the garment by its listing number</li><li>Fill the sale record: price, postage, fees where Vinted says</li><li>Never estimate a fee — NULL means “not told”, not zero</li></ul>
+<h3>Files it touches</h3><ul><li>source/contentScripts/vintedPageReader.js (the orders endpoints)</li><li><code>sixgenbot/core/vintedRead.py</code></li><li><code>sixgenbot/modules/ledger/</code></li></ul>
+<h3>How it fits the rest</h3><p>Depends on stage G for somewhere to put the numbers, and on linking for the match. Buyer details are personal data — docs/DATA_MODEL.md §6.</p>
+<h3>How we know it works</h3><p>A real sale appears with the right garment, the right money, and nothing guessed.</p>
+<h3>What it waits on</h3><p>Stage G. Investigation of the Vinted orders pages.</p>
+<h2>Stage I — To post, and the Boxes page</h2>
+<p><b>What it is for.</b> The two screens that make the daily round easier.</p>
+<p><b>Why now.</b> Both are named in the layout and both are small once the data behind them exists.</p>
+<h3>What gets built</h3><ul><li>To post: what is sold and waiting, where it is, one Posted button</li><li>A parcel photograph kept against the sale</li><li>Boxes: pick a column, pick a box, see what is in it and which numbers are free</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/modules/posting/ (new)</li><li>sixgenbot/modules/boxes/ (new)</li><li>sixgenbot/core/sku.py (SQL_ORDER, already correct)</li></ul>
+<h3>How it fits the rest</h3><p>To post reads the sale records from stage H. Boxes reads only the SKU, so it could in fact be built at any time.</p>
+<h3>How we know it works</h3><p>A sale marked posted leaves the list and keeps its photograph. Boxes agrees with the real shelf for one column, checked by hand.</p>
+<h3>What it waits on</h3><p>Stage H for To post. Stage A, question 3 for Boxes.</p>
+<h2>Stage J — eBay, read only</h2>
+<p><b>What it is for.</b> See what is on eBay, and answer Q16 with real data.</p>
+<p><b>Why now.</b> Reading cannot damage anything, and it settles whether eBay listings carry the storage code — which decides how everything after it works.</p>
+<h3>What gets built</h3><ul><li>Connect by API from the server, not the browser</li><li>Read every listing</li><li>The three-way list: here, Vinted, eBay</li><li>Answer Q16 properly</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/modules/ebaySync/ (new)</li><li>docs/PROJECT_INFO.md §3 (unverified — &lt;b&gt;check every line against the live API&lt;/b&gt;)</li></ul>
+<h3>How it fits the rest</h3><p>Same shape as the Vinted read: arrive, plan, apply. The same linking problem, and the same rule — a read never writes over a correction.</p>
+<h3>How we know it works</h3><p>The listing count matches what eBay's own page says.</p>
+<h3>What it waits on</h3><p>eBay developer keys. <b>PROJECT_INFO §3 is unverified</b> and must be checked first.</p>
+<h2>Stage K — eBay writes, and sold-anywhere-removes-everywhere</h2>
+<p><b>What it is for.</b> The payoff: one garment sells, and it comes down everywhere else.</p>
+<p><b>Why now.</b> This is the thing a cross-listing tool is for, and it is the last big piece.</p>
+<h3>What gets built</h3><ul><li>Write price and stock to eBay</li><li>End an eBay listing when it sells on Vinted, and the reverse</li><li>The shop kept in step too</li><li>Dry run first, every time</li></ul>
+<h3>Files it touches</h3><ul><li><code>sixgenbot/modules/ebaySync/</code></li><li><code>sixgenbot/modules/vintedSync/</code></li><li>the existing Shopify writes in the extension</li></ul>
+<h3>How it fits the rest</h3><p>Needs every read working and every listing linked. A double sale is the thing this prevents — and the thing that goes on the dashboard when it happens.</p>
+<h3>How we know it works</h3><p>A test garment on all three, sold on one, gone from the other two within one run.</p>
+<h3>What it waits on</h3><p>Stages D, F and J.</p>
+<h2>What is already done</h2>
+<p>219 features are built and working — part 3 lists every one. In short: the database, the import of 2,125 garments, all 9,098 photographs brought off Crosslist, the Table, To review with batch editing, Ready to list, and reading the Vinted wardrobe back in.</p>
+<div class="note"><b>The one number that matters.</b> 3 to 6 garments go up a day, against 972 waiting and about 4.6 bought a day. Stage F is the only stage that changes that number — everything before it exists to make stage F safe.</div>
+</div></body></html>

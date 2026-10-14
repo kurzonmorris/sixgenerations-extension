@@ -1,0 +1,2498 @@
+[
+ {
+  "id": "A-01",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "**Read the entire Vinted wardrobe** \u2014 title, description, price, brand, size, colour, condition, category, material, photo URLs, sold/hidden state",
+  "where": "`contentScripts/vintedPageReader.js:124`"
+ },
+ {
+  "id": "A-02",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Reads through the user's own signed-in tab; no credentials handled",
+  "where": "`connectors/vintedWardrobeConnector.js:31`"
+ },
+ {
+  "id": "A-03",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Paced at 900 ms per page so bot protection is not triggered",
+  "where": "`vintedPageReader.js:24`"
+ },
+ {
+  "id": "A-04",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Three ways to identify the signed-in user, whichever works reported in the log",
+  "where": "`vintedPageReader.js:74`"
+ },
+ {
+  "id": "A-05",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Falls back to reading the on-screen grid if the JSON endpoint moves",
+  "where": "`vintedPageReader.js:196`"
+ },
+ {
+  "id": "A-06",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Refuses to return a half-read wardrobe \u2014 throws instead",
+  "where": "`vintedPageReader.js:135`"
+ },
+ {
+  "id": "A-07",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "**Read the whole Shopify catalogue**, one row per variant",
+  "where": "`connectors/shopifyStoreConnector.js:114`"
+ },
+ {
+  "id": "A-08",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Respects Shopify's cost budget; waits the exact time the bucket needs",
+  "where": "`shopifyStoreConnector.js:95`"
+ },
+ {
+  "id": "A-09",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.1 Reading",
+  "what": "Retries once after a throttle",
+  "where": "`shopifyStoreConnector.js:193`"
+ },
+ {
+  "id": "A-10",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "**Pair items on the storage code** `13-8 24` at the end of the description",
+  "where": "`core/storageCode.js:24`"
+ },
+ {
+  "id": "A-11",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Tolerates spellings: `13-8-24`, `13 - 8 24`, en-dashes, trailing full stop",
+  "where": "`core/storageCode.js:27`"
+ },
+ {
+  "id": "A-12",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Anchored to the end, so `fits 10-12` is never mistaken for a location",
+  "where": "`core/storageCode.js:24`"
+ },
+ {
+  "id": "A-13",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Falls back to SKU, then title+size",
+  "where": "`core/garmentItem.js:102`"
+ },
+ {
+  "id": "A-14",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "**Never writes from a title guess** \u2014 reports it for review instead",
+  "where": "`core/parityEngine.js:104`"
+ },
+ {
+  "id": "A-15",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Shows how confident each pairing is",
+  "where": "`core/garmentItem.js:111`"
+ },
+ {
+  "id": "A-16",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "**Size normalisation** \u2014 `UK 10`, `Size 10` and `10` compare equal",
+  "where": "`core/garmentItem.js:62`"
+ },
+ {
+  "id": "A-17",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Prices compared in pence, never as floats",
+  "where": "`core/garmentItem.js:48`"
+ },
+ {
+  "id": "A-18",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.2 Matching",
+  "what": "Remembers pairings between runs in a link table",
+  "where": "`core/settingsStore.js:164`"
+ },
+ {
+  "id": "A-19",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.3 Comparing and planning",
+  "what": "**Full difference report** across price, stock, title, description, brand, size, colour, condition",
+  "where": "`core/parityEngine.js:67`"
+ },
+ {
+  "id": "A-20",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.3 Comparing and planning",
+  "what": "Direction set per field group \u2014 stock one way, price and content the other",
+  "where": "`core/messageTypes.js:53`"
+ },
+ {
+  "id": "A-21",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.3 Comparing and planning",
+  "what": "Detects sold-on-one-side and proposes archiving the other",
+  "where": "`core/parityEngine.js:122`"
+ },
+ {
+  "id": "A-22",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.3 Comparing and planning",
+  "what": "Flags items present on only one platform",
+  "where": "`core/parityEngine.js:88`"
+ },
+ {
+  "id": "A-23",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.3 Comparing and planning",
+  "what": "Counts matched / one-sided / guessed",
+  "where": "`core/parityEngine.js:183`"
+ },
+ {
+  "id": "A-24",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.4 Writing (Shopify only)",
+  "what": "Write a price to Shopify",
+  "where": "`shopifyStoreConnector.js:206`"
+ },
+ {
+  "id": "A-25",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.4 Writing (Shopify only)",
+  "what": "Write stock to Shopify",
+  "where": "`shopifyStoreConnector.js:222`"
+ },
+ {
+  "id": "A-26",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.4 Writing (Shopify only)",
+  "what": "Write title / description / brand to Shopify",
+  "where": "`shopifyStoreConnector.js:244`"
+ },
+ {
+  "id": "A-27",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.4 Writing (Shopify only)",
+  "what": "Archive a sold Shopify product",
+  "where": "`shopifyStoreConnector.js:267`"
+ },
+ {
+  "id": "A-28",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.4 Writing (Shopify only)",
+  "what": "Turns Shopify's own error messages into readable ones",
+  "where": "`shopifyStoreConnector.js:283`"
+ },
+ {
+  "id": "A-29",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "**Dry run on by default** \u2014 see the whole plan, write nothing",
+  "where": "`core/messageTypes.js:54`"
+ },
+ {
+  "id": "A-30",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Cancel mid-run, between actions",
+  "where": "`core/syncRunner.js:23`"
+ },
+ {
+  "id": "A-31",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Every action logged with before/after values",
+  "where": "`core/syncRunner.js:65`"
+ },
+ {
+  "id": "A-32",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Ring-buffer activity log, size configurable",
+  "where": "`core/activityLog.js`"
+ },
+ {
+  "id": "A-33",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "**Shopify token redacted from every export**",
+  "where": "`backgroundServiceWorker.js:151`"
+ },
+ {
+  "id": "A-34",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Token stored only in `chrome.storage.local`, never synced",
+  "where": "`core/settingsStore.js`"
+ },
+ {
+  "id": "A-35",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Export the whole run as JSON",
+  "where": "`backgroundServiceWorker.js:122`"
+ },
+ {
+  "id": "A-36",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.5 Safety",
+  "what": "Snapshot of both catalogues stored after each run",
+  "where": "`core/syncRunner.js:108`"
+ },
+ {
+  "id": "A-44",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**It runs** \u2014 as a container, or `python -m sixgenbot serve`",
+  "where": "`sixgenbot/__main__.py`"
+ },
+ {
+  "id": "A-45",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**`check` command** \u2014 loads everything, reports, exits non-zero if broken, no port opened",
+  "where": "`__main__.py:52`"
+ },
+ {
+  "id": "A-46",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Module loader** \u2014 a feature is a folder; core never names one",
+  "where": "`core/moduleLoader.py`"
+ },
+ {
+  "id": "A-47",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**A broken module cannot stop the others** \u2014 proved against three broken fixtures",
+  "where": "`tests/test_moduleLoader.py`"
+ },
+ {
+  "id": "A-48",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Modules switched off from settings**, no code change",
+  "where": "`core/appConfig.py`"
+ },
+ {
+  "id": "A-49",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Event bus** \u2014 publishers never learn who listened; a bad listener cannot stop the rest",
+  "where": "`core/eventBus.py`"
+ },
+ {
+  "id": "A-50",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Settings in one readable file**, secrets in a separate one, environment wins",
+  "where": "`core/appConfig.py`"
+ },
+ {
+  "id": "A-51",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Logging** to console, rotating file, and a ring buffer the UI reads",
+  "where": "`core/appLogging.py`"
+ },
+ {
+  "id": "A-52",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Console page** \u2014 frozen by design, filter to problems only",
+  "where": "`modules/activityLog/`"
+ },
+ {
+  "id": "A-53",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Status page** \u2014 what loaded, what broke, where things are",
+  "where": "`modules/systemStatus/`"
+ },
+ {
+  "id": "A-54",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Left menu**, fixed group order, current page marked by weight and border not colour",
+  "where": "`core/webApp.py:33`"
+ },
+ {
+  "id": "A-55",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Calm stylesheet enforced by test** \u2014 no animation, no `:hover`, no pure white or black",
+  "where": "`static/sixgenbot.css`"
+ },
+ {
+  "id": "A-56",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Health check** for Docker; 503 when a module failed",
+  "where": "`core/webApp.py`"
+ },
+ {
+  "id": "A-57",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "**Modules never import each other**, enforced by an `ast` test",
+  "where": "`tests/test_moduleIsolation.py`"
+ },
+ {
+  "id": "A-58",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6 sixgenbot \u2014 the server",
+  "what": "23 pytest tests",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-59",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**The full schema** from `DATA_MODEL.md` \u2014 items, multi-value attributes, categories, listings, images, orders, messages, lots, purchases, posting trips, events",
+  "where": "`migrations/0001_initialSchema.sql`"
+ },
+ {
+  "id": "A-60",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Numbered migrations**, each atomic, safe to re-run, applied on every start",
+  "where": "`core/database.py`"
+ },
+ {
+  "id": "A-61",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**A failed migration leaves no trace** \u2014 proved with a deliberately broken one",
+  "where": "`tests/test_database.py`"
+ },
+ {
+  "id": "A-62",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Search across everything at once** \u2014 title, description, brand, SKU, notes, every attribute, every category",
+  "where": "`core/database.py` `searchItems()`"
+ },
+ {
+  "id": "A-63",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "Search survives whatever is typed \u2014 quotes, stars, punctuation",
+  "where": "`core/database.py`"
+ },
+ {
+  "id": "A-64",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Money in integer pence**, dates in ISO-8601",
+  "where": "schema-wide"
+ },
+ {
+  "id": "A-65",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**A bad status is refused**, not stored",
+  "where": "`CHECK` constraints"
+ },
+ {
+  "id": "A-66",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Nothing is deleted** \u2014 status changes and the details stay",
+  "where": "tested"
+ },
+ {
+  "id": "A-67",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Nightly backup at 02:30**, checked as it is written, newest 14 kept",
+  "where": "`modules/backups/`"
+ },
+ {
+  "id": "A-68",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Restore, with the replaced database kept** as `.beforeRestore`",
+  "where": "`core/backup.py`"
+ },
+ {
+  "id": "A-69",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**The round trip is tested** \u2014 fill, back up, delete, restore, check every row",
+  "where": "`tests/test_backup.py`"
+ },
+ {
+  "id": "A-70",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "A damaged backup is refused rather than restored",
+  "where": "`core/backup.py`"
+ },
+ {
+  "id": "A-71",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Scheduler** \u2014 `bot.addJob(name, when, run)`; a job that throws does not stop the others",
+  "where": "`core/scheduler.py`"
+ },
+ {
+  "id": "A-72",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "`migrate`, `backup`, `restore` commands; `check` reports schema, counts and backups",
+  "where": "`__main__.py`"
+ },
+ {
+  "id": "A-73",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "The status page shows real counts and the scheduled jobs",
+  "where": "`modules/systemStatus/`"
+ },
+ {
+  "id": "A-74",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "**Copy-and-paste install guide**, with and without Compose",
+  "where": "`docs/INSTALL_GUIDE.md`"
+ },
+ {
+  "id": "A-75",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6b sixgenbot \u2014 the database",
+  "what": "50 pytest tests",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-76",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "**The SKU parser in Python** \u2014 parse, format, describe, rewrite a description without losing the code, sort a picking route",
+  "where": "`core/sku.py`"
+ },
+ {
+  "id": "A-77",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "**A test that fails if the Python and JavaScript SKU patterns drift apart**",
+  "where": "`tests/test_sku.py`"
+ },
+ {
+  "id": "A-78",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "**\"What is missing\" in plain words**, per platform, ready to put on a screen",
+  "where": "`core/readiness.py`"
+ },
+ {
+  "id": "A-79",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "**\"Nobody has checked this\" tracked separately from \"a field is empty\"**",
+  "where": "`migrations/0002_verifiedAt.sql`"
+ },
+ {
+  "id": "A-80",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "Recommendations never block an item (D-103)",
+  "where": "`core/readiness.py`"
+ },
+ {
+  "id": "A-81",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "An unknown platform asks for nothing rather than inventing requirements",
+  "where": "`core/readiness.py`"
+ },
+ {
+  "id": "A-82",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6c sixgenbot \u2014 stage 3 foundations",
+  "what": "Nothing imported is ever put straight on sale",
+  "where": "`suggestedStatus()`"
+ },
+ {
+  "id": "A-83",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Import the Crosslist export** \u2014 2,125 items, dry run by default",
+  "where": "`core/crosslistImport.py`"
+ },
+ {
+  "id": "A-84",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Idempotent** \u2014 a second run changes nothing",
+  "where": "`crosslistId`"
+ },
+ {
+  "id": "A-85",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**The weight read out of the description** (`W###g`), because the column is junk",
+  "where": "`readWeight()`"
+ },
+ {
+  "id": "A-86",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**The SKU read out of the description**, raw form kept as well",
+  "where": "`readRawCode()`"
+ },
+ {
+  "id": "A-87",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "Items with no code import and are flagged, never skipped",
+  "where": "`importNote`"
+ },
+ {
+  "id": "A-88",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "Items sharing a code both survive, neither merged",
+  "where": "`_uniqueSku()`"
+ },
+ {
+  "id": "A-89",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Nothing is ever imported as on sale**",
+  "where": "`statusFor()`"
+ },
+ {
+  "id": "A-90",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Every import writes a dated history entry**",
+  "where": "`event` table"
+ },
+ {
+  "id": "A-91",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Download every photo**, resumable, five at a time",
+  "where": "`core/photoStore.py`"
+ },
+ {
+  "id": "A-92",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "Every photo hashed, so identical images across items are findable",
+  "where": "`duplicateImages()`"
+ },
+ {
+  "id": "A-93",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "A dead URL is retried twice; **a 404 is not retried at all**",
+  "where": "`_download()`"
+ },
+ {
+  "id": "A-94",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**Photo order recorded as a guess, not the truth** \u2014 `crosslist` / `vinted` / `manual`",
+  "where": "migration 0003"
+ },
+ {
+  "id": "A-97",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**A re-import refreshes sizes, colours, categories and photos**, replacing only Crosslist's own rows and never removing a photograph",
+  "where": "`_refreshChildren()`"
+ },
+ {
+  "id": "A-96",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "**A missing import file is a sentence**, listing what is in the folder and giving both paths",
+  "where": "`__main__.py`"
+ },
+ {
+  "id": "A-95",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6d sixgenbot \u2014 stage 3, the import",
+  "what": "(test count now in A-105)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-98",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**Upload a spreadsheet from the browser** \u2014 no share, no `cp`, works from a phone",
+  "where": "`modules/fileTransfer/`"
+ },
+ {
+  "id": "A-99",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**Upload shows the dry run first**; nothing is written until Import it is pressed",
+  "where": "`routes.preview()`"
+ },
+ {
+  "id": "A-100",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**Download the inventory as CSV**, whole or by status",
+  "where": "`core/csvExport.py`"
+ },
+ {
+  "id": "A-101",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**Download a backup** from the page",
+  "where": "`routes.downloadBackup()`"
+ },
+ {
+  "id": "A-102",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**The flattening rules** \u2014 `sizeUk`/`sizeEu`/`sizeUs`/`sizeLetter`, `;` for lists, no commas inside values",
+  "where": "`core/csvExport.py`"
+ },
+ {
+  "id": "A-103",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "**A filename cannot escape its folder**, and the database is never served",
+  "where": "`tidyName()`, `insideFolder()`"
+ },
+ {
+  "id": "A-104",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "A spreadsheet that cannot be read says so rather than showing a traceback",
+  "where": "`routes.preview()`"
+ },
+ {
+  "id": "A-105",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6e sixgenbot \u2014 the Files page",
+  "what": "(test count now in A-121)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-106",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Three lists**: not checked yet, **never listed** (the 972 still worth putting up), listed but not checked",
+  "where": "`routes._where()`"
+ },
+ {
+  "id": "A-107",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Choose what is shown**, and the choice is remembered in a cookie",
+  "where": "`routes.chosenColumns()`"
+ },
+ {
+  "id": "A-108",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**The chosen columns decide what can be changed** on the next screen \u2014 no separate settings",
+  "where": "`routes.edit()`"
+ },
+ {
+  "id": "A-109",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Tick items, work on up to 40, save the lot in one press**",
+  "where": "`routes.save()`"
+ },
+ {
+  "id": "A-110",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Sizes edited per system** \u2014 UK, EU, US, letter \u2014 as attributes, not columns. The field the whole backlog turns on",
+  "where": "`core/itemEdit.py`"
+ },
+ {
+  "id": "A-111",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Every change recorded** with its value before and after, so a batch save can be explained afterwards",
+  "where": "`itemEdit._record()`"
+ },
+ {
+  "id": "A-112",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**\"I have checked this one\"** is separate from saving a correction \u2014 and is what sets `verifiedAt`",
+  "where": "`itemEdit.markChecked()`"
+ },
+ {
+  "id": "A-113",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Checking recomputes the status**, and never to `on_sale` \u2014 ready is not listed",
+  "where": "`itemEdit.markChecked()`"
+ },
+ {
+  "id": "A-114",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**An item already sold or archived is never disturbed** by a status recompute",
+  "where": "`itemEdit.SETTLED`"
+ },
+ {
+  "id": "A-115",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Room order** \u2014 column, then box, then item. `7-4 3` before `7-4 21` before `13-8 24`; no-code items last",
+  "where": "`core/sku.py SQL_ORDER`"
+ },
+ {
+  "id": "A-116",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**The SKU shown the way the business writes it** \u2014 `13-8 24`, not the stored `13-8-24`",
+  "where": "`sku.formatSku()`"
+ },
+ {
+  "id": "A-117",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Search across every field** from the same screen, submitted not live",
+  "where": "`database.searchItems()`"
+ },
+ {
+  "id": "A-118",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**Server-side paging**, 50 a page, plain Back/On links. Nothing loads the whole table",
+  "where": "`routes.findItems()`"
+ },
+ {
+  "id": "A-119",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**A batch save is all or nothing** \u2014 one failure rolls the whole thing back and says so in a sentence",
+  "where": "`routes.save()`"
+ },
+ {
+  "id": "A-120",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "**An edit reaches the search index**, because it is spread over three tables",
+  "where": "`database.reindexItem()`"
+ },
+ {
+  "id": "A-121",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6f sixgenbot \u2014 To review, the batch edit screen (U-16)",
+  "what": "(test count now in A-133)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-122",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Fetch the photographs from a button**, in the background \u2014 the page comes straight back",
+  "where": "`modules/photoLibrary/`"
+ },
+ {
+  "id": "A-123",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**How many are safely here** versus still only on Crosslist, plus space used",
+  "where": "`photoStore.storedCounts()`"
+ },
+ {
+  "id": "A-124",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Fetch a few first** \u2014 a count box, empty means all",
+  "where": "`routes.startFetch()`"
+ },
+ {
+  "id": "A-125",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Stop, and it stops in seconds** \u2014 chunked 200 at a time rather than one pool over 9,098",
+  "where": "`photoStore.fetchAll(shouldStop=)`"
+ },
+ {
+  "id": "A-126",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**The job list is taken once**, so a failed photo cannot loop forever",
+  "where": "`photoStore.fetchAll()`"
+ },
+ {
+  "id": "A-127",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**One run at a time**, under a lock",
+  "where": "`routes.lock`"
+ },
+ {
+  "id": "A-128",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**No auto-refresh** \u2014 a *Check again* link, and the page says so",
+  "where": "`photos.html`"
+ },
+ {
+  "id": "A-129",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Failures grouped by what the server said**, with counts, retried next run",
+  "where": "`photoStore.failureReasons()`"
+ },
+ {
+  "id": "A-130",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Stored photographs served** to the browser",
+  "where": "`routes.image()`"
+ },
+ {
+  "id": "A-131",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**A path in the database is not permission to read it** \u2014 nothing outside the images folder is ever served",
+  "where": "`routes.image()`"
+ },
+ {
+  "id": "A-132",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "**Duplicates by content, not address** \u2014 answers the \u00a73B.11 correction",
+  "where": "`/photos/duplicates`"
+ },
+ {
+  "id": "A-133",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6g sixgenbot \u2014 the Photos page",
+  "what": "(test count now in A-147)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-134",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**One search box across every field** \u2014 title, description, brand, colour, material, notes",
+  "where": "`database.searchItems()`"
+ },
+ {
+  "id": "A-135",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Filters**: status, size, brand, colour, box, price range, has photographs, ever listed",
+  "where": "`core/itemQuery.py`"
+ },
+ {
+  "id": "A-136",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**The filters say what they are doing in words** above the results",
+  "where": "`itemQuery.describe()`"
+ },
+ {
+  "id": "A-137",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Thumbnails**, now the photographs are on the server",
+  "where": "`table.html`"
+ },
+ {
+  "id": "A-138",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Columns can be chosen**, and the choice is remembered",
+  "where": "`routes.chosenColumns()`"
+ },
+ {
+  "id": "A-139",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Sorting is a choice** \u2014 storage order, newest, cheapest, dearest, title",
+  "where": "`itemQuery.SORTS`"
+ },
+ {
+  "id": "A-140",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Server-side paging**, 50 a page, plain links. Nothing loads the whole table",
+  "where": "`itemQuery.findPage()`"
+ },
+ {
+  "id": "A-141",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**One query per kind of thing, not one per row** \u2014 what makes it work at 100,000",
+  "where": "`routes._decorate()`"
+ },
+ {
+  "id": "A-142",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Paging keeps the search and the filters**",
+  "where": "`routes._withoutPage()`"
+ },
+ {
+  "id": "A-143",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**A search ceiling of 1,000**, and the page says when it is reached",
+  "where": "`itemQuery.SEARCH_CEILING`"
+ },
+ {
+  "id": "A-144",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**The Box filter accepts `11-1` or `11 1`** \u2014 and the page says why the search box cannot do it",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-145",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**A photo row with no file does not count** as having a photograph",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-146",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "**Nothing matching is a sentence**, not a blank table",
+  "where": "`table.html`"
+ },
+ {
+  "id": "A-147",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6h sixgenbot \u2014 The Table",
+  "what": "(test count now in A-154)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-148",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**Small copies of the photographs**, made once and kept \u2014 a page of the Table went from 76 MB to 0.6 MB",
+  "where": "`core/thumbnails.py`"
+ },
+ {
+  "id": "A-149",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**The size is in the filename**, so raising it later cannot serve an old copy at the wrong size",
+  "where": "`thumbnails.thumbnailFor()`"
+ },
+ {
+  "id": "A-150",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**The full photograph is still served** without `small=yes`",
+  "where": "`routes.image()`"
+ },
+ {
+  "id": "A-151",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**Pillow is optional** \u2014 if it is missing the full photograph is served, and the screen still works",
+  "where": "`thumbnails.canResize`"
+ },
+ {
+  "id": "A-152",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**The stylesheet address carries a stamp of its own contents** \u2014 a screen change now reaches the browser at once",
+  "where": "`webApp.styleVersion()`"
+ },
+ {
+  "id": "A-153",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "**The small copies can be thrown away** and are made again on demand",
+  "where": "`thumbnails.removeAll()`"
+ },
+ {
+  "id": "A-154",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6i sixgenbot \u2014 small copies of the photographs",
+  "what": "(test count now in A-170)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-155",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Tick the rows you want**, on any filtered list",
+  "where": "`table.html`"
+ },
+ {
+  "id": "A-156",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Or take everything that matches** \u2014 not just the page",
+  "where": "`routes.edit()`"
+ },
+ {
+  "id": "A-157",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Choose by what is missing** \u2014 brand, size, colour, price, weight, title, description, photographs, category",
+  "where": "`itemQuery.MISSING`"
+ },
+ {
+  "id": "A-158",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Choose by a word in the title, the description or the private notes**",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-159",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Choose by when an item arrived** \u2014 between two dates and times, or in the last N days",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-160",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**An inclusive end date** \u2014 `dateAdded` holds a time, so a date-only end would drop that whole day",
+  "where": "`itemQuery._endOfDay()`"
+ },
+ {
+  "id": "A-161",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Choose by checked or not checked**",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-162",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Choose the items that share a code** with another item",
+  "where": "`itemQuery.buildWhere()`"
+ },
+ {
+  "id": "A-163",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Every choice combines with every other**, and the sentence names them all",
+  "where": "`itemQuery.describe()`"
+ },
+ {
+  "id": "A-164",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**One field becomes one column**, one item to a line",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-165",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Tab walks down the column**, Shift and Tab walk back up. No JavaScript",
+  "where": "the page order itself"
+ },
+ {
+  "id": "A-166",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Nothing focusable sits between two boxes** \u2014 a per-row tick box made it two presses an item",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-167",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**A column holds 200**, a page of cards holds 40",
+  "where": "`routes.MOST_IN_A_COLUMN`"
+ },
+ {
+  "id": "A-168",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**\"The first 200 of 385\"**, said plainly, and the batch shrinks as it is worked",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-169",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "**Saving returns you to the list you came from**, filters intact",
+  "where": "`routes.save()`"
+ },
+ {
+  "id": "A-170",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6j sixgenbot \u2014 choosing items, and editing down a column",
+  "what": "(test count now in A-181)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-171",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**Every photograph shown while you edit**, in order",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-172",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**Put the photographs in order** \u2014 Move up, Move down, Make it first",
+  "where": "`/photos/order/{itemId}`"
+ },
+ {
+  "id": "A-173",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**A move renumbers in two passes**, because `UNIQUE (itemId, position)` blocks a one-at-a-time swap",
+  "where": "`photoOrder._renumber()`"
+ },
+ {
+  "id": "A-174",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**A move marks the order `manual`**, which a later platform read must not overwrite",
+  "where": "`photoOrder.move()`"
+ },
+ {
+  "id": "A-175",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**The order change is recorded** in the item's history",
+  "where": "`photoOrder._record()`"
+ },
+ {
+  "id": "A-176",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**Save and put these in order** \u2014 saves your typing before leaving the page",
+  "where": "`routes.saveThenArrange()`"
+ },
+ {
+  "id": "A-177",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**The old value under every box** \u2014 *was Marks & Spencer*, or *was empty*",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-178",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**What this item says now** \u2014 every field, folded away on a card",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-179",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**Tab picks out the text in the box** so typing replaces it \u2014 the browser already does this, checked in Chromium",
+  "where": "nothing to build"
+ },
+ {
+  "id": "A-180",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "**A column has nothing focusable between its boxes** \u2014 a fold made it two presses an item",
+  "where": "`reviewEdit.html`"
+ },
+ {
+  "id": "A-181",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6k sixgenbot \u2014 photographs and old values while editing",
+  "what": "(test count now in A-193)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-182",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**One garment, every answer the Vinted form asks for**, in one place",
+  "where": "`core/listingSheet.py`"
+ },
+ {
+  "id": "A-183",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**The SKU already on the end of the description** \u2014 first real use of `withSku()`",
+  "where": "`sku.withSku()`"
+ },
+ {
+  "id": "A-184",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**Download all the photographs** as a zip, numbered 01, 02, 03",
+  "where": "`listingSheet.photoZip()`"
+ },
+ {
+  "id": "A-185",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**Where the garment is**, in words: column 8, box 3, item 36",
+  "where": "`sku.describeSku()`"
+ },
+ {
+  "id": "A-186",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**Says what is still missing** before you start",
+  "where": "`readiness.missingFor()`"
+ },
+ {
+  "id": "A-187",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**It is on Vinted now** \u2014 records the date, the listing and the history in one go",
+  "where": "`routes.markListed()`"
+ },
+ {
+  "id": "A-188",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**Pressing it twice does not make two listings**",
+  "where": "`ON CONFLICT DO UPDATE`"
+ },
+ {
+  "id": "A-189",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**The item leaves the waiting list by itself** once it is up",
+  "where": "`listingSheet.waitingToList()`"
+ },
+ {
+  "id": "A-190",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**The waiting list needs photographs**, and says how many are still missing them",
+  "where": "`routes.waiting()`"
+ },
+ {
+  "id": "A-191",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**The Vinted address can be pasted in**, and is kept",
+  "where": "`listing.url`"
+ },
+ {
+  "id": "A-192",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "**Boxes you copy out of, not into** \u2014 readonly, dashed",
+  "where": "`sheet.html`"
+ },
+ {
+  "id": "A-193",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6l sixgenbot \u2014 Ready to list",
+  "what": "(test count now in A-208)",
+  "where": "`sixgenbot/tests/`"
+ },
+ {
+  "id": "A-194",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**The extension sends its wardrobe read to the server**",
+  "where": "`source/core/sixgenbotSender.js`"
+ },
+ {
+  "id": "A-195",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**Permission for the server is asked at send time**, not at install",
+  "where": "`optional_host_permissions`"
+ },
+ {
+  "id": "A-196",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A read changes nothing by arriving** \u2014 it is stored, and a plan is worked out",
+  "where": "`routes.receive()`"
+ },
+ {
+  "id": "A-197",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A read never writes over a field you already have**",
+  "where": "`vintedRead.applyRead()`"
+ },
+ {
+  "id": "A-198",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**Differences are listed, not applied**",
+  "where": "`plan.differences`"
+ },
+ {
+  "id": "A-199",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**Blanks are filled in**, because nothing is lost",
+  "where": "`plan.filledIn`"
+ },
+ {
+  "id": "A-200",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**The listing address, price and state are written** \u2014 Vinted's to state",
+  "where": "`_writeListing()`"
+ },
+ {
+  "id": "A-201",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A sale on Vinted is carried across**",
+  "where": "`plan.soldOnVinted`"
+ },
+ {
+  "id": "A-202",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A listing that has gone is marked ended, never deleted**",
+  "where": "`plan.goneFromVinted`"
+ },
+ {
+  "id": "A-203",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**Matched by the Vinted id first, then the code. Never the title**",
+  "where": "`_findItem()`"
+ },
+ {
+  "id": "A-204",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A suffixed item matches its plain code** \u2014 without this, 324 would have been duplicated",
+  "where": "`itemsWithCode()`"
+ },
+ {
+  "id": "A-205",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A code two garments share is never guessed** \u2014 the page offers both and you pick",
+  "where": "`plan.ambiguous`"
+ },
+ {
+  "id": "A-206",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**Link a listing to a garment by hand, once** \u2014 after that the Vinted id settles it",
+  "where": "`POST /vinted/link`"
+ },
+ {
+  "id": "A-207",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "**A saved read can be uploaded** instead of sent",
+  "where": "`POST /vinted/upload`"
+ },
+ {
+  "id": "A-208",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6m sixgenbot \u2014 reading Vinted into the database",
+  "what": "(test counts now in A-216)",
+  "where": "`sixgenbot/tests/`, `tests/`"
+ },
+ {
+  "id": "A-209",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**The first connection records the account**; every later one is compared",
+  "where": "`source/core/knownAccounts.js`"
+ },
+ {
+  "id": "A-210",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**The Shopify shop id decides**, never the name or the address",
+  "where": "`shop { id }`"
+ },
+ {
+  "id": "A-211",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**The Vinted user id decides**, never the username",
+  "where": "`vintedPageReader.scrapeWardrobe()`"
+ },
+ {
+  "id": "A-212",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**A rename is allowed, recorded and said once** \u2014 the shop is being renamed",
+  "where": "`checkAccount()`"
+ },
+ {
+  "id": "A-213",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**A different account stops the run before its first write**",
+  "where": "`syncRunner.confirmOrStop()`"
+ },
+ {
+  "id": "A-214",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**A refused connection cannot overwrite the recorded account**",
+  "where": "`rememberFrom()`"
+ },
+ {
+  "id": "A-215",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "**The settings page says what this copy is tied to**, and since when",
+  "where": "`showKnown()`"
+ },
+ {
+  "id": "A-216",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6n the extension \u2014 confirming it is the right shop",
+  "what": "276 pytest tests, 53 extension tests",
+  "where": "`sixgenbot/tests/`, `tests/`"
+ },
+ {
+  "id": "A-37",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Run by hand from the popup",
+  "where": "`popupPanel/`"
+ },
+ {
+  "id": "A-38",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Optional schedule, minimum 15 minutes, **off by default**",
+  "where": "`backgroundServiceWorker.js:41`"
+ },
+ {
+  "id": "A-39",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Test-connection buttons for both platforms",
+  "where": "`backgroundServiceWorker.js:95`"
+ },
+ {
+  "id": "A-40",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Shopify location picked automatically on first connect",
+  "where": "`backgroundServiceWorker.js:99`"
+ },
+ {
+  "id": "A-41",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Settings page for domains, token, directions, interval, logging",
+  "where": "`settingsPage/`"
+ },
+ {
+  "id": "A-42",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "Version shown in the UI, read from the manifest, enforced by a test",
+  "where": "`core/extensionVersion.js`"
+ },
+ {
+  "id": "A-43",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.7 Running it (the extension)",
+  "what": "36 tests, no dependencies to install",
+  "where": "`tests/`"
+ },
+ {
+  "id": "B-01",
+  "status": "part",
+  "part": "Part B \u2014 half built",
+  "section": "A.7 Running it (the extension)",
+  "what": "Rate-limit handling",
+  "where": "Backoff works; resuming a part-finished run does not"
+ },
+ {
+  "id": "B-02",
+  "status": "part",
+  "part": "Part B \u2014 half built",
+  "section": "A.7 Running it (the extension)",
+  "what": "Conflict data",
+  "where": "The snapshot is stored but never read, so a two-sided change is not detected"
+ },
+ {
+  "id": "B-03",
+  "status": "part",
+  "part": "Part B \u2014 half built",
+  "section": "A.7 Running it (the extension)",
+  "what": "Undo data",
+  "where": "Before/after values are recorded but nothing replays them"
+ },
+ {
+  "id": "B-04",
+  "status": "part",
+  "part": "Part B \u2014 half built",
+  "section": "A.7 Running it (the extension)",
+  "what": "Images",
+  "where": "URLs are read; nothing is downloaded, compared or uploaded"
+ },
+ {
+  "id": "C-01",
+  "status": "stub",
+  "part": "Part C \u2014 stubs that deliberately refuse",
+  "section": "A.7 Running it (the extension)",
+  "what": "Write a price to Vinted",
+  "where": "`vintedWardrobeConnector.js:78`"
+ },
+ {
+  "id": "C-02",
+  "status": "stub",
+  "part": "Part C \u2014 stubs that deliberately refuse",
+  "section": "A.7 Running it (the extension)",
+  "what": "Write stock to Vinted",
+  "where": "`vintedWardrobeConnector.js:82`"
+ },
+ {
+  "id": "C-03",
+  "status": "stub",
+  "part": "Part C \u2014 stubs that deliberately refuse",
+  "section": "A.7 Running it (the extension)",
+  "what": "Write content to Vinted",
+  "where": "`vintedWardrobeConnector.js:86`"
+ },
+ {
+  "id": "C-04",
+  "status": "stub",
+  "part": "Part C \u2014 stubs that deliberately refuse",
+  "section": "A.7 Running it (the extension)",
+  "what": "Hide or delete a Vinted listing",
+  "where": "`vintedWardrobeConnector.js:90`"
+ },
+ {
+  "id": "C-05",
+  "status": "stub",
+  "part": "Part C \u2014 stubs that deliberately refuse",
+  "section": "A.7 Running it (the extension)",
+  "what": "Create a listing from scratch",
+  "where": "`core/syncRunner.js:142`"
+ },
+ {
+  "id": "X-06",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Reversible holding area.** When something sells it is delisted everywhere immediately, but the delisted listings are held \u2014 not destroyed \u2014 until the sale is confirmed, and one press puts them back. Kurzon's design, and better than what the paid tools do",
+  "where": ""
+ },
+ {
+  "id": "X-07",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Urgent double-sale alert** \u2014 the one event allowed to be loud",
+  "where": ""
+ },
+ {
+  "id": "S-11",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Offsite backup to pCloud**, alongside the onsite copy",
+  "where": ""
+ },
+ {
+  "id": "S-12",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Reachable over Tailscale**, with nothing exposed publicly",
+  "where": ""
+ },
+ {
+  "id": "S-13",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**LibreOffice Calc compatibility** as an export requirement, tested",
+  "where": ""
+ },
+ {
+  "id": "S-14",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Two-way Google Sheet** for purchases entered on a phone",
+  "where": ""
+ },
+ {
+  "id": "U-09",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Dashboard with a left menu** \u2014 specified in `docs/INTERFACE_LAYOUT.md`. Overrides U-01 for the home screen only",
+  "where": ""
+ },
+ {
+  "id": "U-10",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Console viewer**, frozen by default, never live-tailing",
+  "where": ""
+ },
+ {
+  "id": "U-11",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Phone-first entry screens, desk-first packing screens** \u2014 two shapes, not one compromise",
+  "where": ""
+ },
+ {
+  "id": "U-12",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Links out to Vinted / eBay / the shop.** Embedding them in the page will almost certainly be refused by those sites \u2014 see `INTERFACE_LAYOUT.md \u00a74`",
+  "where": ""
+ },
+ {
+  "id": "F-28",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "Read views, likes, offers and listing age from Vinted",
+  "where": ""
+ },
+ {
+  "id": "F-29",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "Read the Vinted category tree once and keep it",
+  "where": ""
+ },
+ {
+  "id": "L-11",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Import the existing ledger** \u2014 63 monthly sheets, 2,864 sales, five years. `docs/EXISTING_LEDGER.md`",
+  "where": ""
+ },
+ {
+  "id": "L-12",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Petrol and posting trips in the profit calculation**, exactly as the sheet already does it: `trips \u00d7 0.959 \u00d7 price per litre`, and profit = sold \u2212 (stock + petrol). This is existing behaviour, not a new feature",
+  "where": ""
+ },
+ {
+  "id": "L-13",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Recreate the monthly sheet as an export**, with the same totals, so nothing is lost by moving off it",
+  "where": ""
+ },
+ {
+  "id": "L-14",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**The SKU on every sale record** \u2014 the missing link that makes profit-per-item, time-to-sell and per-platform comparison possible at all",
+  "where": ""
+ },
+ {
+  "id": "U-13",
+  "status": "part",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**The Table** \u2014 every item, one search box across every field, filters, thumbnails, server-side paging at 100,000 rows. Built 2026-09-20, see A.6h. **In-place cell editing (`INTERFACE_LAYOUT \u00a74.4`) is not built** \u2014 it needs a decision on JavaScript, Q51",
+  "where": ""
+ },
+ {
+  "id": "X-08",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Clear the unlisted backlog** \u2014 roughly 3,000 items bought and never listed. Stock already paid for",
+  "where": ""
+ },
+ {
+  "id": "X-09",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Throughput as the headline measure** \u2014 items listed per day, shown where it is seen, because it is the number that matters",
+  "where": ""
+ },
+ {
+  "id": "U-14",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Batch listing workflow** \u2014 photograph a batch, then assign and publish them one after another with no pause between (D-249, D-250, D-097)",
+  "where": ""
+ },
+ {
+  "id": "L-15",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Answer memory** \u2014 every answer given to the review queue is offered for the next similar item (D-098)",
+  "where": ""
+ },
+ {
+  "id": "X-10",
+  "status": "built",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Five-digit item numbers in the SKU.** The parser accepted only four, so `5-6 17735` would have silently failed to match. Fixed in `source/core/storageCode.js:31` and the content-script copy, with a test",
+  "where": ""
+ },
+ {
+  "id": "X-11",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Returns keep their SKU** \u2014 the item goes back to on-sale with its original number and box, and the stored listing is re-published unchanged. No retyping",
+  "where": ""
+ },
+ {
+  "id": "U-15",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**\"Needs fixing\" at the top of the dashboard** \u2014 failed copies, double sales, dead connections. The essential half of the home screen; the counts and money are the useful half",
+  "where": ""
+ },
+ {
+  "id": "U-16",
+  "status": "built",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Batch review and edit** \u2014 pick a batch, choose which fields show, correct them, save the lot. Built 2026-09-15, see A.6f. Extended 2026-09-20 with choosing by what items have in common, and editing down one column \u2014 A.6j",
+  "where": ""
+ },
+ {
+  "id": "U-17",
+  "status": "part",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Photo order** \u2014 built 2026-09-20 with Move up, Move down and Make it first, one item at a time (A.6k). **Dragging is not built**: it needs JavaScript. Doing a whole batch at once is also still open",
+  "where": ""
+ },
+ {
+  "id": "U-18",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Item history** \u2014 every change to a garment, with what it was before. The rows are already being written by `itemEdit` (A-111); this is the screen that reads them",
+  "where": ""
+ },
+ {
+  "id": "X-12",
+  "status": "part",
+  "part": "Part D \u2014 planned",
+  "section": "D.0 \u2014 accepted 2026-09-09",
+  "what": "**Put the 972 withdrawn items back online.** The sheet that makes one of them a copying job rather than a search is built \u2014 A.6l. Doing it *for* you needs the Vinted write path. **Put the 972 withdrawn items back online.** Not unlisted stock \u2014 photographed, described, priced and taken down when Vinted changed size display. The point of the whole project",
+  "where": ""
+ },
+ {
+  "id": "S-01",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**Docker container**, Python, one volume, runs on Unraid and HexOS alike",
+  "where": ""
+ },
+ {
+  "id": "S-02",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**Database** rather than a pile of CSVs \u2014 SQLite first (Q26)",
+  "where": ""
+ },
+ {
+  "id": "S-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**CSV export** of `onsale_inventory`, `sold_items`, `orders`, `archive`",
+  "where": ""
+ },
+ {
+  "id": "S-04",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**CSV import**, so a hand-edited file can be read back",
+  "where": ""
+ },
+ {
+  "id": "S-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**Image store** \u2014 full resolution, numbered in original order, deduplicated by hash",
+  "where": ""
+ },
+ {
+  "id": "S-06",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "**Extension \u2192 container hand-over** (Q27)",
+  "where": ""
+ },
+ {
+  "id": "S-07",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "Scheduler for polling, chasing and backups",
+  "where": ""
+ },
+ {
+  "id": "S-08",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "Nightly backup of database and images",
+  "where": ""
+ },
+ {
+  "id": "S-09",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "Web interface, following `INTERFACE_PRINCIPLES.md`",
+  "where": ""
+ },
+ {
+  "id": "S-10",
+  "status": "built",
+  "part": "Part D \u2014 planned",
+  "section": "D.1 The server (new \u2014 this is where the system is going)",
+  "what": "One button: **read my Vinted wardrobe**, and send it to the server. Built 2026-09-21, see A.6m",
+  "where": ""
+ },
+ {
+  "id": "F-01",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Verify the read against the real 2,000-item wardrobe",
+  "where": ""
+ },
+ {
+  "id": "F-02",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Write a price to Vinted",
+  "where": ""
+ },
+ {
+  "id": "F-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Hide or delete a sold Vinted listing",
+  "where": ""
+ },
+ {
+  "id": "F-04",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Write title / description, preserving the storage code",
+  "where": ""
+ },
+ {
+  "id": "F-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Create a Vinted listing, photos included",
+  "where": ""
+ },
+ {
+  "id": "F-24",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "**Read every extra field** \u2014 measurements, all size systems, all colours, full category path, upload date",
+  "where": ""
+ },
+ {
+  "id": "F-25",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "**Read sold items and orders**",
+  "where": ""
+ },
+ {
+  "id": "F-26",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "**Read buyer/seller messages**",
+  "where": ""
+ },
+ {
+  "id": "F-27",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.2 Vinted",
+  "what": "Use the official **Vinted Pro API** instead of the tab, if the account qualifies (Q22)",
+  "where": ""
+ },
+ {
+  "id": "E-01",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "Read eBay listings (Q15)",
+  "where": ""
+ },
+ {
+  "id": "E-02",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "Write a price to eBay",
+  "where": ""
+ },
+ {
+  "id": "E-03",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "End an eBay listing",
+  "where": ""
+ },
+ {
+  "id": "E-04",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "Create an eBay listing from an item",
+  "where": ""
+ },
+ {
+  "id": "E-05",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "eBay credentials handled like the Shopify token",
+  "where": ""
+ },
+ {
+  "id": "E-06",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.3 eBay",
+  "what": "Read eBay orders and fees for the ledger",
+  "where": ""
+ },
+ {
+  "id": "X-01",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.4 Cross-platform",
+  "what": "Three-way parity report (Q17)",
+  "where": ""
+ },
+ {
+  "id": "X-02",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.4 Cross-platform",
+  "what": "**Sold anywhere \u2192 removed everywhere.** The point of the whole thing",
+  "where": ""
+ },
+ {
+  "id": "X-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.4 Cross-platform",
+  "what": "Storage code into the eBay SKU field",
+  "where": ""
+ },
+ {
+  "id": "X-04",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.4 Cross-platform",
+  "what": "**\"Needs extra info\" queue** \u2014 one screen, one item, only the fields the target platform demands",
+  "where": ""
+ },
+ {
+  "id": "X-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.4 Cross-platform",
+  "what": "Per-platform required-field rules, so the queue knows what to ask for",
+  "where": ""
+ },
+ {
+  "id": "L-01",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Record a purchase (Q19, Q25)",
+  "where": ""
+ },
+ {
+  "id": "L-02",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Record a sale automatically",
+  "where": ""
+ },
+ {
+  "id": "L-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Profit per garment",
+  "where": ""
+ },
+ {
+  "id": "L-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Unsold stock value",
+  "where": ""
+ },
+ {
+  "id": "L-06",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Period totals",
+  "where": ""
+ },
+ {
+  "id": "L-07",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Job-lot cost apportionment (Q21)",
+  "where": ""
+ },
+ {
+  "id": "L-08",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "**\"Posted\" button** with a photo of the parcel in its bag",
+  "where": ""
+ },
+ {
+  "id": "L-09",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "Tracking numbers and delivery status",
+  "where": ""
+ },
+ {
+  "id": "L-10",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.5 Orders, postage and money",
+  "what": "**Archive after completion, kept 5 years**",
+  "where": ""
+ },
+ {
+  "id": "N-01",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.6 Notifications",
+  "what": "Something sold",
+  "where": ""
+ },
+ {
+  "id": "N-02",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.6 Notifications",
+  "what": "Something delivered",
+  "where": ""
+ },
+ {
+  "id": "N-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.6 Notifications",
+  "what": "**Delivery overdue**",
+  "where": ""
+ },
+ {
+  "id": "N-04",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.6 Notifications",
+  "what": "Something is broken \u2014 a read failed, a token expired, a platform changed",
+  "where": ""
+ },
+ {
+  "id": "N-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.6 Notifications",
+  "what": "Sold on two platforms before a check ran",
+  "where": ""
+ },
+ {
+  "id": "U-01",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "One screen, one job",
+  "where": ""
+ },
+ {
+  "id": "U-02",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Plain language, not data",
+  "where": ""
+ },
+ {
+  "id": "U-03",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Nothing moves \u2014 no animation, no toasts, no auto-refresh",
+  "where": ""
+ },
+ {
+  "id": "U-04",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Predictable placement; nothing happens on hover",
+  "where": ""
+ },
+ {
+  "id": "U-05",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Detail folded away",
+  "where": ""
+ },
+ {
+  "id": "U-06",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Per-item review before applying",
+  "where": ""
+ },
+ {
+  "id": "U-07",
+  "status": "planned",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Grouping and filtering at scale",
+  "where": ""
+ },
+ {
+  "id": "U-08",
+  "status": "question",
+  "part": "Part D \u2014 planned",
+  "section": "D.7 Interface",
+  "what": "Interface review with the person who uses it (Q20)",
+  "where": ""
+ },
+ {
+  "id": "D-084",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "Publish to Shopify as a draft first",
+  "where": "Publishing goes straight live"
+ },
+ {
+  "id": "D-139",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "\"Nothing sold in X days\" notification",
+  "where": "But D-161, price-drop suggestions in a report, **is** wanted. A report, not a nag"
+ },
+ {
+  "id": "D-173",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "One screen, one job. No dashboard",
+  "where": "**Retired U-01.** A dashboard is what is wanted"
+ },
+ {
+  "id": "D-174",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "Plain sentences, not tables",
+  "where": "**Retired U-02.** Tables are wanted"
+ },
+ {
+  "id": "D-240",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "Print storage-code labels",
+  "where": "Not needed. D-239 (QR-ready) **is** wanted"
+ },
+ {
+  "id": "D-244",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "Suggest which items to bundle",
+  "where": ""
+ },
+ {
+  "id": "D-248",
+  "status": "declined",
+  "part": "Part E \u2014 ideas, not yet agreed",
+  "section": "D.7 Interface",
+  "what": "Free up a storage code when an item is posted",
+  "where": "**Answered, and it is a design rule now:** the SKU is bound to the item permanently and never recycled, so a returned garment keeps its number, goes back in the same box, and its listing is re-uploaded unchanged. Item numbers run to five digits \u2014 see X-10"
+ }
+]

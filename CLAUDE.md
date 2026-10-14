@@ -101,6 +101,7 @@ idea does not come round again.
 
 | File | When |
 |---|---|
+| `docs/design/01_pages.html` | **When you are lost.** Every page drawn, every feature's status, and the build schedule. Open it in a browser |
 | `EXPLAINED_six-generations_Extension.md` | **First, every session.** What is known and how it works |
 | `FEATURE_six-generations_creep.md` | **Before building anything.** It may already exist |
 | `docs/SIXGENBOT_PLAN.md` | **Before writing any Python.** The stages, the module contract, the stack, and the rules that keep modules from breaking each other |
