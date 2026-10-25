@@ -29,13 +29,21 @@ def insideFolder(folder: Path, name: str) -> Path | None:
     return candidate if candidate.parent == folder.resolve() and candidate.is_file() else None
 
 
-def itemsFrom(raw: bytes) -> list[dict]:
-    """The extension sends {items: [...]}; a hand-saved file may be a bare list."""
+def itemsFrom(raw: bytes) -> tuple[list[dict], bool]:
+    """(the listings, whether the whole wardrobe was read).
+
+    A read that stopped after two pages must never let the server conclude that
+    the listings it did not see have gone. A hand-saved file that says nothing
+    is treated as **partial**, which is the safe way round.
+    """
     loaded = json.loads(raw.decode("utf-8"))
-    items = loaded.get("items", []) if isinstance(loaded, dict) else loaded
+    if isinstance(loaded, dict):
+        items, complete = loaded.get("items", []), bool(loaded.get("complete", False))
+    else:
+        items, complete = loaded, False
     if not isinstance(items, list):
         raise ValueError("that file does not hold a list of listings")
-    return [item for item in items if isinstance(item, dict)]
+    return [item for item in items if isinstance(item, dict)], complete
 
 
 @router.get("/vinted", response_class=HTMLResponse, include_in_schema=False)
@@ -71,19 +79,20 @@ async def receive(request: Request):
         return JSONResponse({"error": "that read is too big"}, status_code=413)
 
     try:
-        items = itemsFrom(raw)
+        items, complete = itemsFrom(raw)
     except Exception as error:
         return JSONResponse({"error": f"that read could not be understood: {error}"},
                             status_code=400)
 
     name = f"vinted-{datetime.now().strftime('%Y-%m-%d_%H%M%S')}.json"
     (readsFolder(bot) / name).write_bytes(raw)
-    plan = planRead(bot.db.connection(), items)
+    plan = planRead(bot.db.connection(), items, complete=complete)
     log.info(f"read of {len(items)} Vinted listings stored as {name}: {plan.asSentence()}")
 
     return JSONResponse({
         "stored": name,
         "listings": len(items),
+        "wholeWardrobe": complete,
         "wouldDo": plan.asSentence(),
         "nothingWritten": True,
         "openThisPage": "/vinted",
@@ -119,7 +128,8 @@ def plan(request: Request, name: str, message: str = ""):
         return RedirectResponse("/vinted?message=There+is+no+such+read.", status_code=303)
 
     try:
-        made = planRead(bot.db.connection(), itemsFrom(path.read_bytes()))
+        read, complete = itemsFrom(path.read_bytes())
+        made = planRead(bot.db.connection(), read, complete=complete)
         problem = ""
     except Exception as error:
         made, problem = None, str(error)
@@ -136,7 +146,8 @@ def apply(request: Request, name: str):
         return RedirectResponse("/vinted?message=There+is+no+such+read.", status_code=303)
 
     try:
-        made = applyRead(bot.db.connection(), itemsFrom(path.read_bytes()), dryRun=False)
+        read, complete = itemsFrom(path.read_bytes())
+        made = applyRead(bot.db.connection(), read, dryRun=False, complete=complete)
     except Exception as error:
         log.error(f"applying {name} failed, nothing was changed: {error}")
         return RedirectResponse(

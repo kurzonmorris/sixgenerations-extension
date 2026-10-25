@@ -340,7 +340,19 @@ does it put more items up in a day.
 | A-213 | ✅ | **A different account stops the run before its first write** | `syncRunner.confirmOrStop()` |
 | A-214 | ✅ | **A refused connection cannot overwrite the recorded account** | `rememberFrom()` |
 | A-215 | ✅ | **The settings page says what this copy is tied to**, and since when | `showKnown()` |
-| A-216 | ✅ | 276 pytest tests, 53 extension tests | `sixgenbot/tests/`, `tests/` |
+| A-216 | ✅ | (test counts now in A-221) | `sixgenbot/tests/`, `tests/` |
+
+## A.6o the read-only pivot *(2026-10-25)*
+
+Vinted tightened against bots. **The system never writes to Vinted.**
+
+| ID | Status | Feature | Where |
+|---|---|---|---|
+| A-217 | ✅ | **Read what is new** — the two most recent pages, two requests instead of twelve | `vintedPageReader.viaApi(pages)` |
+| A-218 | ✅ | **Read the whole wardrobe** stays, as a deliberate occasional press | popup, `pages: 0` |
+| A-219 | ✅ | **A partial read never decides a listing has gone** — it would have ended ~1,000 in one press | `vintedRead.planRead(complete=)` |
+| A-220 | ✅ | **Silence is treated as partial** — a file that does not say is assumed to be part only | `routes.itemsFrom()` |
+| A-221 | ✅ | 282 pytest tests, 55 extension tests | `sixgenbot/tests/`, `tests/` |
 
 ## A.7 Running it (the extension)
 
@@ -473,10 +485,10 @@ Ordered roughly as `docs/SYSTEM_ARCHITECTURE.md` suggests building them.
 | ID | Status | Feature |
 |---|---|---|
 | F-01 | 📋 | Verify the read against the real 2,000-item wardrobe |
-| F-02 | 📋 | Write a price to Vinted |
-| F-03 | 📋 | Hide or delete a sold Vinted listing |
-| F-04 | 📋 | Write title / description, preserving the storage code |
-| F-05 | 📋 | Create a Vinted listing, photos included |
+| F-02 | ⛔ | **CANCELLED 2026-10-25** — Write a price to Vinted. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53 |
+| F-03 | ⛔ | **CANCELLED 2026-10-25** — Hide or delete a sold Vinted listing. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53 |
+| F-04 | ⛔ | **CANCELLED 2026-10-25** — Write title / description, preserving the storage code. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53 |
+| F-05 | ⛔ | **CANCELLED 2026-10-25** — Create a Vinted listing, photos included. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53 |
 | F-24 | 📋 | **Read every extra field** — measurements, all size systems, all colours, full category path, upload date |
 | F-25 | 📋 | **Read sold items and orders** |
 | F-26 | 📋 | **Read buyer/seller messages** |

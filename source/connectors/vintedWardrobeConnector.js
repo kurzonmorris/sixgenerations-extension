@@ -65,11 +65,13 @@ export class VintedAdapter {
     return { ok: true, ...probe };
   }
 
-  async fetchItems({ knownUserId = '' } = {}) {
-    const { items = [] } = await this.#ask(MSG.VINTED_SCRAPE_WARDROBE, {
+  async fetchItems({ knownUserId = '', pages = 0 } = {}) {
+    const { items = [], complete = true } = await this.#ask(MSG.VINTED_SCRAPE_WARDROBE, {
       username: this.settings.username,
       knownUserId,
+      pages,
     });
+    this.lastReadComplete = complete;
     logger.info(`Vinted: loaded ${items.length} listings`);
     return items;
   }

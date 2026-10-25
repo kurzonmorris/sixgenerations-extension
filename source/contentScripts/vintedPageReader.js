@@ -104,7 +104,7 @@ async function probe() {
 
 // --- wardrobe ----------------------------------------------------------------
 
-async function scrapeWardrobe({ username, knownUserId } = {}) {
+async function scrapeWardrobe({ username, knownUserId, pages = 0 } = {}) {
   const user = await currentUser();
   if (!user) return { error: 'Not signed in to Vinted in this tab.' };
 
@@ -121,24 +121,31 @@ async function scrapeWardrobe({ username, knownUserId } = {}) {
   }
 
   try {
-    const items = await viaApi(user.id);
-    return { items, via: 'api', userId: user.id, username: user.login };
+    const items = await viaApi(user.id, pages);
+    // `complete` decides whether the server may conclude a listing has gone.
+    // A read that stopped after two pages has not looked at the rest.
+    return { items, via: 'api', complete: !pages || items.length < pages * PER_PAGE,
+             userId: user.id, username: user.login };
   } catch (error) {
     const items = viaDom();
     if (!items.length) throw error;
-    return { items, via: 'dom', userId: user.id, username: user.login, apiError: String(error.message ?? error) };
+    return { items, via: 'dom', complete: false, userId: user.id,
+             username: user.login, apiError: String(error.message ?? error) };
   }
 }
 
-async function viaApi(userId) {
+/** `pages` of 0 means the whole wardrobe; 2 means the two most recent pages. */
+async function viaApi(userId, pages = 0) {
   const items = [];
-  for (let page = 1; page <= MAX_PAGES; page += 1) {
+  const last = pages ? Math.min(pages, MAX_PAGES) : MAX_PAGES;
+  for (let page = 1; page <= last; page += 1) {
     if (page > 1) await sleep(PAGE_DELAY_MS);
     const data = await json(`/api/v2/users/${userId}/items?page=${page}&per_page=${PER_PAGE}`);
     const batch = data.items ?? [];
     items.push(...batch.map(normaliseApiItem));
     if (batch.length < PER_PAGE) return items;
   }
+  if (pages) return items;   // stopped on purpose, not truncated
   // Hitting the cap means the wardrobe is bigger than expected — say so loudly
   // rather than returning a silently truncated catalogue to the parity engine.
   throw new Error(

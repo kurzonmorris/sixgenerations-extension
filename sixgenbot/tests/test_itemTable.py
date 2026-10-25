@@ -241,3 +241,23 @@ def test_a_box_code_typed_into_the_search_box_is_not_a_box_search(tmp_path):
     assert client.get("/table?q=11-1").text.count("<tr>") > 2
     page = client.get("/table?box=11-1").text
     assert "Box 11-1 — 1 item." in page
+
+
+def test_the_catalogue_has_two_plain_halves_in_the_menu(tmp_path):
+    """Asked for 2026-10-25: on Vinted, and still to go up.
+
+    Both are this same screen with one filter set, so there is one list to learn.
+    """
+    client, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    addItem(connection, "i1", "13-8-24", dateListed="2026-04-21 10:00:00")
+    addItem(connection, "i2", "7-4-21", dateListed=None)
+
+    page = client.get("/table").text
+    assert "On Vinted now" in page
+    assert "Still to go up" in page
+
+    onVinted = client.get("/table?listed=yes").text
+    toGo = client.get("/table?listed=no").text
+    assert "13-8 24" in onVinted and "7-4 21" not in onVinted
+    assert "7-4 21" in toGo and "13-8 24" not in toGo

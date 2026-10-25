@@ -97,7 +97,7 @@ sixgenerations-extension/
 │   │   └── vintedSync/               taking a wardrobe read, and linking listings
 │   ├── templates/base.html           the shell: left menu, heading, content
 │   ├── static/sixgenbot.css          the calm stylesheet — a requirement, not decoration
-│   └── tests/                        python -m pytest sixgenbot/tests -q — 276 tests
+│   └── tests/                        python -m pytest sixgenbot/tests -q — 283 tests
 │
 │
 ├── docs/design/                  the four design documents — START HERE when lost
@@ -109,7 +109,7 @@ sixgenerations-extension/
 │   ├── designDocPages.py         the pages, their regions and the open questions
 │   └── designDocShared.py        the look, and the diagram drawer
 │
-├── tests/                            Run with `npm test` — 53 tests. Nothing to install
+├── tests/                            Run with `npm test` — 55 tests. Nothing to install
 │   ├── chromeApiStub.mjs             Fake chrome.* API so extension code runs under Node
 │   ├── storageCode.test.mjs          The pairing key: parsing, spellings, false-match guards
 │   ├── knownAccounts.test.mjs        Is it the right shop? Ids decide, names do not

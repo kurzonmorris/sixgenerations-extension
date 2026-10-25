@@ -142,7 +142,12 @@ const handlers = {
    * Nothing is written by sending: the server stores the read and answers with
    * what it *would* do. Applying it is a button on the server's own page.
    */
-  async [MSG.SEND_TO_SIXGENBOT]() {
+  /**
+   * `pages` of 2 reads only the two most recent pages — what is new and what
+   * has just sold. That is two requests instead of twelve, and it is the read
+   * meant for every day. The whole wardrobe is a deliberate, occasional thing.
+   */
+  async [MSG.SEND_TO_SIXGENBOT]({ pages = 0 } = {}) {
     const settings = await getSettings();
     const url = tidyUrl(settings.sixgenbot?.url);
     if (!url) {
@@ -156,10 +161,11 @@ const handlers = {
     const who = await adapter.testConnection();
     await confirmAccount('vinted', { id: who.userId, name: who.username });
 
-    const items = await adapter.fetchItems({ knownUserId: who.userId });
-    const answer = await sendWardrobe(url, items);
+    const items = await adapter.fetchItems({ knownUserId: who.userId, pages });
+    const answer = await sendWardrobe(url, items, { complete: adapter.lastReadComplete });
     await logger.info(
-      `Sent ${items.length} Vinted listings to ${url} — ${answer.wouldDo ?? 'stored'}`,
+      `Sent ${items.length} Vinted listings (${adapter.lastReadComplete ? 'whole wardrobe' : 'recent pages only'})`
+      + ` to ${url} — ${answer.wouldDo ?? 'stored'}`,
       { stored: answer.stored },
     );
     return { ok: true, sent: items.length, answer };

@@ -139,11 +139,13 @@ document.addEventListener('click', async (event) => {
     case 'cancel':
       return send(MSG.CANCEL_SYNC);
 
-    case 'send-vinted': {
+    case 'send-vinted':
+    case 'send-vinted-all': {
+      const wholeLot = event.target.id === 'send-vinted-all';
       const button = event.target;
       button.disabled = true;
       $('#status').textContent = 'Reading the wardrobe…';
-      const response = await send(MSG.SEND_TO_SIXGENBOT);
+      const response = await send(MSG.SEND_TO_SIXGENBOT, { pages: wholeLot ? 0 : 2 });
       button.disabled = false;
       $('#status').textContent = response?.ok
         ? `Sent ${response.sent} listings. ${response.answer?.wouldDo ?? ''} Open the Vinted page on the server to apply it.`

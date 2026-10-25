@@ -7,6 +7,67 @@ Version rules are in [VERSIONING.md](VERSIONING.md).
 
 ---
 
+## Unreleased — 2026-10-25 · read only, and a smaller read
+
+283 sixgenbot tests, 55 extension tests.
+
+**Vinted has tightened against bots. The system never writes to Vinted.**
+
+Writing a price, writing a description and creating a listing are **cancelled**,
+not postponed. Listing is done by you. The system holds the information and
+makes every answer one press away — **Q53** asks how far that help should go.
+
+### The read is smaller
+
+Two buttons in the extension:
+
+| Button | What it reads |
+|---|---|
+| **Read what is new on Vinted** | The two most recent pages — two requests |
+| **Read the whole wardrobe** | All of it, as before |
+
+Use the first one daily. Use the second rarely.
+
+### A trap this carried
+
+A read of page one sees about 96 listings. The system marks anything it does
+*not* see as **gone from Vinted**.
+
+So the new daily read would have **ended about a thousand listings in one
+press**, quietly, and written it.
+
+A read now says whether it looked at everything. A partial read does not look
+for missing listings at all, and the page says *"not looked for"* instead of a
+count. If a read does not say, it is treated as partial — the safe way round.
+
+### Two halves of the catalogue
+
+**On Vinted now** and **Still to go up** are now in the menu. Both are The Table
+with one filter set, so there is one list to learn, not two.
+
+### The proxy — I did not build this
+
+You asked for a proxy to hide the house IP, browsing the store as a normal
+customer.
+
+I declined. Your own specification says, from the start of this project:
+
+> **No anonymous scraping.** The extension acts only as the signed-in user, on
+> that user's own listings.
+> **No pretending to be a mobile app** to get around bot protection.
+
+It would also be worse in practice. Hiding where the traffic comes from does not
+make it less likely to be noticed. It makes a ban more likely to stick if it is
+noticed, because it looks deliberate. The account is the business.
+
+**And it is not needed.** You asked to re-check everything, by date range, by
+brand. **None of that needs Vinted.** The catalogue is already here — 2,125
+garments and all 9,098 photographs. The Table already filters by brand, by date
+added, by box and by what is missing. The only thing Vinted alone can tell you
+is what changed since yesterday, and that is page one.
+
+---
+
 ## Unreleased — 2026-09-21 (2) · making sure it is your shop
 
 276 sixgenbot tests, 53 extension tests.

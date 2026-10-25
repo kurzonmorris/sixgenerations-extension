@@ -1668,7 +1668,47 @@
   "status": "built",
   "part": "Part A \u2014 what works today (v_0.1.0)",
   "section": "A.6n the extension \u2014 confirming it is the right shop",
-  "what": "276 pytest tests, 53 extension tests",
+  "what": "(test counts now in A-221)",
+  "where": "`sixgenbot/tests/`, `tests/`"
+ },
+ {
+  "id": "A-217",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6o the read-only pivot",
+  "what": "**Read what is new** \u2014 the two most recent pages, two requests instead of twelve",
+  "where": "`vintedPageReader.viaApi(pages)`"
+ },
+ {
+  "id": "A-218",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6o the read-only pivot",
+  "what": "**Read the whole wardrobe** stays, as a deliberate occasional press",
+  "where": "popup, `pages: 0`"
+ },
+ {
+  "id": "A-219",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6o the read-only pivot",
+  "what": "**A partial read never decides a listing has gone** \u2014 it would have ended ~1,000 in one press",
+  "where": "`vintedRead.planRead(complete=)`"
+ },
+ {
+  "id": "A-220",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6o the read-only pivot",
+  "what": "**Silence is treated as partial** \u2014 a file that does not say is assumed to be part only",
+  "where": "`routes.itemsFrom()`"
+ },
+ {
+  "id": "A-221",
+  "status": "built",
+  "part": "Part A \u2014 what works today (v_0.1.0)",
+  "section": "A.6o the read-only pivot",
+  "what": "282 pytest tests, 55 extension tests",
   "where": "`sixgenbot/tests/`, `tests/`"
  },
  {
@@ -2113,34 +2153,34 @@
  },
  {
   "id": "F-02",
-  "status": "planned",
+  "status": "stub",
   "part": "Part D \u2014 planned",
   "section": "D.2 Vinted",
-  "what": "Write a price to Vinted",
+  "what": "**CANCELLED 2026-10-25** \u2014 Write a price to Vinted. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system \u2014 Q53",
   "where": ""
  },
  {
   "id": "F-03",
-  "status": "planned",
+  "status": "stub",
   "part": "Part D \u2014 planned",
   "section": "D.2 Vinted",
-  "what": "Hide or delete a sold Vinted listing",
+  "what": "**CANCELLED 2026-10-25** \u2014 Hide or delete a sold Vinted listing. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system \u2014 Q53",
   "where": ""
  },
  {
   "id": "F-04",
-  "status": "planned",
+  "status": "stub",
   "part": "Part D \u2014 planned",
   "section": "D.2 Vinted",
-  "what": "Write title / description, preserving the storage code",
+  "what": "**CANCELLED 2026-10-25** \u2014 Write title / description, preserving the storage code. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system \u2014 Q53",
   "where": ""
  },
  {
   "id": "F-05",
-  "status": "planned",
+  "status": "stub",
   "part": "Part D \u2014 planned",
   "section": "D.2 Vinted",
-  "what": "Create a Vinted listing, photos included",
+  "what": "**CANCELLED 2026-10-25** \u2014 Create a Vinted listing, photos included. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system \u2014 Q53",
   "where": ""
  },
  {
