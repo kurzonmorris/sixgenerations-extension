@@ -447,3 +447,90 @@ def test_the_confirmation_uses_the_sku_the_business_writes(tmp_path):
                         follow_redirects=True)
     assert "13-8 24" in reply.text
     assert "13-8-24" not in reply.text
+
+
+# --- a partial read ---------------------------------------------------------
+#
+# Vinted tightened against bots in October 2026, so the daily read became the
+# two most recent pages instead of all twelve. That change carries one trap:
+# planRead marks every live listing it did not see as GONE. Reading page 1 of a
+# 1,137-listing wardrobe without guarding this would have ended about a thousand
+# listings in one press, quietly.
+
+def liveListing(connection, itemId, sku, externalId):
+    addItem(connection, itemId, sku)
+    connection.execute(
+        "INSERT INTO listing (itemId, platform, externalId, state)"
+        " VALUES (?, 'vinted', ?, 'live')", (itemId, externalId))
+
+
+def test_a_partial_read_never_decides_a_listing_has_gone(tmp_path):
+    _, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    liveListing(connection, "i1", "13-8-24", "900001")
+    liveListing(connection, "i2", "7-4-21", "900002")
+
+    # Only the first listing came back, because the read stopped after a page.
+    plan = planRead(connection, [listing()], complete=False)
+
+    assert plan.goneFromVinted == []
+    assert "nothing is judged missing" in plan.asSentence()
+
+
+def test_a_complete_read_still_finds_what_has_gone(tmp_path):
+    _, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    liveListing(connection, "i1", "13-8-24", "900001")
+    liveListing(connection, "i2", "7-4-21", "900002")
+
+    plan = planRead(connection, [listing()], complete=True)
+
+    assert [g["itemId"] for g in plan.goneFromVinted] == ["i2"]
+
+
+def test_applying_a_partial_read_ends_nothing(tmp_path):
+    _, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    liveListing(connection, "i1", "13-8-24", "900001")
+    liveListing(connection, "i2", "7-4-21", "900002")
+
+    applyRead(connection, [listing()], dryRun=False, complete=False)
+
+    states = [r["state"] for r in connection.execute("SELECT state FROM listing ORDER BY itemId")]
+    assert states == ["live", "live"], "a page-one read must not end the rest of the wardrobe"
+
+
+def test_a_read_that_does_not_say_is_treated_as_partial(tmp_path):
+    """The safe way round. Silence must never be read as “I saw everything”."""
+    client, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    liveListing(connection, "i1", "13-8-24", "900001")
+    liveListing(connection, "i2", "7-4-21", "900002")
+
+    reply = client.post("/vinted/read", json={"items": [listing()]})
+
+    assert reply.json()["wholeWardrobe"] is False
+    page = client.get(f"/vinted/plan/{reply.json()['stored']}").text
+    assert "part of the wardrobe only" in page
+    assert "not looked for" in page
+
+
+def test_a_read_that_says_it_was_complete_is_believed(tmp_path):
+    client, bot = buildClient(tmp_path)
+    connection = bot.db.connection()
+    liveListing(connection, "i1", "13-8-24", "900001")
+    liveListing(connection, "i2", "7-4-21", "900002")
+
+    reply = client.post("/vinted/read", json={"items": [listing()], "complete": True})
+
+    assert reply.json()["wholeWardrobe"] is True
+    assert "1 no longer on Vinted" in reply.json()["wouldDo"]
+
+
+def test_a_bare_list_in_a_saved_file_is_partial(tmp_path):
+    from sixgenbot.modules.vintedSync.routes import itemsFrom
+    import json as j
+
+    items, complete = itemsFrom(j.dumps([listing()]).encode())
+    assert len(items) == 1
+    assert complete is False

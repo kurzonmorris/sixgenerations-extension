@@ -52,7 +52,7 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 </style></head>
 <body><div class="sheet">
 <h1>Part 4 — the build schedule</h1>
-<p class="stamp">Generated from the repository at 39029e7 2026-09-21. Regenerate with python docs/design/buildDesignDocs.py</p>
+<p class="stamp">Generated from the repository at c091bb0 2026-10-14. Regenerate with python docs/design/buildDesignDocs.py</p>
 
 <nav class="docnav">
   <b>The four parts:</b>
@@ -70,9 +70,8 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td><b>A</b></td><td>Answer the questions that block screens</td><td>an evening</td><td><b>You.</b> Reading part 1 and saying yes, no, or “you choose”.</td></tr>
 <tr><td><b>B</b></td><td>The dashboard — make the first screen about the work</td><td>2–3 days</td><td>Stage A, question 1 and 2.</td></tr>
 <tr><td><b>C</b></td><td>One garment, and its history (U-18)</td><td>2–3 days</td><td>Stage A, question 4.</td></tr>
-<tr><td><b>D</b></td><td>Writing to Vinted — price and hiding a sold listing</td><td>1–2 weeks</td><td><b>Investigation first.</b> Vinted's edit form has to be read from the live site — docs/CLAUDE_BROWSER_TASKS.md. Nothing here can be written from documentation.</td></tr>
-<tr><td><b>E</b></td><td>Writing descriptions and titles, keeping the SKU</td><td>1 week</td><td>Stage D.</td></tr>
-<tr><td><b>F</b></td><td>Creating a Vinted listing outright</td><td>2–3 weeks</td><td>Stages D and E. <b>Investigation of the new-listing form on the live site.</b></td></tr>
+<tr><td><b>D</b></td><td>CANCELLED — writing to Vinted</td><td>—</td><td>—</td></tr>
+<tr><td><b>D2</b></td><td>Listing by hand, faster</td><td>1 day to a week — Q53 decides</td><td><b>Q53 — A, B or C.</b> C is a risk only you can decide to take.</td></tr>
 <tr><td><b>G</b></td><td>The ledger — sales, purchases, totals</td><td>2 weeks</td><td>Stage A, question 5. The petrol price per litre.</td></tr>
 <tr><td><b>H</b></td><td>Sales and orders read from Vinted</td><td>1 week</td><td>Stage G. Investigation of the Vinted orders pages.</td></tr>
 <tr><td><b>I</b></td><td>To post, and the Boxes page</td><td>1 week</td><td>Stage H for To post. Stage A, question 3 for Boxes.</td></tr>
@@ -102,30 +101,21 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <h3>How it fits the rest</h3><p>Pure read, except the links out. The event table already records actor (user / vinted / system), field, value before and value after.</p>
 <h3>How we know it works</h3><p>An edit made on the To review screen appears in the history within the same minute, with its old value. A Vinted read appears as actor “vinted”.</p>
 <h3>What it waits on</h3><p>Stage A, question 4.</p>
-<h2>Stage D — Writing to Vinted — price and hiding a sold listing</h2>
-<p><b>What it is for.</b> The first writes. Change a price; hide a listing that has sold elsewhere.</p>
-<p><b>Why now.</b> These two are the smallest useful writes and the least dangerous. They do not create anything and they do not touch descriptions, so the SKU can never be lost.</p>
-<h3>What gets built</h3><ul><li>Drive Vinted's own edit form in the signed-in tab</li><li>Price only, then hide or delete</li><li>Dry run first, always: show the plan, then do it</li><li>Record every write in the garment's history</li><li>Stop on anything unexpected rather than guessing</li></ul>
-<h3>Files it touches</h3><ul><li>source/connectors/vintedWardrobeConnector.js (setPrice, archive)</li><li>source/contentScripts/vintedPageReader.js (the edit form)</li><li>sixgenbot/core/vintedRead.py (what to ask for)</li></ul>
-<h3>How it fits the rest</h3><p>Needs the linking from stage 0 to be done — a write can only go to a listing whose Vinted number is known. Reads stay the source of truth.</p>
-<h3>How we know it works</h3><p>A dry run on ten garments lists exactly what it would change. A real run on ONE garment changes that one and nothing else. The description is untouched.</p>
-<h3>What it waits on</h3><p><b>Investigation first.</b> Vinted's edit form has to be read from the live site — docs/CLAUDE_BROWSER_TASKS.md. Nothing here can be written from documentation.</p>
-<h2>Stage E — Writing descriptions and titles, keeping the SKU</h2>
-<p><b>What it is for.</b> Change listing text on Vinted without ever losing the storage code.</p>
-<p><b>Why now.</b> This is how the 972 withdrawn garments get their sizes corrected in place, rather than being relisted from scratch.</p>
-<h3>What gets built</h3><ul><li>Use withSku() so the code is always on the end</li><li>Leave a padded code (B5-5 004) exactly as it is</li><li>Show the before and after text before writing anything</li><li>Refuse to write if the code would change</li></ul>
-<h3>Files it touches</h3><ul><li>sixgenbot/core/sku.py (withSku, already correct)</li><li>source/connectors/vintedWardrobeConnector.js (updateContent)</li></ul>
-<h3>How it fits the rest</h3><p>Reuses the description already shown on Ready to list. A write that would change the parsed code is a bug, not a feature — it stops.</p>
-<h3>How we know it works</h3><p>A hundred descriptions round-trip with the code unchanged, padding and all.</p>
-<h3>What it waits on</h3><p>Stage D.</p>
-<h2>Stage F — Creating a Vinted listing outright</h2>
-<p><b>What it is for.</b> One button: put this garment on Vinted.</p>
-<p><b>Why now.</b> <b>This is the point of the project.</b> 972 garments are waiting, 3 to 6 go up a day by hand. This is the step that changes that number.</p>
-<h3>What gets built</h3><ul><li>Upload the photographs in order</li><li>Fill the form from the garment, including the SKU on the end</li><li>Category and size pickers — the hardest part, and why F comes after E</li><li>Record the new listing number straight away, so it is linked for ever</li><li>One garment at a time, with the plan shown first</li></ul>
-<h3>Files it touches</h3><ul><li>source/contentScripts/vintedPageReader.js (the new-listing form)</li><li>sixgenbot/core/listingSheet.py (already produces every answer)</li><li>sixgenbot/modules/listingHelper/ (becomes a button, not a copying screen)</li></ul>
-<h3>How it fits the rest</h3><p>listingSheet already assembles everything the form asks for — that work is done. This stage is the driving, not the data.</p>
-<h3>How we know it works</h3><p>One garment, end to end, on the real account. Then ten. The photographs come out in the right order and the SKU is on the end.</p>
-<h3>What it waits on</h3><p>Stages D and E. <b>Investigation of the new-listing form on the live site.</b></p>
+<h2>Stage D — CANCELLED — writing to Vinted</h2>
+<p><b>What it is for.</b> <b>Cancelled on 2026-10-25.</b> Vinted tightened against bots. The system never writes to Vinted. Stages D, E and F are replaced by stage D2 below.</p>
+<p><b>Why now.</b> Not postponed — cancelled. The account is the business, and an automated write is the thing most likely to lose it.</p>
+<h3>What gets built</h3><ul><li>Nothing. Kept here so the decision is visible, not quietly dropped.</li></ul>
+<h3>Files it touches</h3><ul><li><code>docs/FEATURE_SPECIFICATION.md §4A</code></li></ul>
+<h3>How we know it works</h3><p>—</p>
+<h3>What it waits on</h3><p>—</p>
+<h2>Stage D2 — Listing by hand, faster</h2>
+<p><b>What it is for.</b> A person lists on Vinted. The system makes every answer one press away.</p>
+<p><b>Why now.</b> This replaces stages D, E and F. It is the only thing left that moves the 3-to-6-a-day number.</p>
+<h3>What gets built</h3><ul><li>&lt;b&gt;A&lt;/b&gt; — one-press copy beside every field on Ready to list, photographs as a zip. No automation at all</li><li>&lt;b&gt;B&lt;/b&gt; — tick ten garments, the extension opens ten Vinted sell tabs, a panel beside each gives the answers in order</li><li>&lt;b&gt;C&lt;/b&gt; — as B, but the boxes are filled in for you. You add photographs, check, submit</li><li>Record which garments went up, so they leave the waiting list</li></ul>
+<h3>Files it touches</h3><ul><li>sixgenbot/core/listingSheet.py (already produces every answer)</li><li><code>sixgenbot/modules/listingHelper/</code></li><li>source/ (B and C only)</li></ul>
+<h3>How it fits the rest</h3><p>A needs nothing new — listingSheet already assembles every answer. B adds tab opening. C adds form filling, and needs the live sell form read first.</p>
+<h3>How we know it works</h3><p>Ten garments listed in one sitting, timed against doing it unaided.</p>
+<h3>What it waits on</h3><p><b>Q53 — A, B or C.</b> C is a risk only you can decide to take.</p>
 <h2>Stage G — The ledger — sales, purchases, totals</h2>
 <p><b>What it is for.</b> The money side, matching the existing books exactly.</p>
 <p><b>Why now.</b> Everything about the garment is built; nothing about what it cost or made. docs/EXISTING_LEDGER.md has five years of real numbers to check against.</p>
@@ -167,6 +157,6 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <h3>How we know it works</h3><p>A test garment on all three, sold on one, gone from the other two within one run.</p>
 <h3>What it waits on</h3><p>Stages D, F and J.</p>
 <h2>What is already done</h2>
-<p>219 features are built and working — part 3 lists every one. In short: the database, the import of 2,125 garments, all 9,098 photographs brought off Crosslist, the Table, To review with batch editing, Ready to list, and reading the Vinted wardrobe back in.</p>
+<p>224 features are built and working — part 3 lists every one. In short: the database, the import of 2,125 garments, all 9,098 photographs brought off Crosslist, the Table, To review with batch editing, Ready to list, and reading the Vinted wardrobe back in.</p>
 <div class="note"><b>The one number that matters.</b> 3 to 6 garments go up a day, against 972 waiting and about 4.6 bought a day. Stage F is the only stage that changes that number — everything before it exists to make stage F safe.</div>
 </div></body></html>

@@ -52,7 +52,7 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 </style></head>
 <body><div class="sheet">
 <h1>Part 3 — every feature and its status</h1>
-<p class="stamp">Generated from the repository at 39029e7 2026-09-21. Regenerate with python docs/design/buildDesignDocs.py</p>
+<p class="stamp">Generated from the repository at c091bb0 2026-10-14. Regenerate with python docs/design/buildDesignDocs.py</p>
 
 <nav class="docnav">
   <b>The four parts:</b>
@@ -67,14 +67,14 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <div class="key"><span><i class="swatch" style="background:#dfe9e1;border-color:#3f5f45"></i>Built and working</span><span><i class="swatch" style="background:#f2ead6;border-color:#7a5a12"></i>Partly built</span><span><i class="swatch" style="background:#f6dede;border-color:#7a3b3b"></i>Refuses on purpose</span><span><i class="swatch" style="background:#e3e5ef;border-color:#4a4f6a"></i>Planned, not built</span><span><i class="swatch" style="background:#ece0ec;border-color:#6a4a6a"></i>Needs your answer</span><span><i class="swatch" style="background:#e8e5df;border-color:#6a655e"></i>Declined</span></div>
 <h2>The count</h2>
 <table><tr><th>State</th><th>How many</th><th>What it means</th></tr>
-<tr><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>219</b></td><td>On screen, working, and covered by a test.</td></tr>
+<tr><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>224</b></td><td>On screen, working, and covered by a test.</td></tr>
 <tr><td><span class="tag" style="color:#7a5a12;background:#f2ead6">Partly built</span></td><td><b>7</b></td><td>Some of it works. The missing half is named in part 4.</td></tr>
-<tr><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>5</b></td><td>The code is there and refuses on purpose, with a reason.</td></tr>
-<tr><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>59</b></td><td>Agreed and waiting. Part 4 says when.</td></tr>
+<tr><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>9</b></td><td>The code is there and refuses on purpose, with a reason.</td></tr>
+<tr><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>55</b></td><td>Agreed and waiting. Part 4 says when.</td></tr>
 <tr><td><span class="tag" style="color:#6a4a6a;background:#ece0ec">Needs your answer</span></td><td><b>15</b></td><td>Waiting on an answer from you. Part 1 holds the questions.</td></tr>
 <tr><td><span class="tag" style="color:#6a655e;background:#e8e5df">Declined</span></td><td><b>7</b></td><td>You said no. Kept so the same idea does not come round again.</td></tr>
-<tr><td><b>Everything</b></td><td><b>312</b></td><td>Features discussed since the project began.</td></tr></table>
-<h2>Built and working — 219</h2>
+<tr><td><b>Everything</b></td><td><b>317</b></td><td>Features discussed since the project began.</td></tr></table>
+<h2>Built and working — 224</h2>
 <table><tr><th>ID</th><th>State</th><th>What it is</th><th>Where</th><th>Part of</th></tr>
 <tr><td>A-01</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>Read the entire Vinted wardrobe</b> — title, description, price, brand, size, colour, condition, category, material, photo URLs, sold/hidden state</td><td><code>contentScripts/vintedPageReader.js:124</code></td><td>A.1 Reading</td></tr>
 <tr><td>A-02</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>Reads through the user's own signed-in tab; no credentials handled</td><td><code>connectors/vintedWardrobeConnector.js:31</code></td><td>A.1 Reading</td></tr>
@@ -284,7 +284,12 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>A-213</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>A different account stops the run before its first write</b></td><td><code>syncRunner.confirmOrStop()</code></td><td>A.6n the extension — confirming it is the right shop</td></tr>
 <tr><td>A-214</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>A refused connection cannot overwrite the recorded account</b></td><td><code>rememberFrom()</code></td><td>A.6n the extension — confirming it is the right shop</td></tr>
 <tr><td>A-215</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>The settings page says what this copy is tied to</b>, and since when</td><td><code>showKnown()</code></td><td>A.6n the extension — confirming it is the right shop</td></tr>
-<tr><td>A-216</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>276 pytest tests, 53 extension tests</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td><td>A.6n the extension — confirming it is the right shop</td></tr>
+<tr><td>A-216</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>(test counts now in A-221)</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td><td>A.6n the extension — confirming it is the right shop</td></tr>
+<tr><td>A-217</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>Read what is new</b> — the two most recent pages, two requests instead of twelve</td><td><code>vintedPageReader.viaApi(pages)</code></td><td>A.6o the read-only pivot</td></tr>
+<tr><td>A-218</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>Read the whole wardrobe</b> stays, as a deliberate occasional press</td><td>popup, <code>pages: 0</code></td><td>A.6o the read-only pivot</td></tr>
+<tr><td>A-219</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>A partial read never decides a listing has gone</b> — it would have ended ~1,000 in one press</td><td><code>vintedRead.planRead(complete=)</code></td><td>A.6o the read-only pivot</td></tr>
+<tr><td>A-220</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td><b>Silence is treated as partial</b> — a file that does not say is assumed to be part only</td><td><code>routes.itemsFrom()</code></td><td>A.6o the read-only pivot</td></tr>
+<tr><td>A-221</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>282 pytest tests, 55 extension tests</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td><td>A.6o the read-only pivot</td></tr>
 <tr><td>A-37</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>Run by hand from the popup</td><td><code>popupPanel/</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>A-38</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>Optional schedule, minimum 15 minutes, <b>off by default</b></td><td><code>backgroundServiceWorker.js:41</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>A-39</td><td><span class="tag" style="color:#3f5f45;background:#dfe9e1">Built and working</span></td><td>Test-connection buttons for both platforms</td><td><code>backgroundServiceWorker.js:95</code></td><td>A.7 Running it (the extension)</td></tr>
@@ -306,15 +311,19 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>U-17</td><td><span class="tag" style="color:#7a5a12;background:#f2ead6">Partly built</span></td><td><b>Photo order</b> — built 2026-09-20 with Move up, Move down and Make it first, one item at a time (A.6k). <b>Dragging is not built</b>: it needs JavaScript. Doing a whole batch at once is also still open</td><td></td><td>D.0 — accepted 2026-09-09</td></tr>
 <tr><td>X-12</td><td><span class="tag" style="color:#7a5a12;background:#f2ead6">Partly built</span></td><td><b>Put the 972 withdrawn items back online.</b> The sheet that makes one of them a copying job rather than a search is built — A.6l. Doing it *for* you needs the Vinted write path. <b>Put the 972 withdrawn items back online.</b> Not unlisted stock — photographed, described, priced and taken down when Vinted changed size display. The point of the whole project</td><td></td><td>D.0 — accepted 2026-09-09</td></tr>
 </table>
-<h2>Refuses on purpose — 5</h2>
+<h2>Refuses on purpose — 9</h2>
 <table><tr><th>ID</th><th>State</th><th>What it is</th><th>Where</th><th>Part of</th></tr>
 <tr><td>C-01</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td>Write a price to Vinted</td><td><code>vintedWardrobeConnector.js:78</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>C-02</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td>Write stock to Vinted</td><td><code>vintedWardrobeConnector.js:82</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>C-03</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td>Write content to Vinted</td><td><code>vintedWardrobeConnector.js:86</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>C-04</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td>Hide or delete a Vinted listing</td><td><code>vintedWardrobeConnector.js:90</code></td><td>A.7 Running it (the extension)</td></tr>
 <tr><td>C-05</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td>Create a listing from scratch</td><td><code>core/syncRunner.js:142</code></td><td>A.7 Running it (the extension)</td></tr>
+<tr><td>F-02</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>CANCELLED 2026-10-25</b> — Write a price to Vinted. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td><td>D.2 Vinted</td></tr>
+<tr><td>F-03</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>CANCELLED 2026-10-25</b> — Hide or delete a sold Vinted listing. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td><td>D.2 Vinted</td></tr>
+<tr><td>F-04</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>CANCELLED 2026-10-25</b> — Write title / description, preserving the storage code. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td><td>D.2 Vinted</td></tr>
+<tr><td>F-05</td><td><span class="tag" style="color:#7a3b3b;background:#f6dede">Refuses on purpose</span></td><td><b>CANCELLED 2026-10-25</b> — Create a Vinted listing, photos included. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td><td>D.2 Vinted</td></tr>
 </table>
-<h2>Planned, not built — 59</h2>
+<h2>Planned, not built — 55</h2>
 <table><tr><th>ID</th><th>State</th><th>What it is</th><th>Where</th><th>Part of</th></tr>
 <tr><td>X-06</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>Reversible holding area.</b> When something sells it is delisted everywhere immediately, but the delisted listings are held — not destroyed — until the sale is confirmed, and one press puts them back. Kurzon's design, and better than what the paid tools do</td><td></td><td>D.0 — accepted 2026-09-09</td></tr>
 <tr><td>X-07</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>Urgent double-sale alert</b> — the one event allowed to be loud</td><td></td><td>D.0 — accepted 2026-09-09</td></tr>
@@ -346,10 +355,6 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>S-08</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Nightly backup of database and images</td><td></td><td>D.1 The server (new — this is where the system is going)</td></tr>
 <tr><td>S-09</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Web interface, following <code>INTERFACE_PRINCIPLES.md</code></td><td></td><td>D.1 The server (new — this is where the system is going)</td></tr>
 <tr><td>F-01</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Verify the read against the real 2,000-item wardrobe</td><td></td><td>D.2 Vinted</td></tr>
-<tr><td>F-02</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Write a price to Vinted</td><td></td><td>D.2 Vinted</td></tr>
-<tr><td>F-03</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Hide or delete a sold Vinted listing</td><td></td><td>D.2 Vinted</td></tr>
-<tr><td>F-04</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Write title / description, preserving the storage code</td><td></td><td>D.2 Vinted</td></tr>
-<tr><td>F-05</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td>Create a Vinted listing, photos included</td><td></td><td>D.2 Vinted</td></tr>
 <tr><td>F-24</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>Read every extra field</b> — measurements, all size systems, all colours, full category path, upload date</td><td></td><td>D.2 Vinted</td></tr>
 <tr><td>F-25</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>Read sold items and orders</b></td><td></td><td>D.2 Vinted</td></tr>
 <tr><td>F-26</td><td><span class="tag" style="color:#4a4f6a;background:#e3e5ef">Planned, not built</span></td><td><b>Read buyer/seller messages</b></td><td></td><td>D.2 Vinted</td></tr>

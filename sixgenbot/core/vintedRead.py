@@ -55,17 +55,19 @@ class Plan:
     soldOnVinted: list[dict] = field(default_factory=list)
     goneFromVinted: list[dict] = field(default_factory=list)
     unmatchable: list[dict] = field(default_factory=list)   # no SKU, no known listing
+    complete: bool = True   # a partial read may never conclude a listing has gone
     ambiguous: list[dict] = field(default_factory=list)     # the code is shared
     filledIn: list[Difference] = field(default_factory=list)
     differences: list[Difference] = field(default_factory=list)
     readAt: str = ""
 
     def asSentence(self) -> str:
+        gone = (f"{len(self.goneFromVinted)} no longer on Vinted" if self.complete
+                else "part of the wardrobe only, so nothing is judged missing")
         return (
             f"{len(self.newItems)} new, {len(self.linked)} matched for the first time, "
             f"{len(self.alreadyLinked)} already known, {len(self.soldOnVinted)} sold, "
-            f"{len(self.goneFromVinted)} no longer on Vinted, "
-            f"{len(self.unmatchable)} could not be matched, "
+            f"{gone}, {len(self.unmatchable)} could not be matched, "
             f"{len(self.ambiguous)} share a code with another item"
         )
 
@@ -120,9 +122,17 @@ def _findItem(connection, read: dict) -> sqlite3.Row | str | None:
     return None
 
 
-def planRead(connection: sqlite3.Connection, items: list[dict]) -> Plan:
-    """What this read would do. Writes nothing."""
-    plan = Plan(readAt=datetime.now().isoformat(timespec="seconds"))
+def planRead(connection: sqlite3.Connection, items: list[dict],
+             complete: bool = True) -> Plan:
+    """What this read would do. Writes nothing.
+
+    `complete` is the whole wardrobe. **A partial read must never conclude that a
+    listing has gone** — it only looked at the first page or two, so everything
+    it did not see is simply unexamined, not absent. Reading page 1 of a 1,137
+    listing wardrobe without this would end about a thousand listings in one go,
+    quietly.
+    """
+    plan = Plan(readAt=datetime.now().isoformat(timespec="seconds"), complete=complete)
     seen: set[str] = set()
 
     for read in items:
@@ -178,7 +188,8 @@ def planRead(connection: sqlite3.Connection, items: list[dict]) -> Plan:
             (plan.filledIn if not ours else plan.differences).append(difference)
 
     # Anything we believe is live on Vinted that the read did not mention.
-    for row in connection.execute(
+    # Only a complete read may say this. See the note on `complete` above.
+    for row in [] if not complete else connection.execute(
         "SELECT i.itemId, i.sku, l.externalId, l.url FROM item i"
         " JOIN listing l ON l.itemId = i.itemId"
         " WHERE l.platform = 'vinted' AND l.state = 'live'"
@@ -214,9 +225,9 @@ def _record(connection, itemId: str, name: str, before: str, after: str, now: st
 
 
 def applyRead(connection: sqlite3.Connection, items: list[dict],
-              dryRun: bool = True) -> Plan:
+              dryRun: bool = True, complete: bool = True) -> Plan:
     """Writes the plan. Dry run by default, as everything here is."""
-    plan = planRead(connection, items)
+    plan = planRead(connection, items, complete=complete)
     if dryRun:
         return plan
 

@@ -21,3 +21,7 @@ def register(bot):
     bot.templates(Path(__file__).parent / "templates")
     bot.addRoutes(routes.router)
     bot.addMenuItem("The Table", "/table", group="ITEMS", order=10)
+    # The two halves of the catalogue, as plain menu entries. Both are this same
+    # screen with one filter set — one list to learn, not two.
+    bot.addMenuItem("On Vinted now", "/table?listed=yes", group="ITEMS", order=11)
+    bot.addMenuItem("Still to go up", "/table?listed=no", group="ITEMS", order=12)

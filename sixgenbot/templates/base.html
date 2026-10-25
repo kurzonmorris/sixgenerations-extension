@@ -17,7 +17,9 @@
         {% for item in items %}
           <li>
             <a href="{{ item.path }}"
-               {% if request.url.path == item.path %}aria-current="page"{% endif %}>{{ item.label }}</a>
+               {% if (item.path.split("?")[0] == request.url.path
+                   and (("?" not in item.path) or item.path.split("?")[1] in request.url.query))
+                %}aria-current="page"{% endif %}>{{ item.label }}</a>
           </li>
         {% endfor %}
       </ul>

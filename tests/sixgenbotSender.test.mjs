@@ -66,3 +66,27 @@ test('no token or credential is ever put in the body', async () => {
     assert.ok(!body.toLowerCase().includes(word.toLowerCase()), `${word} must not be sent`);
   }
 });
+
+test('a read says whether it was the whole wardrobe', async () => {
+  let body = null;
+  const fetcher = async (_url, options) => {
+    body = JSON.parse(options.body);
+    return { ok: true, json: async () => ({}) };
+  };
+
+  await sendWardrobe('tower:8770', [{ sourceId: '1' }], { fetcher, complete: false });
+  assert.equal(body.complete, false, 'the server may not judge listings missing');
+
+  await sendWardrobe('tower:8770', [{ sourceId: '1' }], { fetcher, complete: true });
+  assert.equal(body.complete, true);
+});
+
+test('a read defaults to saying it was complete only when told', async () => {
+  let body = null;
+  const fetcher = async (_url, options) => {
+    body = JSON.parse(options.body);
+    return { ok: true, json: async () => ({}) };
+  };
+  await sendWardrobe('tower:8770', [], { fetcher });
+  assert.equal(body.complete, true, 'the old full-wardrobe read keeps working unchanged');
+});

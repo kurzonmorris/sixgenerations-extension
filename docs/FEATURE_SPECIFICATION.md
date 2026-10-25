@@ -142,6 +142,39 @@ decision** — Q14 asks whether it is right.
 Creating listings (F-05, F-06, E-04) sits after v_1.0.0. It is a different and
 much larger job than keeping existing listings in step.
 
+## 4A. The pivot — read only, 2026-10-25
+
+**Vinted has tightened against bots.** The decision: **the system never writes to
+Vinted.** Stages D, E and F of the build schedule — writing a price, writing a
+description, creating a listing — are **cancelled**, not postponed.
+
+What remains on Vinted:
+
+| | |
+|---|---|
+| Read the wardrobe in the signed-in session | **keep** — gentler now, see below |
+| Write a price, hide a listing, create a listing | **cancelled** |
+| Help a person list by hand, faster | **the replacement** |
+
+**The read got smaller, not sneakier.** The everyday read is now the two most
+recent pages — what is new and what has just sold — which is two requests
+instead of twelve. The whole wardrobe is a deliberate, occasional press.
+
+⚠ **A partial read may never conclude a listing has gone.** It only looked at
+page one; everything else is unexamined, not missing. Without that guard, a
+daily read would have ended about a thousand listings in one press, quietly.
+
+### What was asked for and refused, 2026-10-25
+
+A proxy to hide the house IP, with the system browsing the public store "as if
+it's a normal customer" to read listings without the account being linked to it.
+
+**Declined.** It breaks §5 below, written at the start of this project, twice
+over: it is anonymous scraping, and it is disguise to get around bot protection.
+It is also worse in practice — hiding the origin makes a ban more likely to
+stick if it is ever noticed, and the account is the business. See
+`docs/OPEN_QUESTIONS.md` Q53 for what was done instead.
+
 ## 5. Deliberately not doing
 
 Carried over from `FUTURE_FEATURES.md`, and still true with eBay added:

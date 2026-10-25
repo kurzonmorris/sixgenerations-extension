@@ -32,9 +32,19 @@ item, one search box, filters, thumbnails — and **Ready to list**, which lays 
 garment out with every answer the Vinted form asks for and the photographs as a
 numbered zip — and **reading Vinted back in**: the extension sends its wardrobe
 read, the server says what it would change, and nothing changes until told.
-**A read never writes over a correction.** Next: the Vinted write path, item
-history (U-18), and in-place editing on the Table (Q51). eBay and Shopify wait
-until Vinted works end to end.
+**A read never writes over a correction.**
+
+**⛔ THE PIVOT, 2026-10-25 — the system never writes to Vinted.** Vinted
+tightened against bots. F-02 to F-05 are **cancelled, not postponed**: no price
+writes, no description writes, no creating listings. Listing is done by a
+person, helped by the system — **Q53** asks how far that help should go. The
+everyday read is now the **two most recent pages**, two requests instead of
+twelve; the whole wardrobe is a deliberate, occasional press. ⚠ **A partial read
+may never conclude a listing has gone** — see §7.10g, it would have ended about
+a thousand listings in one press. A proxy to hide the house IP was asked for and
+**refused**: it breaks `FEATURE_SPECIFICATION.md §5`, which this project wrote
+at the start. Next: the dashboard, item history (U-18), Q53, then the ledger.
+eBay and Shopify wait until Vinted works end to end.
 
 **The photographs are on a clock:** all 9,098 are hosted on
 `media-na.crosslist.com` and will very likely die with the subscription — for 988
@@ -163,14 +173,14 @@ source/                the extension
   connectors/                  one file per platform
   contentScripts/              runs inside the Vinted tab
   popupPanel/  settingsPage/   UI
-tests/                 npm test — 53 tests, nothing to install
+tests/                 npm test — 55 tests, nothing to install
 
 sixgenbot/             the SERVER (Python, Docker)
   VERSION_v_0.2.0      its own version marker
   core/                config, logging, events, database, backup, scheduler, web app
   migrations/          numbered SQL — the only description of the schema
   modules/             one folder per feature — add a folder, add a feature
-  tests/               python -m pytest sixgenbot/tests -q — 276 tests
+  tests/               python -m pytest sixgenbot/tests -q — 283 tests
 
 docs/                  everything else
 ```

@@ -87,6 +87,41 @@ is before 639 rows are imported:
 **Proposed either way:** import all of them, flag every clash, and put them at
 the front of the review queue. Nothing is merged and nothing is skipped.
 
+## Q53 — Listing by hand, faster ⏳
+
+**2026-10-25.** Vinted tightened against bots, so writing to Vinted is
+cancelled. Listing is done by a person. The question is how the system helps.
+
+Three ways, least risky first:
+
+**A. A listing pack (no automation against Vinted at all).**
+The Ready to list screen already holds every answer. Add a one-press copy beside
+each field and the photographs as a zip. You open Vinted yourself.
+*Risk: none. Build: a day.*
+
+**B. Open the tabs, do not fill them.**
+Tick ten garments and the extension opens ten Vinted sell pages. Beside each, a
+small panel gives the answers in order with one-press copy. Opening a tab is
+navigation, not botting; every keystroke is yours.
+*Risk: low. Build: 2–3 days.*
+
+**C. Open the tabs and fill the boxes.**
+As asked for: ten tabs, each form filled from the database. You add the
+photographs, check the text and press Submit.
+*Risk: real. It is automated interaction with Vinted's own page, which their
+terms almost certainly forbid. A human submits every listing, and it is your
+account and your data — but if it is noticed, the account is the business.*
+*Build: a week, and it needs the live form read first.*
+
+**The question: A, B or C?** A and B are safe. C is faster and is a decision
+only you can make, knowing the risk.
+
+**Claude's suggestion:** build **B**, then try **C** on one garment and judge.
+B is most of the speed for none of the risk, and it is not wasted work — C is B
+plus the filling.
+
+---
+
 ## Q52 — A Next button that works on hover ⏳
 
 Asked for on 2026-09-20, as one of three ways to move from one box to the next:

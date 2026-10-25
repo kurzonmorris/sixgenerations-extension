@@ -52,7 +52,7 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 </style></head>
 <body><div class="sheet">
 <h1>Part 2 — what happens on each page</h1>
-<p class="stamp">Generated from the repository at 39029e7 2026-09-21. Regenerate with python docs/design/buildDesignDocs.py</p>
+<p class="stamp">Generated from the repository at c091bb0 2026-10-14. Regenerate with python docs/design/buildDesignDocs.py</p>
 
 <nav class="docnav">
   <b>The four parts:</b>
@@ -123,7 +123,7 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>A-213</td><td><b>A different account stops the run before its first write</b></td><td><code>syncRunner.confirmOrStop()</code></td></tr>
 <tr><td>A-214</td><td><b>A refused connection cannot overwrite the recorded account</b></td><td><code>rememberFrom()</code></td></tr>
 <tr><td>A-215</td><td><b>The settings page says what this copy is tied to</b>, and since when</td><td><code>showKnown()</code></td></tr>
-<tr><td>A-216</td><td>276 pytest tests, 53 extension tests</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td></tr>
+<tr><td>A-216</td><td>(test counts now in A-221)</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td></tr>
 </table>
 <h2>The server itself</h2>
 <table><tr><th>ID</th><th>What it does</th><th>Where in the code</th></tr>
@@ -159,6 +159,11 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>A-73</td><td>The status page shows real counts and the scheduled jobs</td><td><code>modules/systemStatus/</code></td></tr>
 <tr><td>A-74</td><td><b>Copy-and-paste install guide</b>, with and without Compose</td><td><code>docs/INSTALL_GUIDE.md</code></td></tr>
 <tr><td>A-75</td><td>50 pytest tests</td><td><code>sixgenbot/tests/</code></td></tr>
+<tr><td>A-217</td><td><b>Read what is new</b> — the two most recent pages, two requests instead of twelve</td><td><code>vintedPageReader.viaApi(pages)</code></td></tr>
+<tr><td>A-218</td><td><b>Read the whole wardrobe</b> stays, as a deliberate occasional press</td><td>popup, <code>pages: 0</code></td></tr>
+<tr><td>A-219</td><td><b>A partial read never decides a listing has gone</b> — it would have ended ~1,000 in one press</td><td><code>vintedRead.planRead(complete=)</code></td></tr>
+<tr><td>A-220</td><td><b>Silence is treated as partial</b> — a file that does not say is assumed to be part only</td><td><code>routes.itemsFrom()</code></td></tr>
+<tr><td>A-221</td><td>282 pytest tests, 55 extension tests</td><td><code>sixgenbot/tests/</code>, <code>tests/</code></td></tr>
 </table>
 <h2>Files — in and out</h2>
 <p class="lead"><code>/files</code> — Upload a spreadsheet, see what importing would do, download the inventory.</p>
@@ -357,10 +362,6 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>S-08</td><td>Nightly backup of database and images</td><td>D.1 The server (new — this is where the system is going)</td></tr>
 <tr><td>S-09</td><td>Web interface, following <code>INTERFACE_PRINCIPLES.md</code></td><td>D.1 The server (new — this is where the system is going)</td></tr>
 <tr><td>F-01</td><td>Verify the read against the real 2,000-item wardrobe</td><td>D.2 Vinted</td></tr>
-<tr><td>F-02</td><td>Write a price to Vinted</td><td>D.2 Vinted</td></tr>
-<tr><td>F-03</td><td>Hide or delete a sold Vinted listing</td><td>D.2 Vinted</td></tr>
-<tr><td>F-04</td><td>Write title / description, preserving the storage code</td><td>D.2 Vinted</td></tr>
-<tr><td>F-05</td><td>Create a Vinted listing, photos included</td><td>D.2 Vinted</td></tr>
 <tr><td>F-24</td><td><b>Read every extra field</b> — measurements, all size systems, all colours, full category path, upload date</td><td>D.2 Vinted</td></tr>
 <tr><td>F-25</td><td><b>Read sold items and orders</b></td><td>D.2 Vinted</td></tr>
 <tr><td>F-26</td><td><b>Read buyer/seller messages</b></td><td>D.2 Vinted</td></tr>
@@ -395,5 +396,9 @@ svg { max-width: 100%; height: auto; background: #fbfaf7;
 <tr><td>C-03</td><td>Write content to Vinted</td><td><code>vintedWardrobeConnector.js:86</code></td></tr>
 <tr><td>C-04</td><td>Hide or delete a Vinted listing</td><td><code>vintedWardrobeConnector.js:90</code></td></tr>
 <tr><td>C-05</td><td>Create a listing from scratch</td><td><code>core/syncRunner.js:142</code></td></tr>
+<tr><td>F-02</td><td><b>CANCELLED 2026-10-25</b> — Write a price to Vinted. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td></tr>
+<tr><td>F-03</td><td><b>CANCELLED 2026-10-25</b> — Hide or delete a sold Vinted listing. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td></tr>
+<tr><td>F-04</td><td><b>CANCELLED 2026-10-25</b> — Write title / description, preserving the storage code. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td></tr>
+<tr><td>F-05</td><td><b>CANCELLED 2026-10-25</b> — Create a Vinted listing, photos included. Vinted tightened against bots; the system never writes to Vinted. Listing is done by a person, helped by the system — Q53</td><td></td></tr>
 </table>
 </div></body></html>

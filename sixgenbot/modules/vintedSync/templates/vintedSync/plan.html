@@ -11,6 +11,15 @@
   {% else %}
     <p><strong>Nothing has been written.</strong> This is what it would change.</p>
 
+    {% if not plan.complete %}
+      <p>
+        <strong>This read looked at part of the wardrobe only.</strong>
+        So nothing is judged to have gone from Vinted — a listing it did not look
+        at is simply unexamined, not missing. Use <em>Read the whole wardrobe</em>
+        when you want gone listings found.
+      </p>
+    {% endif %}
+
     <div class="rows">
       <div class="row">
         <span>New items, found on Vinted but not here</span>
@@ -30,7 +39,10 @@
       </div>
       <div class="row">
         <span>No longer on Vinted</span>
-        <span class="value">{{ '{:,}'.format(plan.goneFromVinted | length) }}</span>
+        <span class="value">
+          {%- if plan.complete %}{{ '{:,}'.format(plan.goneFromVinted | length) }}
+          {%- else %}not looked for{% endif -%}
+        </span>
       </div>
       <div class="row">
         <span>Blanks it would fill in</span>

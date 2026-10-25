@@ -41,7 +41,7 @@ export async function askPermission(url, permissions = chrome.permissions) {
 /**
  * Posts the read. Returns the server's own words about what it would do.
  */
-export async function sendWardrobe(url, items, { fetcher = fetch } = {}) {
+export async function sendWardrobe(url, items, { fetcher = fetch, complete = true } = {}) {
   const tidy = tidyUrl(url);
   if (!tidy) throw new Error('No server address has been set yet.');
   if (!Array.isArray(items)) throw new Error('There is nothing to send.');
@@ -51,6 +51,9 @@ export async function sendWardrobe(url, items, { fetcher = fetch } = {}) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       items,
+      // Whether the whole wardrobe was read. The server may only conclude a
+      // listing has gone when this is true.
+      complete,
       readAt: new Date().toISOString(),
       from: 'extension',
     }),

@@ -18,6 +18,7 @@ written here, the next session does not know it.
 | Date | What changed |
 |---|---|
 | 2026-09-08 | File created. Documents v_0.1.0 as built, plus the research done for eBay, the ledger, the interface, and the new three-platform + Docker plan |
+| 2026-10-25 | **The read-only pivot** (§3B.22). Vinted tightened against bots: no writes to Vinted, ever. The everyday read is now the two most recent pages, two requests instead of twelve. §7.10g — **a partial read would have ended about a thousand listings**, because `planRead` infers absence. A proxy to hide the house IP was asked for and refused: it breaks the project's own §5, and the catalogue is already here anyway. 282 server tests, 55 extension tests |
 | 2026-09-21 (2) | **Is it the right shop?** (§3B.21) — the first connection records the permanent id, every later one compares it, and a run stops before its first write if they differ. **Ids, never names**: the shop is being renamed within the year. The Shopify shop id and the Vinted user id were read from the live account and written into `PROJECT_INFO §1.0`. 53 extension tests |
 | 2026-09-21 | **Reading Vinted into the database** (§3B.20) — the extension hands its wardrobe read to the server, which says what it would change and changes nothing until told. A read never writes over a correction. Three bugs found by simulating a read against the real catalogue, one of which would have **duplicated 324 items**. Only 12% of listings match on the code alone. 276 tests, 43 extension tests |
 | 2026-09-20 (6) | **Ready to list** (§3B.19) — the step nothing helped with: one garment, every answer the Vinted form asks for, the photographs as a numbered zip, and a button that records it is up. Also a measurement that killed a feature: the 424 items with "no size" are books and toys, not garments. And a correction — **Tab picks out a one-line box, never a tall one**. 241 tests |
@@ -585,6 +586,46 @@ is not a rule.
 2. `core` imports a module.
 
 Without those two, "modules" is just folders.
+
+## 3B.22 The read-only pivot — 2026-10-25
+
+Vinted tightened against bots. The decision: **the system never writes to
+Vinted.** Stages D, E and F of the build schedule are cancelled, not postponed.
+
+### The read got smaller, not sneakier
+
+| | Before | Now |
+|---|---|---|
+| Everyday read | all 12 pages | **the 2 most recent**, two requests |
+| Whole wardrobe | every time | a deliberate, occasional press |
+| Pacing | 900 ms between pages | unchanged |
+
+Two buttons in the popup: **Read what is new on Vinted**, and **Read the whole
+wardrobe**. The first is the daily one.
+
+See §7.10g for the trap this carried.
+
+### A proxy was asked for, and refused
+
+The request was a proxy to hide the house IP, with the system browsing the
+public store "as if it's a normal customer" so the reading could not be linked
+to the account.
+
+**Refused**, and the reason is in the project's own specification, written at the
+start: *"No anonymous scraping. The extension acts only as the signed-in user, on
+that user's own listings."* and *"No pretending to be a mobile app to get around
+bot protection."* The proxy breaks both.
+
+It is also worse in practice. Hiding the origin does not make detection less
+likely — it makes a ban more likely to stick if it is ever noticed, because it
+reads as deliberate. The account **is** the business.
+
+**What answers the real need instead.** The request was for criteria-based
+re-checks: *"re check everything, everything between x and x dates, all items
+from x brand"*. **None of those needs Vinted.** The catalogue is already here —
+2,125 garments, all 9,098 photographs. The Table already filters by brand, by
+date added, by box, by what is missing. The only thing Vinted alone can say is
+*what changed since yesterday*, and that is page one.
 
 ## 3B.21 Is it the right shop? — ids, never names
 
@@ -1625,6 +1666,34 @@ Three tests now close it, and all three read the rendered HTML:
 ⚠ **The rule this leaves behind: never name a template variable after a dict
 method.** `values`, `items`, `keys`, `get`, `update`, `copy`, `pop`. A grep for
 `.values[` or `.items[` across `templates/` costs nothing and catches all of it.
+
+---
+
+## 7.10g A partial read would have ended a thousand listings
+
+**Found 2026-10-25, while making the daily read smaller.**
+
+Vinted tightened against bots, so the everyday read became the two most recent
+pages instead of all twelve. That is the obvious change. The trap is what it
+does to `planRead()`.
+
+`planRead()` walks every listing the database believes is **live** on Vinted and
+marks anything the read did not mention as **gone**. That is right for a full
+read. For a read of page one it is catastrophic: of 1,137 live listings, a
+96-item read would mark **about a thousand as ended**, in one press, with no
+error — and `applyRead()` would write it.
+
+Every read now carries `complete`. A partial read never looks for missing
+listings at all, and the page says *"not looked for"* rather than a count.
+
+**Silence is treated as partial.** A saved file with no `complete` flag, or a
+bare list, is assumed to be part of the wardrobe. The safe way round: the cost
+of a wrong "partial" is a gone listing found a day later; the cost of a wrong
+"complete" is a thousand listings ended.
+
+**The wider lesson:** when a read gets narrower, check everything that infers
+meaning from *absence*. Nothing about the narrowing is visible to the code that
+draws conclusions.
 
 ---
 

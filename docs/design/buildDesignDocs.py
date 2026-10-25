@@ -269,59 +269,30 @@ STAGES = [
         needs="Stage A, question 4.",
     ),
     dict(
-        n="D", name="Writing to Vinted — price and hiding a sold listing", weeks="1–2 weeks",
-        goal="The first writes. Change a price; hide a listing that has sold elsewhere.",
-        why="These two are the smallest useful writes and the least dangerous. They do not create "
-            "anything and they do not touch descriptions, so the SKU can never be lost.",
-        does=["Drive Vinted's own edit form in the signed-in tab",
-              "Price only, then hide or delete",
-              "Dry run first, always: show the plan, then do it",
-              "Record every write in the garment's history",
-              "Stop on anything unexpected rather than guessing"],
-        touches=["source/connectors/vintedWardrobeConnector.js (setPrice, archive)",
-                 "source/contentScripts/vintedPageReader.js (the edit form)",
-                 "sixgenbot/core/vintedRead.py (what to ask for)"],
-        interacts="Needs the linking from stage 0 to be done — a write can only go to a listing "
-                  "whose Vinted number is known. Reads stay the source of truth.",
-        test="A dry run on ten garments lists exactly what it would change. A real run on ONE "
-             "garment changes that one and nothing else. The description is untouched.",
-        needs="<b>Investigation first.</b> Vinted's edit form has to be read from the live site — "
-              "docs/CLAUDE_BROWSER_TASKS.md. Nothing here can be written from documentation.",
+        n="D", name="CANCELLED — writing to Vinted", weeks="—",
+        goal="<b>Cancelled on 2026-10-25.</b> Vinted tightened against bots. The system never "
+             "writes to Vinted. Stages D, E and F are replaced by stage D2 below.",
+        why="Not postponed — cancelled. The account is the business, and an automated write is "
+            "the thing most likely to lose it.",
+        does=["Nothing. Kept here so the decision is visible, not quietly dropped."],
+        touches=["docs/FEATURE_SPECIFICATION.md §4A"],
+        test="—", needs="—",
     ),
     dict(
-        n="E", name="Writing descriptions and titles, keeping the SKU", weeks="1 week",
-        goal="Change listing text on Vinted without ever losing the storage code.",
-        why="This is how the 972 withdrawn garments get their sizes corrected in place, rather "
-            "than being relisted from scratch.",
-        does=["Use withSku() so the code is always on the end",
-              "Leave a padded code (B5-5 004) exactly as it is",
-              "Show the before and after text before writing anything",
-              "Refuse to write if the code would change"],
-        touches=["sixgenbot/core/sku.py (withSku, already correct)",
-                 "source/connectors/vintedWardrobeConnector.js (updateContent)"],
-        interacts="Reuses the description already shown on Ready to list. A write that would "
-                  "change the parsed code is a bug, not a feature — it stops.",
-        test="A hundred descriptions round-trip with the code unchanged, padding and all.",
-        needs="Stage D.",
-    ),
-    dict(
-        n="F", name="Creating a Vinted listing outright", weeks="2–3 weeks",
-        goal="One button: put this garment on Vinted.",
-        why="<b>This is the point of the project.</b> 972 garments are waiting, 3 to 6 go up a day "
-            "by hand. This is the step that changes that number.",
-        does=["Upload the photographs in order",
-              "Fill the form from the garment, including the SKU on the end",
-              "Category and size pickers — the hardest part, and why F comes after E",
-              "Record the new listing number straight away, so it is linked for ever",
-              "One garment at a time, with the plan shown first"],
-        touches=["source/contentScripts/vintedPageReader.js (the new-listing form)",
-                 "sixgenbot/core/listingSheet.py (already produces every answer)",
-                 "sixgenbot/modules/listingHelper/ (becomes a button, not a copying screen)"],
-        interacts="listingSheet already assembles everything the form asks for — that work is done. "
-                  "This stage is the driving, not the data.",
-        test="One garment, end to end, on the real account. Then ten. The photographs come out in "
-             "the right order and the SKU is on the end.",
-        needs="Stages D and E. <b>Investigation of the new-listing form on the live site.</b>",
+        n="D2", name="Listing by hand, faster", weeks="1 day to a week — Q53 decides",
+        goal="A person lists on Vinted. The system makes every answer one press away.",
+        why="This replaces stages D, E and F. It is the only thing left that moves the "
+            "3-to-6-a-day number.",
+        does=["<b>A</b> — one-press copy beside every field on Ready to list, photographs as a zip. No automation at all",
+              "<b>B</b> — tick ten garments, the extension opens ten Vinted sell tabs, a panel beside each gives the answers in order",
+              "<b>C</b> — as B, but the boxes are filled in for you. You add photographs, check, submit",
+              "Record which garments went up, so they leave the waiting list"],
+        touches=["sixgenbot/core/listingSheet.py (already produces every answer)",
+                 "sixgenbot/modules/listingHelper/", "source/ (B and C only)"],
+        interacts="A needs nothing new — listingSheet already assembles every answer. B adds tab "
+                  "opening. C adds form filling, and needs the live sell form read first.",
+        test="Ten garments listed in one sitting, timed against doing it unaided.",
+        needs="<b>Q53 — A, B or C.</b> C is a risk only you can decide to take.",
     ),
     dict(
         n="G", name="The ledger — sales, purchases, totals", weeks="2 weeks",
